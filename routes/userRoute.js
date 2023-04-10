@@ -8,4 +8,8 @@ router.get('/',userController.userHome);
 
 router.get('/user-login',userController.userLogin);
 
+router.get('/about',userController.about);
+
+
+
 module.exports=router;
