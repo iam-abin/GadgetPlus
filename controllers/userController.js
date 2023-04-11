@@ -1,11 +1,14 @@
 const userModel=require('../models/userModel');
 
+// const userHome=async (req,res)=>{
+//     res.render('user/login',{loginForm:true})
+// }
 const userHome=async (req,res)=>{
-    res.render('user/about')
+    res.render('user/contactUs',{loginForm:false})
 }
 
 const userLogin=async (req,res)=>{
-    res.send("user Login Page")
+    res.render('user/login')
 }
 
     

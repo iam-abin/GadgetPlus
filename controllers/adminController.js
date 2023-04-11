@@ -1,6 +1,6 @@
 
 const adminHome=async (req,res)=>{
-    res.send("admin Home Page")
+    res.render("admin/loginAdmin",{layout:'layouts/adminLayout'})
 }
 
 const adminLogin=async (req,res)=>{
