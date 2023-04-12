@@ -1,5 +1,6 @@
 const userModel=require('../models/userModel');
-const user=require('../models/userModel')
+const User=require('../models/userModel');
+const bcrypt=require('bcrypt')
 
 // const userHome=async (req,res)=>{
 //     res.render('user/login',{loginForm:true})
@@ -14,39 +15,65 @@ const userSignup=async (req,res)=>{
 }
 
 const userSignupPost=async (req,res)=>{
-    const data=req.body;
-    user.create({
-        name:data.name,
-        email:data.email,
-        phone:data.phone,
-        password:data.password
-    }).then((data)=>{
+    try{
+        const data=req.body;
         console.log(data);
-    }).catch((err)=>{
-        console.log(err);
-    })
+        const isUserExist= await User.findOne({email:data.email});
+        console.log(isUserExist);
+        if(isUserExist){
+            console.log(`User ${data.email} already exist`);
+            res.redirect('/user-signup')
+        }else{
+            const password=await bcrypt.hash(req.body.password,10);
+            User.create({
+                name:data.name,
+                email:data.email,
+                phone:data.phone,
+                password:password
+            }).then((data)=>{
+                console.log(data);
+            }).catch((err)=>{
+                console.log(err);
+            })
 
-    res.redirect('/user-login')
+            res.redirect('/user-login')
+        }
+    }catch(err){
+        console.log(err);
+        
+        res.redirect('/')
+        console.log("catch error");
+    }
+   
 }
 
 const userLogin=async (req,res)=>{
-
     res.render('user/login')
 }
 
 const userLoginPost=async (req,res)=>{
-    let email=req.body.email;
 
-    let userData= await user.findOne({email:email})
-    console.log(userData);
-    console.log(req.body.password);
-    if(userData.password==req.body.password){
-        res.redirect('/')
-    }else{
-        res.render('user/404')
-    }
+  try{
+        let email=req.body.email;
+        let userData= await User.findOne({email:email})
+        console.log(userData);
+        console.log(req.body.password);
+       if(userData){
+            bcrypt.compare(req.body.password,userData.password).then((result)=>{
+                if(result){
+                    res.redirect('/')
+                    console.log("Login success");
+                }else{
+                    res.render('user/404')
+                    console.log("password is not matching");
 
-    
+                }
+            })
+       }
+  }catch(err){
+        console.log(err);
+        console.log("error occurd in login");
+  }
 }
 
 const profile=async (req,res)=>{

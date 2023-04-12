@@ -2,8 +2,10 @@ require('dotenv').config();
 const express=require('express');
 const mongoose=require('mongoose');
 const logger=require('morgan');
-const expressLayouts=require('express-ejs-layouts')
-const path=require('path')
+const expressLayouts=require('express-ejs-layouts');
+const path=require('path');
+const session =require('express-session');
+const cookieParser=require('cookie-parser');
 
 
 const userRoute=require('./routes/userRoute');
@@ -37,6 +39,16 @@ mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true})
 })
 
 // db connection end 
+app.use(cookieParser());
+
+app.use(session({
+    secret:"Gadgets",
+    resave:false,
+    saveUninitialized:false,
+    cookie:{
+        maxAge:6000000
+    }
+}))
 
 app.use('/',userRoute);
 app.use('/admin',adminRoute);
