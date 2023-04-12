@@ -1,22 +1,23 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="/assets/css/formStyle.css">
+<body>
+   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="/user/assets/css/formStyle.css">
 
 
 
-<section class="get-in-touch container">
+<section class="get-in-touch container ">
    <h1 class="title">User Login</h1>
-   <form class="contact-form row" action="" method="post">
-      <div class="form-field col-lg-12">
-         <input id="name" name="name" class="input-text js-input" type="text" required>
-         <label class="label" for="name">Name</label>
-      </div>
+   <form class="contact-form row" action="/user-login" method="post"  >
+      <div class="form-field col-lg-12" >
       <div class="form-field col-lg-12">
          <input id="email" name="email" class="input-text js-input" type="email" required>
          <label class="label" for="email">E-mail</label>
       </div> 
-       <div class="form-field col-lg-12 ">
-         <input id="phone" name="phone" class="input-text js-input" type="text" required>
-         <label class="label" for="phone">Contact Number</label>
+      <div class="form-field col-lg-12 ">
+         <input id="password" name="password" class="input-text js-input" type="password" required>
+         <label class="label" for="password">Password</label>
+      </div>
+      <div class="form-field col-lg-12 ">
+         <a href="/user-signup">Create a new Account</a>
       </div>
       <div class="form-field col-lg-12 text-right">
          <input class="submit-btn " type="submit" value="Submit">
@@ -27,3 +28,4 @@
 <!------ Include the above closing body tag ---------->
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>

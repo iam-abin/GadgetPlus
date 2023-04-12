@@ -27,15 +27,15 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 // db connection start
-mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true});
-const db=mongoose.connection;
 
-db.on('error',(error)=>{
-    console.log(error)
+mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true})
+.then((response)=>{
+    console.log("database connected successfully......");
 })
-db.once('open',()=>{
-    console.log("connected to database");
+.catch((err)=>{
+    console.log(err);
 })
+
 // db connection end 
 
 app.use('/',userRoute);

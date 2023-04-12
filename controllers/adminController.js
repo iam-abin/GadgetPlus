@@ -1,11 +1,13 @@
 
-const adminHome=async (req,res)=>{
+const adminLogin=async (req,res)=>{
     res.render("admin/loginAdmin",{layout:'layouts/adminLayout'})
 }
 
-const adminLogin=async (req,res)=>{
-    res.send("admin Login Page")
+const adminHome=async (req,res)=>{
+    res.render("admin/index",{layout:'layouts/adminLayout'})
 }
+
+
 
 module.exports={
     adminHome,
