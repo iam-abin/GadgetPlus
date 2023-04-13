@@ -3,13 +3,18 @@ const adminLogin=async (req,res)=>{
     res.render("admin/loginAdmin",{layout:'layouts/adminLayout'})
 }
 
-const adminHome=async (req,res)=>{
+const adminLoginPost=async (req,res)=>{
     res.render("admin/index",{layout:'layouts/adminLayout'})
 }
 
 
+const adminLogout=async (req,res)=>{
+    res.redirect('/')
+}
+
 
 module.exports={
-    adminHome,
-    adminLogin
+    adminLogin,
+    adminLoginPost,
+    adminLogout
 }

@@ -4,8 +4,12 @@ const router=express.Router();
 const adminController=require('../controllers/adminController')
 
 
-router.get('/',adminController.adminHome);
+router.get('/',adminController.adminLogin);
 
-router.get('/admin-login',adminController.adminLogin);
+router.post('/adminLogin',adminController.adminLoginPost);
+
+router.get('/Logout',adminController.adminLogout)
+
+// router.get('/',adminController.);
 
 module.exports=router;
