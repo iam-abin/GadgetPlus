@@ -14,6 +14,8 @@ router.get('/user-login',userController.userLogin);
 
 router.post('/user-login',userController.userLoginPost);
 
+router.get('/user-logout',userController.userLogout);
+
 router.get('/profile',userController.profile)
 
 router.get('/about',userController.about);
@@ -39,10 +41,6 @@ router.get('/order-details',userController.orderDetails)
 router.get('/order-summery',userController.orderSummary)
 
 router.get('/contact',userController.contact)
-
-
-
-
 
 
 

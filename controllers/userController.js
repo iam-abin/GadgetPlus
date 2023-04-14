@@ -1,13 +1,12 @@
-const userModel = require('../models/userModel');
+
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt')
 
-// const userHome=async (req,res)=>{
-//     res.render('user/login',{loginForm:true})
-// }
 
 const userHome = async (req, res) => {
-    res.render('user/index-8', { loginForm: false })
+    console.log(req.session.user);
+    console.log("ajay12345");
+    res.render('user/index-8', {loginForm: false ,loggedIn:req.session.loggedIn,user:req.session.user})
 }
 
 const userSignup = async (req, res) => {
@@ -42,7 +41,7 @@ const userSignupPost = async (req, res) => {
         console.log(err);
 
         res.redirect('/')
-        console.log("catch error");
+        console.log("catch error");style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;"
     }
 
 }
@@ -61,23 +60,31 @@ const userLoginPost = async (req, res) => {
         if (userData) {
             bcrypt.compare(req.body.password, userData.password).then((result) => {
                 if (result) {
+                    
+                    req.session.loggedIn = true;
+                    req.session.user=userData;
                     res.redirect('/')
                     console.log("Login success");
                 } else {
                     res.render('user/404')
                     console.log("password is not matching");
-
                 }
             })
         } else {
             res.render('user/404')
-            console.log("password is not matching");
+            console.log("User not Found");
         }
     } catch (err) {
         console.log(err);
-        console.log("error occurd in login");
+        console.log("error occured in login");
     }
 }
+
+const userLogout=async (req, res) => {
+    req.session.destroy()
+    res.redirect('/')
+}
+
 
 const profile = async (req, res) => {
     res.render('user/profile')
@@ -140,6 +147,7 @@ module.exports = {
     userSignupPost,
     userLogin,
     userLoginPost,
+    userLogout,
     about,
     laptop,
     mobile,

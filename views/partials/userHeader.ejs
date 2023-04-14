@@ -48,16 +48,17 @@
                         </button>
 
                         <a href="/" class="logo">
-                            <img src="/user/assets/images/demos/demo-8/logo.png" alt="Molla Logo" width="150" height="20">
+                            <img src="/user/assets/images/demos/demo-8/logo.png" alt="Molla Logo" width="150"
+                                height="20">
                         </a>
                     </div>
                     <div class="header-center">
                         <nav class="main-nav" style="margin-right: 175px;">
-                            <ul class="menu sf-arrows" >
+                            <ul class="menu sf-arrows">
                                 <li class="megamenu-container ">
-                                    <a href="index.html" >Home</a>
+                                    <a href="index.html">Home</a>
                                 </li>
-                                
+
                                 <li>
                                     <a href="product.html" class="sf-with-ul">Product</a>
                                     <ul>
@@ -66,12 +67,12 @@
                                         <li><a href="about-2.html">Tablet</a></li>
                                     </ul>
                                 </li>
-                                
+
                                 <li class="megamenu-container ">
-                                    <a href="index.html" >About</a>
+                                    <a href="index.html">About</a>
                                 </li>
                                 <li class="megamenu-container ">
-                                    <a href="index.html" >Contact</a>
+                                    <a href="index.html">Contact</a>
                                 </li>
 
                             </ul><!-- End .menu -->
@@ -119,7 +120,8 @@
 
                                         <figure class="product-image-container">
                                             <a href="product.html" class="product-image">
-                                                <img src="/user/assets/images/products/cart/product-1.jpg" alt="product">
+                                                <img src="/user/assets/images/products/cart/product-1.jpg"
+                                                    alt="product">
                                             </a>
                                         </figure>
                                         <a href="#" class="btn-remove" title="Remove Product"><i
@@ -140,7 +142,8 @@
 
                                         <figure class="product-image-container">
                                             <a href="product.html" class="product-image">
-                                                <img src="/user/assets/images/products/cart/product-2.jpg" alt="product">
+                                                <img src="/user/assets/images/products/cart/product-2.jpg"
+                                                    alt="product">
                                             </a>
                                         </figure>
                                         <a href="#" class="btn-remove" title="Remove Product"><i
@@ -155,15 +158,33 @@
                                 </div><!-- End .dropdown-cart-total -->
 
                                 <div class="dropdown-cart-action">
-                                    <a href="/cart" class="btn btn-primary">View Cart</a>
                                     <a href="/checkout" class="btn btn-outline-p45rimary-2"><span>Checkout</span><i
                                             class="icon-long-arrow-right"></i></a>
                                 </div><!-- End .dropdown-cart-total -->
                             </div><!-- End .dropdown-menu -->
                         </div><!-- End .cart-dropdown -->
 
-                        <a href="/user-login"><i class="fa-solid fa-user-tie"
-                                style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;"></i></a>
+                        <% if (locals.loggedIn) { %>
+                            <a href="#"
+                                style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;">
+                                <div>
+                                    <ul class="menu sf-arrows">
+                                        <li>
+                                            <a href="/" class="sf-with-ul">
+                                                <%= user.name %>
+                                            </a>
+                                            <ul>
+                                                <li><a href="/user-logout">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul><!-- End .menu -->
+                                </div><!-- End .header-left -->
+                            </a>
+                        <% } else { %>
+                                <a href="/user-login"><i class="fa-solid fa-user-tie"
+                                        style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;"></i></a>
+                        <% } %>
+
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
             </div><!-- End .header-bottom -->

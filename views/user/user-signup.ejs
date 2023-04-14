@@ -6,29 +6,43 @@
 
     <section class="get-in-touch container ">
         <h1 class="title">User Signup</h1>
-        <form class="contact-form row" action="/user-signup" method="post">
+        <form class="contact-form row" action="/user-signup" method="post" id="signup-form">
             <div class="form-field col-lg-12">
-                <input id="name" name="name" class="input-text js-input" type="text" required>
+                <input id="name" name="name" class="input-text js-input" type="text">
                 <label class="label" for="name">Name</label>
             </div>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="nameError"></span>
+
+
             <div class="form-field col-lg-12">
-                <input id="email" name="email" class="input-text js-input" type="email" required>
+                <input id="email" name="email" class="input-text js-input" type="email">
                 <label class="label" for="email">E-mail</label>
             </div>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="emailError"></span>
+
+
             <div class="form-field col-lg-12 ">
-                <input id="phone" name="phone" class="input-text js-input" type="text" required>
-                <label class="label" for="phone">Contact Number</label>
+                <input id="phone" name="phone" class="input-text js-input" type="text">
+                <label class="label" for="phone">Mobile Number</label>
             </div>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="mobileNumError"></span>
+
+
             <div class="form-field col-lg-12 ">
                 <input id="password" name="password" class="input-text js-input" type="password" required>
                 <label class="label" for="password">Password</label>
             </div>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="passwordError"></span>
+
             <div class="form-field col-lg-12 text-right">
                 <p style="text-align: left;"><a href="/user-login">Already have an account</a></p>
                 <input class="submit-btn " type="submit" value="Submit">
             </div>
         </form>
     </section>
+
+    <!-- validation -->
+    <script src="validation/signupValidation.js"> </script>
 
     <!------ Include the above closing body tag ---------->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
