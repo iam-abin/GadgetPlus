@@ -15,6 +15,7 @@ const userSignup = async (req, res) => {
 
 const userSignupPost = async (req, res) => {
     try {
+        
         const data = req.body;
         console.log(data);
         const isUserExist = await User.findOne({ email: data.email });

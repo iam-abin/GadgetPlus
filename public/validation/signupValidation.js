@@ -1,7 +1,9 @@
-const loginForm=document.getElementById("signup-form")
+const loginForm=document.getElementById("signup-form");
+
 const userName=document.getElementById("name");
 const email=document.getElementById("email");
-const mobile=document.getElementById("phone")
+const mobile=document.getElementById("phone");
+const password=document.getElementById("password")
 
 
 
@@ -15,7 +17,7 @@ loginForm.addEventListener('submit',(e)=>{
     if(userName.value==="" || userName.value===null){
         e.preventDefault();
         document.getElementById("nameError").classList.remove('d-none');
-        document.getElementById("nameError").innerHTML="Name must be filled!"
+        document.getElementById("nameError").innerHTML="Name must be filled!----"
     }else if(!userName.value.match(usernameRegex)){
         e.preventDefault();
         document.getElementById("nameError").classList.remove('d-none');
@@ -53,5 +55,19 @@ loginForm.addEventListener('submit',(e)=>{
         e.preventDefault();
         document.getElementById("mobileNumError").classList.remove('d-none');
         document.getElementById("mobileNumError").innerHTML=""
+    }
+
+    if(password.value==="" || password.value===null){
+        e.preventDefault();
+        document.getElementById("passwordError").classList.remove('d-node');
+        document.getElementById("passwordError").innerHTML="password number must be filled!"
+    }else if(password.value.match(passRegX)){
+        e.preventDefault();
+        document.getElementById("passwordError").classList.remove('d-none');
+        document.getElementById("passwordError").innerHTML="Password must contain at least 6 characters including one uppercase letter,<br> one lowercase letter, one number and one special character.";
+    }else if(password.value.match(passRegX)){
+        e.preventDefault();
+        document.getElementById("passwordError").classList.remove('d-none');
+        document.getElementById("passwordError").innerHTML=""
     }
 })

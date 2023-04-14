@@ -165,21 +165,20 @@
                         </div><!-- End .cart-dropdown -->
 
                         <% if (locals.loggedIn) { %>
-                            <a href="#"
-                                style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;">
+                            
                                 <div>
                                     <ul class="menu sf-arrows">
                                         <li>
-                                            <a href="/" class="sf-with-ul">
+                                            <span class="sf-with-ul">
                                                 <%= user.name %>
-                                            </a>
+                                            </span>
                                             <ul>
                                                 <li><a href="/user-logout">Logout</a></li>
                                             </ul>
                                         </li>
                                     </ul><!-- End .menu -->
                                 </div><!-- End .header-left -->
-                            </a>
+                            
                         <% } else { %>
                                 <a href="/user-login"><i class="fa-solid fa-user-tie"
                                         style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;"></i></a>
