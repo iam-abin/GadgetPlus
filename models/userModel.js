@@ -10,22 +10,33 @@ const userSchema=new mongoose.Schema({
     },
     email:{
         type:String,
-        required:true
+        required:true,
+        unique: true,
+        trim: true,
+        lowercase: true
     },
     phone:{
         type:String,
-        required:true
+        required:true,
+        trim: true,
+        unique : true
     },
     password:{
         type:String,
-        required:true
-    },
-    created:{
-        type:Date,
         required:true,
-        default:Date.now
+        trim: true
+    },
+    isActive:{
+        type:Boolean,
+        required:true,
+        default:true
     }
-})
+},
+{
+    timestamps:true,
+    collection:'users'
+}
+)
 
 
 module.exports=mongoose.model('user',userSchema)

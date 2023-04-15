@@ -7,33 +7,32 @@
     <section class="get-in-touch container ">
         <h1 class="title">User Signup</h1>
         <form class="contact-form row" action="/user-signup" method="post" id="signup-form">
-            <!--  onsubmit="return validateForm()" -->
             <div class="form-field col-lg-12">
                 <input id="name" name="name" class="input-text js-input" type="text">
                 <label class="label" for="name">Name</label>
             </div>
-            <span class="text-danger " style="font-size: 12px; margin-left: 10px;" id="nameError"></span>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="nameError"></span>
 
 
             <div class="form-field col-lg-12">
                 <input id="email" name="email" class="input-text js-input" type="text">
                 <label class="label" for="email">E-mail</label>
             </div>
-            <span class="text-danger " style="font-size: 12px; margin-left: 10px;" id="emailError"></span>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="emailError"></span>
 
 
             <div class="form-field col-lg-12 ">
                 <input id="phone" name="phone" class="input-text js-input" type="text">
                 <label class="label" for="phone">Mobile Number</label>
             </div>
-            <span class="text-danger " style="font-size: 12px; margin-left: 10px;" id="mobileNumError"></span>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="mobileNumError"></span>
 
 
             <div class="form-field col-lg-12 ">
                 <input id="password" name="password" class="input-text js-input" type="password">
                 <label class="label" for="password">Password</label>
             </div>
-            <span class="text-danger " style="font-size: 12px; margin-left: 10px;" id="passwordError"></span>
+            <span class="text-danger d-none" style="font-size: 12px; margin-left: 10px;" id="passwordError"></span>
 
             <div class="form-field col-lg-12 text-right">
                 <p style="text-align: left;"><a href="/user-login">Already have an account</a></p>
@@ -48,6 +47,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <!-- validation -->
+    
     <!-- <script src="../../public/validation/signupValidation.js"> </script> -->
 
     <script>
@@ -81,7 +81,7 @@
 
             if (email.value === "" || email.value === null) {
                 e.preventDefault();
-                document.getElementById("emailError").classList.remove('d-node');
+                document.getElementById("emailError").classList.remove('d-none');
                 document.getElementById("emailError").innerHTML = "Email must be filled!"
             } else if (!email.value.match(emailRegX)) {
                 e.preventDefault();
@@ -95,7 +95,7 @@
 
             if (mobile.value === "" || mobile.value === null) {
                 e.preventDefault();
-                document.getElementById("mobileNumError").classList.remove('d-node');
+                document.getElementById("mobileNumError").classList.remove('d-none');
                 document.getElementById("mobileNumError").innerHTML = "Phone number must be filled!"
             } else if (!mobile.value.match(mobileRegex)) {
                 e.preventDefault();
@@ -108,8 +108,8 @@
 
             if (password.value === "" || password.value === null) {
                 e.preventDefault();
-                document.getElementById("passwordError").classList.remove('d-node');
-                document.getElementById("passwordError").innerHTML = "password number must be filled!"
+                document.getElementById("passwordError").classList.remove('d-none');
+                document.getElementById("passwordError").innerHTML = "password must be filled!"
             } else if (!password.value.match(passRegX)) {
                 e.preventDefault();
                 document.getElementById("passwordError").classList.remove('d-none');

@@ -6,11 +6,14 @@ const bcrypt = require('bcrypt')
 const userHome = async (req, res) => {
     console.log(req.session.user);
     console.log("ajay12345");
-    res.render('user/index-8', {loginForm: false ,loggedIn:req.session.loggedIn,user:req.session.user})
+    res.render('user/index-8', {loginForm: false ,
+        loggedIn:req.session.loggedIn,user:req.session.user,
+    })
 }
 
+
 const userSignup = async (req, res) => {
-    res.render('user/user-signup')
+    res.render('user/user-signup',{others:true})
 }
 
 const userSignupPost = async (req, res) => {
@@ -48,7 +51,7 @@ const userSignupPost = async (req, res) => {
 }
 
 const userLogin = async (req, res) => {
-    res.render('user/login')
+    res.render('user/login',{others:true})
 }
 
 const userLoginPost = async (req, res) => {
@@ -79,6 +82,10 @@ const userLoginPost = async (req, res) => {
         console.log(err);
         console.log("error occured in login");
     }
+}
+
+const otpUser=(req,res)=>{
+    res.render('user/otp2')
 }
 
 const userLogout=async (req, res) => {
@@ -148,6 +155,7 @@ module.exports = {
     userSignupPost,
     userLogin,
     userLoginPost,
+    otpUser,
     userLogout,
     about,
     laptop,

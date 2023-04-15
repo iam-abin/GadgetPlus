@@ -14,6 +14,8 @@ router.get('/user-login',userController.userLogin);
 
 router.post('/user-login',userController.userLoginPost);
 
+router.get('/otp-user',userController.otpUser);
+
 router.get('/user-logout',userController.userLogout);
 
 router.get('/profile',userController.profile)
