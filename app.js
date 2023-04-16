@@ -7,6 +7,8 @@ const path=require('path');
 const session =require('express-session');
 const cookieParser=require('cookie-parser');
 
+const connectDb=require('./config/db')
+
 
 const userRoute=require('./routes/userRoute');
 const adminRoute=require('./routes/adminRoute');
@@ -28,17 +30,17 @@ app.use(express.urlencoded({extended:false}))  //for parsing form data
 app.use(express.static(path.join(__dirname,'public')));
 
 
-// db connection start
+// // db connection start
+connectDb();
+// mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true})
+// .then((response)=>{
+//     console.log("database connected successfully......");
+// })
+// .catch((err)=>{
+//     console.log(err);
+// })
 
-mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true})
-.then((response)=>{
-    console.log("database connected successfully......");
-})
-.catch((err)=>{
-    console.log(err);
-})
-
-// db connection end 
+// // db connection end 
 app.use(cookieParser());
 
 app.use(session({

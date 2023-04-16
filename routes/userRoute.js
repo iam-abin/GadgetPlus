@@ -30,6 +30,10 @@ router.get('/wishlist',userController.wishlist)
 
 router.get('/cart',userController.cart)
 
+router.get('/checkout',userController.checkout)
+
+// router.get('/quickView',userController.quickView)
+
 router.get('/add-address',userController.addAddress)
 
 router.get('/edit-address',userController.editAddress)
