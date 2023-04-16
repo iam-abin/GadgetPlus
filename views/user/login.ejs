@@ -1,32 +1,74 @@
-<body>
-   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="/user/assets/css/formStyle.css">
+<% if (locals.logErr) { %>
+  <span style="text-align: center;">
+    <p class="text-danger">
+      <%= logErr %>
+    </p>
+  </span>
+  <% } %>
 
+    <section class="vh-100" style="background-color: #fffdfd;">
+      <div class="container py-4 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-90">
+          <div class="col col-xl-10">
+            <div class="card shadow border" style="border-radius: 1rem; margin-top: 20px; height: 54rem;">
+              <div class="row g-0">
+                <div class="col-md-6 col-lg-5 d-none d-md-block pt-3"
+                  style="background-color: #3293C9; border-radius: 1rem 0 0 1rem; height: 54rem;">
+                  <img src="user/assets/images/Secure login-amico.png" alt="login form" class="img-fluid"
+                    style="border-radius: 1rem 0 0 1rem; margin-top: 49px; margin-left: -1px;" />
+                </div>
+                <div class="col-md-6 col-lg-7 d-flex align-items-center ">
+                  <div class="card-body p-4 p-lg-5 text-black">
+                    <form action="/user-login" method="post"  class="style2" id="loginForm">
+                      <div class="d-flex align-items-center mb-2 pb-1">
+                        <h1 class="mb-0 mx-auto font-weight-bold">Login</h1>
+                      </div>
+                      <div class="form-group">
+                        <label for="emailId" class="form-label">Email ID</label>
+                        <input type="email" id="emailId" name="email" class="form-control" placeholder="Email" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password"  id="password" name="password" class="form-control"
+                          placeholder="Password" style="font-size: medium;" required>
+                      </div>
+                      <div class="divider">
+                        <p class="mx-auto"><a href="#" class="text-primary">Forgotten password?</a></p><br>
+                      </div>
+                      <div class="pt-1">
+                        <button class="btn btn-primary btn-block" style="width: 100%;">Login</button>
+                      </div>
+                      <div class="pt-1 mb-3">
+                        <p class="fw-bold mx-3 mb-0 text-muted" style="text-align: center;">OR</p>
+                        <a href="/otp-user" class="btn btn-outline-primary" style="width: 100%;"
+                          id="specialButton">Login with OTP</a>
 
-
-<section class="get-in-touch container ">
-   <h1 class="title">User Login</h1>
-   <form class="contact-form row" action="/user-login" method="post"  >
-      <div class="form-field col-lg-12" >
-      <div class="form-field col-lg-12">
-         <input id="email" name="email" class="input-text js-input" type="email" required>
-         <label class="label" for="email">E-mail</label>
-      </div> 
-      <div class="form-field col-lg-12 ">
-         <input id="password" name="password" class="input-text js-input" type="password" required>
-         <label class="label" for="password">Password</label>
-         <br>
+                          <p style="text-align: center; padding-top: 6px;">Don't have an account?<br>
+                            <a href="/user-signup" class="text-primary">Create New Account</a>
+                      </div>
+                      <!-- <div> -->
+                        
+                        </p><br>
+                      <!-- </div> -->
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="form-field col-lg-12 ">
-         <a href="/user-signup">Create a new Account</a>
-      </div>
-      <div class="form-field col-lg-12 text-right">
-         <input class="submit-btn " type="submit" value="Submit">
-      </div>
-   </form>
-</section>
+    </section>
 
-<!------ Include the above closing body tag ---------->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</body>
+    <style>
+      label.form-label {
+        color: #333333;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      input.form-control {
+        border-radius: 1rem;
+        padding: 1rem
+      }
+    </style>

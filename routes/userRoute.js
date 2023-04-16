@@ -16,7 +16,15 @@ router.post('/user-login',userController.userLoginPost);
 
 router.get('/otp-user',userController.otpUser);
 
+router.post('/otp-user',userController.otpSending);
+
+router.post('/otp-fill',userController.otpVerifying);
+
 router.get('/user-logout',userController.userLogout);
+
+
+
+
 
 router.get('/profile',userController.profile)
 
@@ -24,7 +32,7 @@ router.get('/about',userController.about);
 
 router.get('/laptop',userController.laptop)
 
-router.get('/mobile',userController.mobile)
+router.get('/mobile',userController.mobileNum)
 
 router.get('/wishlist',userController.wishlist)
 

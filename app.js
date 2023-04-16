@@ -6,6 +6,7 @@ const expressLayouts=require('express-ejs-layouts');
 const path=require('path');
 const session =require('express-session');
 const cookieParser=require('cookie-parser');
+const nocache=require('nocache')
 
 const connectDb=require('./config/db')
 
@@ -30,18 +31,13 @@ app.use(express.urlencoded({extended:false}))  //for parsing form data
 app.use(express.static(path.join(__dirname,'public')));
 
 
-// // db connection start
+// // db connection 
 connectDb();
-// mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true})
-// .then((response)=>{
-//     console.log("database connected successfully......");
-// })
-// .catch((err)=>{
-//     console.log(err);
-// })
 
-// // db connection end 
 app.use(cookieParser());
+app.use(nocache())
+
+
 
 app.use(session({
     secret:"Gadgets",
