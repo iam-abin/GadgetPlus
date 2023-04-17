@@ -1,5 +1,13 @@
-<%- include('../partials/adminHeader') %>
+<% if (locals.admin) { %>
 
     <%- body %>
 
-<%- include('../partials/adminFooter') %>
+<% } else { %>
+
+    <%- include('../partials/adminHeader') %>
+
+        <%- body %>
+
+    <%- include('../partials/adminFooter') %>
+
+<% } %>

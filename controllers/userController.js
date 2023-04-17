@@ -21,7 +21,7 @@ const userHome = async (req, res) => {
 
 
 const userSignup = async (req, res) => {
-    res.render('user/user-signup', { others: true })
+    res.render('user/user-signup', { user: true })
 }
 
 const userSignupPost = async (req, res) => {
@@ -36,7 +36,7 @@ const userSignupPost = async (req, res) => {
 }
 
 const userLogin = async (req, res) => {
-    res.render('user/login', { others: true })
+    res.render('user/login', { user: true })
 }
 
 const userLoginPost = async (req, res) => {
@@ -111,7 +111,7 @@ const otpVerifying = async (req, res) => {
 
 const userLogout = async (req, res) => {
     try {
-        req.session.destroy()
+        req.session.loggedIn=false;
         res.redirect('/')
     } catch (error) {
         console.log(error);
