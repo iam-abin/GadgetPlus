@@ -25,8 +25,8 @@ app.use(expressLayouts) //middleware that helps to create reusable layouts for y
 
 
 app.use(logger('dev'))
-app.use(express.json());  //for parsing json
 app.use(express.urlencoded({extended:false}))  //for parsing form data
+app.use(express.json());  //for parsing json
 
 app.use(express.static(path.join(__dirname,'public')));
 

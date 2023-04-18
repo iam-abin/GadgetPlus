@@ -75,7 +75,7 @@ const otpSending = async (req, res) => {
                 await twilio.sentOtp(find.phone);
                 res.render('user/otp-fill');
             }else{
-                console.log("mobile no not found");
+                console.log("mobile not found");
                 res.redirect('/user-signup')
             }
         })

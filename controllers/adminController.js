@@ -1,3 +1,7 @@
+const userSchema = require('../models/userModel');
+const adminHelper = require('../helpers/adminHelper');
+
+
 const email="admin@gmail.com"
 const password="123"
 
@@ -22,18 +26,41 @@ const adminLoginPost=async (req,res)=>{
     }else{
         res.redirect('/admin')
     }
-    
 }
 
 
-const adminLogout=async (req,res)=>{
+const usersList= (req,res)=>{
+    if (req.session.admin) {
+        adminHelper.findUsers()
+        .then((response)=>{
+            console.log(response);
+            res.render("admin/users-list",{layout:'layouts/adminLayout',admin:false,users:response})
+        })
+        
+    } else {
+        res.redirect('/admin')
+    }
+  
+}
+
+
+const adminLogout= (req,res)=>{
      req.session.admin=false;
     res.redirect('/admin')
 }
 
+// const isLogged=(req,res,next)=>{
+//     if(req.session.admin){
+//         next();
+//     }else{
+//         res.redirect('/admin/adminLogin')
+//     }
+// }
 
 module.exports={
     adminLogin,
     adminLoginPost,
-    adminLogout
+    adminLogout,
+    usersList,
+    // isLogged
 }
