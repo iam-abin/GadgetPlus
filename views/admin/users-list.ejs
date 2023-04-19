@@ -1,7 +1,7 @@
 
         <section class="content-main">
             <div class="content-header">
-                <h2 class="content-title">Users list</h2>
+                <h2 class="content-title">Users</h2>
             </div>
             <div class="card mb-4">
                 <header class="card-header">
@@ -31,10 +31,11 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>No</th>
                                     <th>NAME</th>
                                     <th>EMAIL</th>
                                     <th>MOBILE</th>
+                                    <th>STATUS</th>
                                     <th class="text-end"> Action </th>
                                 </tr>
                             </thead>
@@ -42,9 +43,15 @@
                                 <% for( let i = 0; i < users.length; i++ ) { %>
                                     <tr>
                                         <td width="10%"><%= i+1 %></td>
-                                        <td width="25%"><%= users[i].name %></td>
-                                        <td width="25%"><%= users[i].email %></td>
-                                        <td width="25%"><%= users[i].phone %></td>
+                                        <td width="20%"><%= users[i].name %></td>
+                                        <td width="20%"><%= users[i].email %></td>
+                                        <td width="15%"><%= users[i].phone %></td>
+                                        <% if (users[i].isActive) { %>
+                                            <td><span class="badge rounded-pill alert-success">Active</span></td>
+                                        <% }else {%>
+                                            <td><span class="badge rounded-pill alert-danger">inActive</span></td>
+                                        <% } %>
+
                                         <td class="text-end" width="15%">
                                             <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">Block</a>
                                             <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>

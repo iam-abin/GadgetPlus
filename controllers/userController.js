@@ -24,6 +24,7 @@ const userSignup = async (req, res) => {
     res.render('user/user-signup', { user: true })
 }
 
+
 const userSignupPost = async (req, res) => {
 
     userHelper.doSignup(req.body).then((response) => {
@@ -57,7 +58,7 @@ const userLoginPost = async (req, res) => {
 
 // otp login page
 const otpUser = (req, res) => {
-    res.render('user/otp2', {
+    res.render('user/otp-form', {
         user_header: true,
     })
 }

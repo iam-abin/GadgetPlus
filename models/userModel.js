@@ -1,4 +1,4 @@
-// this file is for define a schema
+// this file is for define a schema for user
 
 const mongoose=require('mongoose');
 
@@ -28,15 +28,13 @@ const userSchema=new mongoose.Schema({
     },
     isActive:{
         type:Boolean,
-        required:true,
         default:true
     }
 },
 {
     timestamps:true,
     collection:'users'
-}
-)
+})
 
 
 module.exports=mongoose.model('user',userSchema)

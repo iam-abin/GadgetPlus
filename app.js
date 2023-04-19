@@ -20,7 +20,7 @@ const PORT=process.env.PORT || 8080;
 // view engine setup
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'))
-app.set('layout','layouts/userLayout') // set default layout for admin pages
+app.set('layout','layouts/userLayout') // set default layout for user pages
 app.use(expressLayouts) //middleware that helps to create reusable layouts for your views
 
 

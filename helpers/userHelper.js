@@ -37,7 +37,8 @@ module.exports = {
                     name: userData.name,
                     email: userData.email,
                     phone: userData.phone,
-                    password: userData.password
+                    password: userData.password,
+                    isActive:false,
                 }).then((data) => {
                     resolve(data)
                 }).catch((error) => {

@@ -19,7 +19,9 @@ module.exports = {
                 .then((verification) => {
                     console.log(verification);
                     resolve(verification.sid)
-                });
+                }).catch((error)=>{
+                    console.log(error);
+                })
         })
     },
 
@@ -34,6 +36,8 @@ module.exports = {
                 .then((verification)=> {
                     console.log(verification.status);
                     resolve(verification.valid)
+                }).catch((error)=>{
+                    console.log(error);
                 });
         })
     }
