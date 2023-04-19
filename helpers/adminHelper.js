@@ -4,9 +4,9 @@ module.exports = {
     findUsers: () => {
         return new Promise(async (resolve, reject) => {
             await userSchema.find()
-                .then((response) => [
+                .then((response) => {
                     resolve(response)
-                ]).catch((error) => {
+                }).catch((error) => {
                     console.log(error);
                     reject(error)
                 })

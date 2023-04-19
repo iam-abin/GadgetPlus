@@ -6,15 +6,12 @@ const password = "123";
 
 const adminLogin = async (req, res) => {
   try {
-    if (req.session.admin) {
-      res.render("admin/admin-home", { layout: "layouts/adminLayout"});
-    } else {
-      res.render("admin/adminLogin", {
-        layout: "layouts/adminLayout",
-        admin: true,
-      });
-    }
+    res.render("admin/adminLogin", {
+      layout: "layouts/adminLayout",
+      admin: true,
+    });
   } catch (error) {
+    res.status(500);
     console.log(error);
   }
 };
@@ -29,36 +26,38 @@ const adminLoginPost = async (req, res) => {
 };
 
 const usersList = (req, res) => {
-  if (req.session.admin) {
+  
     adminHelper.findUsers().then((response) => {
       console.log(response);
       res.render("admin/users-list", {
         layout: "layouts/adminLayout",
-        admin: false,
+        // admin: false,
         users: response,
       });
+    }).catch((error)=>{
+      console.log("errorrrrrrrrrrrrrrrr");
+      console.log(error);
     });
-  } else {
-    res.redirect("/admin");
-  }
+  
 };
 
 const productList = (req, res) => {
   res.render("admin/products-list", {
     layout: "layouts/adminLayout",
-    admin: false,
+    // admin: false,
+
   });
 };
 
 const addProduct = (req, res) => {
   res.render("admin/add-product", {
     layout: "layouts/adminLayout",
-    admin: false,
+    // admin: false,
   });
 };
 
 const orders = (req, res) => {
-  res.render("admin/orders", { layout: "layouts/adminLayout", admin: false });
+  res.render("admin/orders", { layout: "layouts/adminLayout"});
 };
 
 const banners = (req, res) => {

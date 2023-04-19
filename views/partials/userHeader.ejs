@@ -163,13 +163,13 @@
                                 </div><!-- End .dropdown-menu -->
                             </div><!-- End .cart-dropdown -->
     
-                            <% if (locals.loggedIn) { %>
+                            <% if (locals.loginStatus) { %>
                                 
                                     <div>
                                         <ul class="menu sf-arrows">
                                             <li>
                                                 <span class="sf-with-ul">
-                                                    <%= user.name %>
+                                                    <%= loginStatus.name %>
                                                 </span>
                                                 <ul>
                                                     <li><a href="/user-logout">Logout</a></li>

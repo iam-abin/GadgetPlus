@@ -2,23 +2,29 @@
 const userSchema = require('../models/userModel');
 const userHelper = require('../helpers/userHelper');
 const twilio = require('../api/twilio')
+let loginStatus;
 
-
-const userHome = async (req, res) => {
-    // console.log(req.session.user);
-    // console.log("ajay12345");
-    if (req.session.loggedIn) {
-        res.render('user/index', {
-            loginForm: false,
-            loggedIn: req.session.loggedIn,
-            user: req.session.user,
-        })
-    } else {
+const landingPage = (req, res) => {
+    try {
         res.render('user/index')
+    } catch (error) {
+        console.log(error);
     }
-
 }
 
+const userHome = async (req, res) => {
+    try {
+        res.status(200).render('user/index', {
+            loginStatus
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const error = (req, res) => {
+    res.render('/error')
+}
 
 const userSignup = async (req, res) => {
     res.render('user/user-signup', { user: true })
@@ -36,6 +42,7 @@ const userSignupPost = async (req, res) => {
     })
 }
 
+
 const userLogin = async (req, res) => {
     res.render('user/login', { user: true })
 }
@@ -44,8 +51,8 @@ const userLoginPost = async (req, res) => {
 
     await userHelper.doLogin(req.body).then((response) => {
         if (response.loggedIn) {
-            req.session.loggedIn = true;
             req.session.user = response.user;
+            loginStatus=req.session.user
             res.redirect('/')
 
         } else {
@@ -68,20 +75,20 @@ const otpSending = async (req, res) => {
     const find = req.body;
     req.session.mobile = req.body.phone;
     console.log(req.body.phone);
-    await userSchema.findOne({phone:find.phone})
+    await userSchema.findOne({ phone: find.phone })
         .then(async (userData) => {
             if (userData) {
                 console.log(userData + "find mobile no from db");
                 req.session.tempUser = userData;
                 await twilio.sentOtp(find.phone);
                 res.render('user/otp-fill');
-            }else{
+            } else {
                 console.log("mobile not found");
                 res.redirect('/user-signup')
             }
         })
         .catch((error) => {
-            console.log(error+"ERROR");
+            console.log(error + "ERROR");
             res.redirect('/user-signup')
         })
 }
@@ -91,28 +98,30 @@ const otpSending = async (req, res) => {
 const otpVerifying = async (req, res) => {
     const phone = req.session.mobile;
     const otp = req.body.otp;
-    await twilio.verifyOtp(phone,otp)
-    .then((status)=>{
-        console.log(status);
-        if(status){
-            req.session.user=req.session.tempUser;
-            req.session.loggedIn=true;
-            console.log("loggin successfulllllllllllllllllllll");
-            res.redirect('/')
-        }else{
-            console.log("invalid otp");
-            res.redirect('/user-signup')
-        }
-    }).catch((error)=>{
-        console.log(error+"error occured");
-    })
+    await twilio.verifyOtp(phone, otp)
+        .then((status) => {
+            console.log(status);
+            if (status) {
+                req.session.user = req.session.tempUser;
+                loginStatus=req.session.user
+                console.log("loggin successfulllllllllllllllllllll");
+                res.redirect('/')
+            } else {
+                console.log("invalid otp");
+                res.redirect('/user-signup')
+            }
+        }).catch((error) => {
+            console.log(error + "error occured");
+        })
 }
 
 // -------------------------------------------------
 
 const userLogout = async (req, res) => {
     try {
-        req.session.loggedIn=false;
+        req.session.user = false;
+        loginStatus=false;
+        // req.session.loggedIn = false;
         res.redirect('/')
     } catch (error) {
         console.log(error);
@@ -127,7 +136,7 @@ const profile = async (req, res) => {
 
 
 const about = async (req, res) => {
-    res.render('user/about')
+    res.render('user/about',{loginStatus})
 }
 
 const laptop = async (req, res) => {
@@ -139,15 +148,15 @@ const mobileNum = async (req, res) => {
 }
 
 const wishlist = async (req, res) => {
-    res.render('user/wishlist')
+    res.render('user/wishlist',{loginStatus})
 }
 
 const cart = async (req, res) => {
-    res.render('user/cart')
+    res.render('user/cart',{loginStatus})
 }
 
 const checkout = async (req, res) => {
-    res.render('user/checkout')
+    res.render('user/checkout',{loginStatus})
 }
 
 // const quickView = async (req, res) => {
@@ -171,7 +180,7 @@ const orderDetails = async (req, res) => {
 }
 
 const product = async (req, res) => {
-    res.render('user/product')
+    res.render('user/product',{loginStatus})
 }
 
 const orderSummary = async (req, res) => {
@@ -179,11 +188,12 @@ const orderSummary = async (req, res) => {
 }
 
 const contact = async (req, res) => {
-    res.render('user/contact')
+    res.render('user/contact',{loginStatus})
 }
 
 
 module.exports = {
+    landingPage,
     userHome,
     profile,
     userSignup,
@@ -199,6 +209,7 @@ module.exports = {
     mobileNum,
     wishlist,
     cart,
+    error,
     checkout,
     // quickView,
     addAddress,

@@ -1,10 +1,14 @@
 const express=require('express');
 const router=express.Router();
+const {userAuthenticationCheck,userChecking } = require('../middlewares/sessionHandling');
 
-const userController=require('../controllers/userController')
+const userController=require('../controllers/userController');
 
 
-router.get('/',userController.userHome);
+
+router.get('/',userChecking,userController.userHome);
+
+router.get('/landing-page',userController.landingPage);
 
 router.get('/user-signup',userController.userSignup);
 
@@ -22,11 +26,11 @@ router.post('/otp-fill',userController.otpVerifying);
 
 router.get('/user-logout',userController.userLogout);
 
+router.get('/error',userController.error)
 
 
 
-
-router.get('/profile',userController.profile)
+router.get('/profile',userChecking,userController.profile)
 
 router.get('/about',userController.about);
 
@@ -38,7 +42,7 @@ router.get('/wishlist',userController.wishlist)
 
 router.get('/cart',userController.cart)
 
-router.get('/checkout',userController.checkout)
+router.get('/checkout',userChecking,userController.checkout)
 
 // router.get('/quickView',userController.quickView)
 
