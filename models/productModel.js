@@ -28,11 +28,9 @@ const productSchema=new mongoose.Schema({
         type:Boolean,
         default:true
     },
-    product_image:Array,
 },
 {
     timestamps:true,
-    collection:'products'
 })
 
 

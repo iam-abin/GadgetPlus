@@ -6,6 +6,7 @@ const serviceSid = process.env.TWILIO_SERVICE_SID;
 
 const client = require('twilio')(accountSid, authToken);
 
+
 module.exports = {
     sentOtp: (mobileNo) => {
         console.log(mobileNo);

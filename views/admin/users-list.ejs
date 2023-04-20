@@ -43,7 +43,7 @@
                                 <% for( let i = 0; i < users.length; i++ ) { %>
                                     <tr>
                                         <td width="10%"><%= i+1 %></td>
-                                        <td width="20%"><%= users[i].name %></td>
+                                        <td width="15%"><%= users[i].name %></td>
                                         <td width="20%"><%= users[i].email %></td>
                                         <td width="15%"><%= users[i].phone %></td>
                                         <% if (users[i].isActive) { %>
@@ -52,8 +52,14 @@
                                             <td><span class="badge rounded-pill alert-danger">inActive</span></td>
                                         <% } %>
 
-                                        <td class="text-end" width="15%">
-                                            <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">Block</a>
+                                        <td class="text-end" width="20%">
+                                            <% if (users[i].isActive) { %>
+                                                <a href="/admin/block-user/<%= users[i]._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">Block</a>
+                                             
+                                            <% } else {%>
+                                                <a href="/admin/unBlock-user/<%= users[i]._id %>" class="btn btn-sm btn-brand btn-success rounded font-sm mt-15">Unblock</a>
+                                            <% } %>
+
                                             <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
                                         </td>
                                     </tr>

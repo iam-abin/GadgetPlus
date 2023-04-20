@@ -66,7 +66,7 @@ const userLoginPost = async (req, res) => {
 // otp login page
 const otpUser = (req, res) => {
     res.render('user/otp-form', {
-        user_header: true,
+        user_header: true,loginStatus,
     })
 }
 

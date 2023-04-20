@@ -41,6 +41,26 @@ const usersList = (req, res) => {
   
 };
 
+const blockUser=async (req,res)=>{
+  let userId=req.params.id;
+  await adminHelper.blockUser(userId)
+  .then((result)=>{
+    res.redirect("/admin/users-List")
+  }).catch((error)=>{
+    console.log(error);
+  })
+}
+
+const unBlockUser=async(req,res)=>{
+  let userId=req.params.id;
+  await adminHelper.unBlockUser(userId)
+  .then((result)=>{
+    res.redirect("/admin/users-List")
+  }).catch((error)=>{
+    console.log(error);
+  })
+}
+
 const productList = (req, res) => {
   res.render("admin/products-list", {
     layout: "layouts/adminLayout",
@@ -51,6 +71,13 @@ const productList = (req, res) => {
 
 const addProduct = (req, res) => {
   res.render("admin/add-product", {
+    layout: "layouts/adminLayout",
+    // admin: false,
+  });
+};
+
+const productCategory = (req, res) => {
+  res.render("admin/product-categories", {
     layout: "layouts/adminLayout",
     // admin: false,
   });
@@ -86,8 +113,11 @@ module.exports = {
   adminLoginPost,
   adminLogout,
   usersList,
+  blockUser,
+  unBlockUser,
   productList,
   addProduct,
+  productCategory,
   orders,
   banners,
   coupons,
