@@ -54,13 +54,13 @@
 
                                         <td class="text-end" width="20%">
                                             <% if (users[i].isActive) { %>
-                                                <a href="/admin/block-user/<%= users[i]._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">Block</a>
+                                                <a href="/admin/block-user/<%= users[i]._id %>" class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"> Block </a>
                                              
                                             <% } else {%>
-                                                <a href="/admin/unBlock-user/<%= users[i]._id %>" class="btn btn-sm btn-brand btn-success rounded font-sm mt-15">Unblock</a>
+                                                <a href="/admin/unBlock-user/<%= users[i]._id %>" class="btn btn-sm btn-info  rounded font-sm mt-15">Unblock</a>
                                             <% } %>
 
-                                            <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
+                                            <a href="/admin/userProfile/<%= users[i]._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
                                         </td>
                                     </tr>
                                 <% } %>

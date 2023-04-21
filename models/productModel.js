@@ -5,25 +5,26 @@ const productSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    image:[{
-        type:String,
-        required:true
-    }],
-    product_category:{
-        type:String,
-        required:true
-    },
-    product_price:{
-        type:Number,
-        required:true
-    },
-    product_quantity:{
-        type:Number,
-        required:true
-    },
     product_description:{
         type:String
     },
+    // image:[{
+    //     type:String,
+    //     required:true
+    // }],
+    // product_category:{
+    //     type:String,
+    //     required:true
+    // },
+    product_price:{
+        type:String,
+        required:true
+    },
+    product_quantity:{
+        type:String,
+        required:true
+    },
+    
     product_status:{
         type:Boolean,
         default:true

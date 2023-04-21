@@ -1,7 +1,12 @@
 <section class="content-main">
     <div class="content-header">
-        <h2 class="content-title">Product List</h2>
-        <a href="/admin/add-product"> <button type="button" class="btn btn-primary">Add Product +</button></a>
+        <h2 class="content-title">Coupon Management</h2>
+        <div>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                data-bs-whatever="@getbootstrap">Add Coupon +</button>
+
+        </div>
 
     </div>
     <div class="card mb-4">
@@ -40,25 +45,24 @@
                             <th>Discount</th>
                             <th>Image</th>
                             <th>Update</th>
-                            <th > Status </th>
+                            <th> Remove </th>
                         </tr>
                     </thead>
                     <tbody>
-                       <% for( let i = 0; i < products.length; i++ ) { %>
                         <tr class="text-left">
-                            <td width="15%"><%= products[i].product_name %></td>
-                            <td width="10%"><%= products[i].product_description %></td>
+                            <td width="15%">i phone 14 pro max</td>
+                            <td width="10%">Mobile</td>
                             <td width="10%">Apple</td>
-                            <td width="10%"><%= products[i].product_price %></td>
+                            <td width="10%">120000</td>
                             <td width="10%">7</td>
                             <td width="10%">1000</td>
                             <td width="10%">Image</td>
-                            <td width="10%"><a href="/admin/block-user/" class="btn btn-danger btn-sm btn-brand rounded font-sm mt-15">Edit</a></td>
-                            <td > <a href="/admin/block-user/" class="btn btn-sm btn-brand rounded font-sm mt-15">Delete</a> </td>
-                            
+                            <td width="10%"><a href="/admin/block-user/"
+                                    class="btn btn-sm btn-success rounded font-sm mt-15">Edit</a></td>
+                            <td> <a href="/admin/block-user/"
+                                    class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a> </td>
+
                         </tr>
-                       <% } %>
-                        
 
                     </tbody>
                 </table> <!-- table-responsive.// -->
@@ -81,3 +85,37 @@
 </section> <!-- content-main end// -->
 
 
+<!-- Modal -->
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Coupon Code</label>
+                        <input type="text" class="form-control" name="categoryName" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Discount</label>
+                        <textarea class="form-control" name="categoryDescription" id="message-text"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Expired On</label>
+                        <input type="text" class="form-control" name="categoryName" id="recipient-name">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create Coupon</button>
+            </div>
+        </div>
+    </div>
+</div>

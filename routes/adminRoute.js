@@ -20,13 +20,21 @@ router.get('/product',adminChecking,adminController.productList);
 
 router.get('/add-product',adminChecking,adminController.addProduct);
 
-router.get('/product-categories',adminChecking,adminController.productCategory);
+router.post('/add-product',adminChecking,adminController.postAddProduct);
+
+router.get('/product-categories',adminChecking,adminController.productCategory); 
+
+router.get('/add-productCategory',adminChecking,adminController.addProductCategory);
+
+router.post('/add-productCategory',adminChecking,adminController.postAddProductCategory);
 
 router.get('/orders',adminChecking,adminController.orders);
 
 router.get('/banner',adminChecking,adminController.banners);
 
 router.get('/coupon',adminChecking,adminController.coupons);
+
+router.get('/userProfile/:id',adminChecking,adminController.userProfile);
 
 router.get('/Logout',adminController.adminLogout)
 

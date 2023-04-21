@@ -4,10 +4,6 @@
                 <div class="col-9">
                     <div class="content-header">
                         <h2 class="content-title">Add New Product</h2>
-                        <div>
-                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-                            <button class="btn btn-md rounded font-sm hover-up">Publich</button>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -16,77 +12,37 @@
                             <h4>Basic</h4>
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form action="/admin/add-product" method="post">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name">
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Full description</label>
-                                    <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Regular price</label>
-                                            <div class="row gx-2">
-                                                <input placeholder="$" type="text" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Promotional price</label>
-                                            <input placeholder="$" type="text" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="form-label">Currency</label>
-                                        <select class="form-select">
-                                            <option> USD </option>
-                                            <option> EUR </option>
-                                            <option> RUBL </option>
-                                        </select>
-                                    </div>
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input type="text" name="product_name" placeholder="Type here" class="form-control" id="product_name">
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label">Tax rate</label>
-                                    <input type="text" placeholder="%" class="form-control" id="product_name">
+                                    <label class="form-label">Product description</label>
+                                    <textarea placeholder="Type here" name="product_description" class="form-control" rows="4"></textarea>
                                 </div>
-                                <label class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label"> Make a template </span>
-                                </label>
-                            </form>
-                        </div>
-                    </div> <!-- card end// -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Shipping</h4>
-                        </div>
-                        <div class="card-body">
-                            <form>
+                               
+                                <div class="mb-4">
+                                    <label class="form-label" for="product_price">Price</label>
+                                    <input type="text" placeholder="%" name="price" class="form-control" id="product_price">
+                                </div>
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mb-4">
-                                            <label for="product_name" class="form-label">Width</label>
-                                            <input type="text" placeholder="inch" class="form-control" id="product_name">
+                                            <label for="product_quantity" class="form-label">Quantity</label>
+                                            <input type="text" name="quantity" placeholder="inch" class="form-control" id="product_quantity">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-4">
-                                            <label for="product_name" class="form-label">Height</label>
-                                            <input type="text" placeholder="inch" class="form-control" id="product_name">
+                                            <label for="product_discount" class="form-label">Discount</label>
+                                            <input type="text" name="discount" placeholder="inch" class="form-control" id="product_discount">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Weight</label>
-                                    <input type="text" placeholder="gam" class="form-control" id="product_name">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Shipping fees</label>
-                                    <input type="text" placeholder="$" class="form-control" id="product_name">
+                                    <div>
+                                        <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add Product</button> <!-- ms-auto d-block to move button to right-->
+                                    </div>
+
                                 </div>
                             </form>
                         </div>

@@ -1,5 +1,6 @@
 const userSchema = require("../models/userModel");
 const adminHelper = require("../helpers/adminHelper");
+const productHelper=require("../helpers/productHelper")
 
 const email = "admin@gmail.com";
 const password = "123";
@@ -26,47 +27,52 @@ const adminLoginPost = async (req, res) => {
 };
 
 const usersList = (req, res) => {
-  
-    adminHelper.findUsers().then((response) => {
-      console.log(response);
-      res.render("admin/users-list", {
-        layout: "layouts/adminLayout",
-        // admin: false,
-        users: response,
-      });
-    }).catch((error)=>{
-      console.log("errorrrrrrrrrrrrrrrr");
-      console.log(error);
+
+  adminHelper.findUsers().then((response) => {
+    console.log(response);
+    res.status(200).render("admin/users-list", {
+      layout: "layouts/adminLayout",
+      // admin: false,
+      users: response,
     });
-  
+  }).catch((error) => {
+    console.log("errorrrrrrrrrrrrrrrr");
+    console.log(error);
+  });
+
 };
 
-const blockUser=async (req,res)=>{
-  let userId=req.params.id;
+const blockUser = async (req, res) => {
+  let userId = req.params.id;
   await adminHelper.blockUser(userId)
-  .then((result)=>{
-    res.redirect("/admin/users-List")
-  }).catch((error)=>{
-    console.log(error);
-  })
+    .then((result) => {
+      console.log(result);
+      res.redirect("/admin/users-List")
+    }).catch((error) => {
+      console.log(error);
+    })
 }
 
-const unBlockUser=async(req,res)=>{
-  let userId=req.params.id;
+const unBlockUser = async (req, res) => {
+  let userId = req.params.id;
   await adminHelper.unBlockUser(userId)
-  .then((result)=>{
-    res.redirect("/admin/users-List")
-  }).catch((error)=>{
-    console.log(error);
-  })
+    .then((result) => {
+      res.redirect("/admin/users-List")
+    }).catch((error) => {
+      console.log(error);
+    })
 }
 
 const productList = (req, res) => {
-  res.render("admin/products-list", {
-    layout: "layouts/adminLayout",
-    // admin: false,
-
-  });
+  productHelper.getAllProducts()
+  .then((response)=>{
+    console.log(response);
+    res.render("admin/products-list", {
+      layout: "layouts/adminLayout",
+      products:response,
+    });
+  })
+  
 };
 
 const addProduct = (req, res) => {
@@ -76,15 +82,50 @@ const addProduct = (req, res) => {
   });
 };
 
+const postAddProduct=(req, res) => {
+  console.log(req.body);
+  productHelper.addProductToDb(req.body)
+  .then((response)=>{
+    res.status(500).redirect('/admin/product')
+  })
+};
+
+
 const productCategory = (req, res) => {
-  res.render("admin/product-categories", {
-    layout: "layouts/adminLayout",
-    // admin: false,
+  adminHelper.getAllcategory().then((category) => {
+    console.log(category);
+    res.render("admin/product-categories", {
+      layout: "layouts/adminLayout",
+      categories:category
+      // admin: false,
+    });
+  });
+
+  
+};
+
+const addProductCategory = (req, res) => {
+  res.render("admin/add-product-category", {
+    admin: true,
   });
 };
 
+
+const postAddProductCategory=(req, res) => {
+  adminHelper
+    .addCategoryTooDb(req.body)
+    .then((category) => {
+      res.status(200).redirect("/admin/product-categories");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
+
 const orders = (req, res) => {
-  res.render("admin/orders", { layout: "layouts/adminLayout"});
+  res.render("admin/orders", { layout: "layouts/adminLayout" });
 };
 
 const banners = (req, res) => {
@@ -92,7 +133,21 @@ const banners = (req, res) => {
 };
 
 const coupons = (req, res) => {
-  res.send("coupon");
+  res.render("admin/coupon", { layout: "layouts/adminLayout" });
+};
+
+const userProfile = (req, res) => {
+
+  adminHelper.findAUser(req.params.id)
+    .then((response) => {
+      res.render("admin/user-profile", {
+        layout: "layouts/adminLayout",
+        user: response
+      });
+    }).catch((error)=>{
+      console.log(error);
+    })
+
 };
 
 const adminLogout = (req, res) => {
@@ -117,9 +172,13 @@ module.exports = {
   unBlockUser,
   productList,
   addProduct,
+  postAddProduct,
   productCategory,
+  addProductCategory,
+  postAddProductCategory,
   orders,
   banners,
   coupons,
+  userProfile,
   // isLogged
 };

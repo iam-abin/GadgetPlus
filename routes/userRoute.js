@@ -6,7 +6,7 @@ const userController=require('../controllers/userController');
 
 
 
-router.get('/',userChecking,userController.userHome);
+router.get('/',userAuthenticationCheck,userController.userHome);
 
 router.get('/landing-page',userController.landingPage);
 
