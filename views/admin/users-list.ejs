@@ -1,116 +1,142 @@
-
-        <section class="content-main">
-            <div class="content-header">
-                <h2 class="content-title">Users</h2>
+<section class="content-main">
+    <div class="content-header">
+        <h2 class="content-title">Users</h2>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row gx-3">
+                <div class="col-lg-4 col-md-6 me-auto">
+                    <input type="text" placeholder="Search..." class="form-control">
+                </div>
+                <div class="col-lg-2 col-md-3 col-6">
+                    <select class="form-select">
+                        <option>Status</option>
+                        <option>Active</option>
+                        <option>Disabled</option>
+                        <option>Show all</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6">
+                    <select class="form-select">
+                        <option>Show 20</option>
+                        <option>Show 30</option>
+                        <option>Show 40</option>
+                    </select>
+                </div>
             </div>
-            <div class="card mb-4">
-                <header class="card-header">
-                    <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input type="text" placeholder="Search..." class="form-control">
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-6">
-                            <select class="form-select">
-                                <option>Status</option>
-                                <option>Active</option>
-                                <option>Disabled</option>
-                                <option>Show all</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-6">
-                            <select class="form-select">
-                                <option>Show 20</option>
-                                <option>Show 30</option>
-                                <option>Show 40</option>
-                            </select>
-                        </div>
-                    </div>
-                </header> <!-- card-header end// -->
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>NAME</th>
-                                    <th>EMAIL</th>
-                                    <th>MOBILE</th>
-                                    <th>STATUS</th>
-                                    <th class="text-end"> Action </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for( let i = 0; i < users.length; i++ ) { %>
-                                    <tr>
-                                        <td width="10%"><%= i+1 %></td>
-                                        <td width="15%"><%= users[i].name %></td>
-                                        <td width="20%"><%= users[i].email %></td>
-                                        <td width="15%"><%= users[i].phone %></td>
-                                        <td><span id="user-status-<%= users[i]._id %>" class="badge rounded-pill alert-success">Active</span></td>
-
-
-                                        <!-- <% if (users[i].isActive) { %>
-                                            <td><span id="user-status-<%= users[i]._id %>" class="badge rounded-pill alert-success">Active</span></td>
+        </header> <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>MOBILE</th>
+                            <th>STATUS</th>
+                            <th class="text-end"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for( let i=0; i < users.length; i++ ) { %>
+                            <tr>
+                                <td width="10%">
+                                    <%= i+1 %>
+                                </td>
+                                <td width="15%">
+                                    <%= users[i].name %>
+                                </td>
+                                <td width="20%">
+                                    <%= users[i].email %>
+                                </td>
+                                <td width="15%">
+                                    <%= users[i].phone %>
+                                </td>
+                                <td>
+                                    <% if (users[i].isActive) { %>
+                                        <span id="user-status-<%= users[i]._id %>"
+                                            class="badge rounded-pill alert-success">Active</span>
                                         <% }else {%>
-                                            <td><span class="badge rounded-pill alert-danger">inActive</span></td>
-                                        <% } %> -->
-
-                                        <td class="text-end" width="20%">
-                                            <button id="status-button-<%= users[i]._id %>"  onclick="changeUserStatus('<%= users[i]._id %>')" type="button" class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"><%= users[i].isActive %></button>
-
-
-                                            <!-- <% if (users[i].isActive) { %>
-                                                <a href="#"  onclick="changeUserStatus('<%= users[i]._id %>')" type="button" class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"> Block </a>
-                                                <!-- href="/admin/block-user/<%= users[i]._id %>" -->
-                                                
-                                            <% } else {%>
-                                                <a href="/admin/unBlock-user/<%= users[i]._id %>" class="btn btn-sm btn-info  rounded font-sm mt-15">Unblock</a>
+                                            <span id="user-status-<%= users[i]._id %>"
+                                                class="badge rounded-pill alert-danger">Blocked</span>
                                             <% } %>
 
+                                </td>
+
+                                <td class="text-end" width="20%">
+
+                                    <% if (users[i].isActive) { %>
+                                        <button id="status-button-<%= users[i]._id %>"
+                                            onclick="changeUserStatus('<%= users[i]._id %>')" type="button"
+                                            class="btn btn-sm btn-success rounded font-sm mt-15 ps-3 pe-3">Active</button>
+
+                                        <a href="/admin/userProfile/<%= users[i]._id %>"
+                                            class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
+                                    <% } else {%>
+                                        <button id="status-button-<%= users[i]._id %>"
+                                                onclick="changeUserStatus('<%= users[i]._id %>')" type="button"
+                                                class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3">Blocked</button>
+
+                                        <a href="/admin/userProfile/<%= users[i]._id %>"
+                                                class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <% } %>
 
 
-                                            <a href="/admin/userProfile/<%= users[i]._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a> -->
-                                        </td>
-                                    </tr>
-                                <% } %>
-                                
-                               
-                            </tbody>
-                        </table> <!-- table-responsive.// -->
-                    </div>
-                </div> <!-- card-body end// -->
-            </div> <!-- card end// -->
-            <div class="pagination-area mt-15 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-                    </ul>
-                </nav>
+                    </tbody>
+                </table> <!-- table-responsive.// -->
             </div>
-        </section> <!-- content-main end// -->
-       
-        <script>
-            function changeUserStatus(userId){
-                console.log('clicked', userId)
+        </div> <!-- card-body end// -->
+    </div> <!-- card end// -->
+    <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section> <!-- content-main end// -->
 
-                
+<script>
+    function changeUserStatus(userId) {
+        console.log('clicked', userId)
+
+        swal("Are you sure you want to do this?", {
+            buttons: ["No!", "Yes!"],
+        }).then((res) => {
+            if (res) {
                 $.ajax({
-                    url:'/admin/block-unBlock-user/' + userId,
-                    type:'get'
-                }).done(res =>{
-                    const status = document.getElementById(`status-button-${userId}`).innerHTML = res.user.isActive
-                    if(status){
-                        document.getElementById(`user-status-${userId}`).innerHTML = 'Active'
-                    } else {
-                        document.getElementById(`user-status-${userId}`).innerHTML = 'Blocked'
-                    }
-                }).fail(err =>{
+                    url: '/admin/block-unBlock-user/' + userId,
+                    type: 'get'
+                }).done(res => {
+                    swal("Successfull", `${res.message}`, "success").then(() => {
+                        location.reload();
+                    })
+                    // const status=res.user.isActive
+                    // console.log("------------------");
+                    // console.log(status);
+                    // console.log("------------------");
 
+                    // if (status) {
+                    //     document.getElementById(`user-status-${userId}`).innerHTML = 'Active'
+                    // } else {
+                    //     document.getElementById(`user-status-${userId}`).innerHTML = 'Blocked'
+                    // }
+                }).fail((err) => {
+                    swal("Successfull", `${err.responseJSON.message}`, "success").then(() => {
+                        location.reload();
+                    })
                 })
             }
-        </script>
+        })
+    }
+</script>
