@@ -30,18 +30,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>21</td>
-                                    <td><b>Men clothes</b></td>
-                                    <td>Men clothes</td>
-                                    <td width="20%">
-                                        <a href="/admin/block-user/"
-                                            class="btn btn-danger btn-sm btn-brand rounded font-sm mt-15">Edit</a>
-                                        <a href="/admin/block-user/"
-                                            class="btn btn-sm btn-brand rounded font-sm mt-15">Delete</a>
-                                    </td>
 
-                                </tr>
+                                <% for( let i = 0; i < categories.length; i++ ) { %>
+                                    <tr>
+                                        <td><%= i+1 %></td>
+                                        <td><b><%= categories[i].name %></b></td>
+                                        <td><%= categories[i].description %></td>
+                                        <td width="20%">
+                                            <a href="/admin/block-user/"
+                                                class="btn btn-danger btn-sm btn-brand rounded font-sm mt-15">Edit</a>
+                                            <a href="/admin/block-user/"
+                                                class="btn btn-sm btn-brand rounded font-sm mt-15">Delete</a>
+                                        </td>
+    
+                                    </tr>
+                                <% } %>
+                                
 
                             </tbody>
                         </table>

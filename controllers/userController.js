@@ -1,6 +1,7 @@
 
 const userSchema = require('../models/userModel');
 const userHelper = require('../helpers/userHelper');
+const productHelper=require('../helpers/productHelper')
 const twilio = require('../api/twilio')
 let loginStatus;
 
@@ -143,8 +144,12 @@ const laptop = async (req, res) => {
     res.render('user/laptop')
 }
 
-const mobileNum = async (req, res) => {
-    res.render('user/mobile')
+const Phone = async (req, res) => {
+    productHelper.getAllProducts()
+    .then((response)=>{
+        res.render('user/phones',{phones:response})
+    })
+    
 }
 
 const wishlist = async (req, res) => {
@@ -206,7 +211,7 @@ module.exports = {
     userLogout,
     about,
     laptop,
-    mobileNum,
+    Phone,
     wishlist,
     cart,
     error,

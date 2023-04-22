@@ -12,9 +12,9 @@ router.post('/adminLogin',adminController.adminLoginPost);
 
 router.get('/users-List',adminChecking,adminController.usersList);
 
-router.get('/block-user/:id',adminChecking,adminController.blockUser);
+router.get('/block-unblock-user/:id',adminChecking,adminController.blockUnBlockUser);
 
-router.get('/unBlock-user/:id',adminChecking,adminController.unBlockUser);
+// router.get('/unBlock-user/:id',adminChecking,adminController.unBlockUser);
 
 router.get('/product',adminChecking,adminController.productList); 
 
@@ -22,11 +22,15 @@ router.get('/add-product',adminChecking,adminController.addProduct);
 
 router.post('/add-product',adminChecking,adminController.postAddProduct);
 
+
+
 router.get('/product-categories',adminChecking,adminController.productCategory); 
 
-router.get('/add-productCategory',adminChecking,adminController.addProductCategory);
+// router.get('/add-productCategory',adminChecking,adminController.addProductCategory);
 
 router.post('/add-productCategory',adminChecking,adminController.postAddProductCategory);
+
+
 
 router.get('/orders',adminChecking,adminController.orders);
 

@@ -46,21 +46,30 @@
                                         <td width="15%"><%= users[i].name %></td>
                                         <td width="20%"><%= users[i].email %></td>
                                         <td width="15%"><%= users[i].phone %></td>
-                                        <% if (users[i].isActive) { %>
-                                            <td><span class="badge rounded-pill alert-success">Active</span></td>
+                                        <td><span id="user-status-<%= users[i]._id %>" class="badge rounded-pill alert-success">Active</span></td>
+
+
+                                        <!-- <% if (users[i].isActive) { %>
+                                            <td><span id="user-status-<%= users[i]._id %>" class="badge rounded-pill alert-success">Active</span></td>
                                         <% }else {%>
                                             <td><span class="badge rounded-pill alert-danger">inActive</span></td>
-                                        <% } %>
+                                        <% } %> -->
 
                                         <td class="text-end" width="20%">
-                                            <% if (users[i].isActive) { %>
-                                                <a href="/admin/block-user/<%= users[i]._id %>" class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"> Block </a>
-                                             
+                                            <button id="status-button-<%= users[i]._id %>"  onclick="changeUserStatus('<%= users[i]._id %>')" type="button" class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"><%= users[i].isActive %></button>
+
+
+                                            <!-- <% if (users[i].isActive) { %>
+                                                <a href="#"  onclick="changeUserStatus('<%= users[i]._id %>')" type="button" class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"> Block </a>
+                                                <!-- href="/admin/block-user/<%= users[i]._id %>" -->
+                                                
                                             <% } else {%>
                                                 <a href="/admin/unBlock-user/<%= users[i]._id %>" class="btn btn-sm btn-info  rounded font-sm mt-15">Unblock</a>
                                             <% } %>
 
-                                            <a href="/admin/userProfile/<%= users[i]._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
+
+
+                                            <a href="/admin/userProfile/<%= users[i]._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a> -->
                                         </td>
                                     </tr>
                                 <% } %>
@@ -85,3 +94,23 @@
             </div>
         </section> <!-- content-main end// -->
        
+        <script>
+            function changeUserStatus(userId){
+                console.log('clicked', userId)
+
+                
+                $.ajax({
+                    url:'/admin/block-unBlock-user/' + userId,
+                    type:'get'
+                }).done(res =>{
+                    const status = document.getElementById(`status-button-${userId}`).innerHTML = res.user.isActive
+                    if(status){
+                        document.getElementById(`user-status-${userId}`).innerHTML = 'Active'
+                    } else {
+                        document.getElementById(`user-status-${userId}`).innerHTML = 'Blocked'
+                    }
+                }).fail(err =>{
+
+                })
+            }
+        </script>

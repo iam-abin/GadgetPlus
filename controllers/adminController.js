@@ -42,26 +42,28 @@ const usersList = (req, res) => {
 
 };
 
-const blockUser = async (req, res) => {
+const blockUnBlockUser = async (req, res) => {
   let userId = req.params.id;
-  await adminHelper.blockUser(userId)
+  await adminHelper.blockOrUnBlockUser(userId)
     .then((result) => {
-      console.log(result);
-      res.redirect("/admin/users-List")
+      // console.log(result);
+      // res.redirect("/admin/users-List")
+      res.status(200).json({error: false, message:'User has been blocked', user: result})
     }).catch((error) => {
+      res.status(200).json({error: true, message:'Something went wrong', user: result})
       console.log(error);
     })
 }
 
-const unBlockUser = async (req, res) => {
-  let userId = req.params.id;
-  await adminHelper.unBlockUser(userId)
-    .then((result) => {
-      res.redirect("/admin/users-List")
-    }).catch((error) => {
-      console.log(error);
-    })
-}
+// const unBlockUser = async (req, res) => {
+//   let userId = req.params.id;
+//   await adminHelper.unBlockUser(userId)
+//     .then((result) => {
+//       res.redirect("/admin/users-List")
+//     }).catch((error) => {
+//       console.log(error);
+//     })
+// }
 
 const productList = (req, res) => {
   productHelper.getAllProducts()
@@ -104,11 +106,11 @@ const productCategory = (req, res) => {
   
 };
 
-const addProductCategory = (req, res) => {
-  res.render("admin/add-product-category", {
-    admin: true,
-  });
-};
+// const addProductCategory = (req, res) => {
+//   res.render("admin/add-product-category", {
+//     admin: true,
+//   });
+// };
 
 
 const postAddProductCategory=(req, res) => {
@@ -168,13 +170,13 @@ module.exports = {
   adminLoginPost,
   adminLogout,
   usersList,
-  blockUser,
-  unBlockUser,
+  blockUnBlockUser,
+  // unBlockUser,
   productList,
   addProduct,
   postAddProduct,
   productCategory,
-  addProductCategory,
+  // addProductCategory,
   postAddProductCategory,
   orders,
   banners,

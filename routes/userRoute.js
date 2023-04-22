@@ -36,7 +36,7 @@ router.get('/about',userController.about);
 
 router.get('/laptop',userController.laptop)
 
-router.get('/mobile',userController.mobileNum)
+router.get('/phone',userController.Phone)
 
 router.get('/wishlist',userController.wishlist)
 
