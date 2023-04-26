@@ -1,9 +1,9 @@
 <section class="content-main">
     <div class="row">
-        <form action="/admin/add-product" method="post" enctype="multipart/form-data">
+        <form action="/admin/edit-product/<%= product._id %>" method="post" enctype="multipart/form-data">
             <div class="col-9">
                 <div class="content-header">
-                    <h2 class="content-title">Add New Product</h2>
+                    <h2 class="content-title">Edit Product</h2>
                 </div>
             </div>
             <div class="row">
@@ -12,38 +12,45 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Product Name</label>
-                                <input type="text" name="product_name" placeholder="Type here" class="form-control"
+                                <input type="text" name="product_name" value="<%= product.product_name %>" placeholder="Type here" class="form-control"
                                     id="product_name">
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Product description</label>
-                                <textarea placeholder="Type here" name="product_description" class="form-control"
+                                <textarea placeholder="Type here" id="product_description" name="product_description" class="form-control"
                                     rows="4"></textarea>
                             </div>
 
                             <div class="mb-4">
+                                <label for="product_name" class="form-label">Product Category</label>
+                                <input type="text" name="product_category" value="<%= product.product_category %>" placeholder="Type here" class="form-control"
+                                    id="product_category">
+                            </div>
+
+                            <div class="mb-4">
                                 <label class="form-label" for="product_price">Price</label>
-                                <input type="text" placeholder="%" name="price" class="form-control" id="product_price">
+                                <input type="text" placeholder="%" value="<%= product.product_price %>" name="price" class="form-control" id="product_price">
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-4">
                                         <label for="product_quantity" class="form-label">Quantity</label>
-                                        <input type="text" name="quantity" placeholder="inch" class="form-control"
+                                        <input type="text" name="quantity" value="<%= product.product_quantity %>" placeholder="inch" class="form-control"
                                             id="product_quantity">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-4">
                                         <label for="product_discount" class="form-label">Discount</label>
-                                        <input type="text" name="discount" placeholder="inch" class="form-control"
+                                        <input type="text" name="discount" value="<%= product.product_discount %>" placeholder="inch" class="form-control"
                                             id="product_discount">
                                     </div>
                                 </div>
                                 <div>
                                     <button type="submit"
-                                        class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add
-                                        Product</button> <!-- ms-auto d-block to move button to right-->
+                                        class="btn ms-auto d-block btn-md rounded font-sm hover-up">Edit
+                                        Product</button> <!-- ms-auto d-block to move button to right--> 
+                                       
                                 </div>
 
                             </div>
@@ -56,22 +63,21 @@
                         <div class="card-body">
                             <div class="input-upload">
                                 <label class="form-label">Image</label>
+                                <img src="/product-images/<%= product.image %>" style="width: 100px; height: 72px;" alt="">
                                 <input class="form-control" type="file" name="img">
+
+                                <input type="hidden" value="<%= product.image %> " name="old_image">
                             </div>
 
                             <br>
                             <div class="row gx-2">
                                 <div class="col-sm-12 mb-3">
                                     <label class="form-label">Category</label>
-                                    <select class="form-select" name="product_category">
-
-                                        <% for( let i = 0; i < category.length; i++ ) { %>
-                                            <% if (category[i].status) { %>
-                                                <option value="<%= category[i]._id %>"> <%= category[i].name %> </option>
-                                            <% } %>
-                                           
-                                        <% } %>
-                                        
+                                    <select class="form-select">
+                                        <option> Phone </option>
+                                        <option>  Laptop </option>
+                                        <option> Tablet </option>
+                                        <option> SmartWatch </option>
                                     </select>
                                 </div>
                             </div> <!-- row.// -->
@@ -83,3 +89,8 @@
         </form>
     </div>
 </section> <!-- content-main end// -->
+
+
+<script>
+    document.getElementById("product_description").value = "<%= product.product_description || '' %>";
+  </script>

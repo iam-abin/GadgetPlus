@@ -29,6 +29,7 @@ app.use(express.urlencoded({extended:false}))  //for parsing form data
 app.use(express.json());  //for parsing json
 
 app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname,'uploads')));
 
 
 // // db connection 

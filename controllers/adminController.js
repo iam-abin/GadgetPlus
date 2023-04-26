@@ -1,6 +1,11 @@
-const userSchema = require("../models/userModel");
+// const userSchema = require("../models/userModel");
 const adminHelper = require("../helpers/adminHelper");
-const productHelper=require("../helpers/productHelper")
+const productHelper = require("../helpers/productHelper");
+const categoryHelper = require('../helpers/categoryHelper')
+
+// const productSchema=require('../models/productModel');
+// const categorySchema=require('../models/category');
+
 
 const email = "admin@gmail.com";
 const password = "123";
@@ -26,9 +31,9 @@ const adminLoginPost = async (req, res) => {
   }
 };
 
-const usersList = (req, res) => {
+const usersList = async (req, res) => {
 
-  adminHelper.findUsers().then((response) => {
+  await adminHelper.findUsers().then((response) => {
     console.log(response);
     res.status(200).render("admin/users-list", {
       layout: "layouts/adminLayout",
@@ -48,9 +53,13 @@ const blockUnBlockUser = async (req, res) => {
     .then((result) => {
       // console.log(result);
       // res.redirect("/admin/users-List")
-      res.status(200).json({error: false, message:'User has been blocked', user: result})
+      if (result.isActive) {
+        res.status(200).json({ error: false, message: 'User has been unBlocked', user: result })
+      } else {
+        res.status(200).json({ error: false, message: 'User has been Blocked', user: result })
+      }
     }).catch((error) => {
-      res.status(200).json({error: true, message:'Something went wrong', user: result})
+      res.status(200).json({ error: true, message: 'Something went wrong', user: result })
       console.log(error);
     })
 }
@@ -65,45 +74,112 @@ const blockUnBlockUser = async (req, res) => {
 //     })
 // }
 
+//--------------------------------------------------------------------------------
+
 const productList = (req, res) => {
-  productHelper.getAllProducts()
-  .then((response)=>{
-    console.log(response);
-    res.render("admin/products-list", {
+  productHelper.getAllProductsWithLookup()
+    .then((responseProduct) => {
+      // categoryHelper.getAllcategory()
+      //   .then((responseCategory) => {
+
+      console.log("products", responseProduct);
+      // console.log("category", responseCategory);
+
+      res.render("admin/products-list", {
+        layout: "layouts/adminLayout",
+        products: responseProduct,
+
+      })
+    })
+
+};
+
+// const productList = async (req, res) => {
+//   const products = await productSchema.find();
+//   const categories = await categorySchema.find();
+
+//   console.log(products);
+//   console.log("--------------------");
+//   res.render("admin/products-list", {
+//     layout: "layouts/adminLayout",
+//     products: products,
+//     category: categories,
+//   });
+
+// }
+
+//--------------------------------------------------------------------------------
+
+
+const addProduct = async (req, res) => {
+  categoryHelper.getAllcategory().then((response) => {
+    res.render("admin/add-product", {
       layout: "layouts/adminLayout",
-      products:response,
+      category: response,
+      // admin: false,
     });
   })
-  
+
 };
 
-const addProduct = (req, res) => {
-  res.render("admin/add-product", {
-    layout: "layouts/adminLayout",
-    // admin: false,
-  });
-};
-
-const postAddProduct=(req, res) => {
+const postAddProduct = (req, res) => {
   console.log(req.body);
-  productHelper.addProductToDb(req.body)
-  .then((response)=>{
-    res.status(500).redirect('/admin/product')
-  })
+  console.log(req.file);
+  productHelper.addProductToDb(req.body, req.file)
+    .then((response) => {
+      res.status(500).redirect('/admin/product')
+    })
 };
 
+const editProduct = (req, res) => {
+  productHelper.editAProduct(req.params.id)
+    .then((response) => {
+      if (response == '') {
+        res.status(401).redirect('/admin')
+      } else {
+        res.status(200).render('admin/edit-product', { product: response, layout: 'layouts/adminLayout' })
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+}
+
+const postEditProduct = (req, res) => {
+  console.log("new image");
+  console.log(req.file);
+  productHelper.postEditAProduct(req.body, req.params.id, req.file)
+    .then((response) => {
+      res.status(200).redirect('/admin/product')
+    })
+}
+
+const deleteProduct = (req, res) => {
+  console.log(req.params.id);
+  productHelper.softDeleteProduct(req.params.id).
+    then((result) => {
+      if (result) {
+        console.log(result);
+        if (result.product_status) {
+          res.status(200).json({ error: false, message: "product unblocked ", product: result })
+        } else {
+          res.status(200).json({ error: false, message: "product deleted", product: result })
+        }
+      } else {
+        res.status(401).json({ error: false, message: "error occurerd" })
+      }
+    })
+}
 
 const productCategory = (req, res) => {
-  adminHelper.getAllcategory().then((category) => {
+  categoryHelper.getAllcategory().then((category) => {
     console.log(category);
     res.render("admin/product-categories", {
       layout: "layouts/adminLayout",
-      categories:category
+      categories: category
       // admin: false,
     });
   });
-
-  
 };
 
 // const addProductCategory = (req, res) => {
@@ -113,8 +189,8 @@ const productCategory = (req, res) => {
 // };
 
 
-const postAddProductCategory=(req, res) => {
-  adminHelper
+const postAddProductCategory = (req, res) => {
+  categoryHelper
     .addCategoryTooDb(req.body)
     .then((category) => {
       res.status(200).redirect("/admin/product-categories");
@@ -146,7 +222,7 @@ const userProfile = (req, res) => {
         layout: "layouts/adminLayout",
         user: response
       });
-    }).catch((error)=>{
+    }).catch((error) => {
       console.log(error);
     })
 
@@ -175,7 +251,10 @@ module.exports = {
   productList,
   addProduct,
   postAddProduct,
+  editProduct,
+  postEditProduct,
   productCategory,
+  deleteProduct,
   // addProductCategory,
   postAddProductCategory,
   orders,

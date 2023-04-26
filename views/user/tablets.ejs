@@ -9,7 +9,7 @@
         <ul class="nav nav-pills nav-big nav-border-anim justify-content-center mb-2 mb-md-3" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="products-featured-link" data-toggle="tab" href="#products-featured-tab"
-                    role="tab" aria-controls="products-featured-tab" aria-selected="true">Mobile Phones</a>
+                    role="tab" aria-controls="products-featured-tab" aria-selected="true">Tablets</a>
             </li>
         </ul>
 
@@ -18,7 +18,7 @@
 
             <% for( let i=0; i < product.length; i++ ) { %>
 
-                <% if (product[i].product_status && product[i].category[0].name =='phone') { %>
+                <% if (product[i].product_status && product[i].category[0].name=='tab') { %>
                     <div class=" col-6 col-md-4 col-lg-3 d-flex product card product-2 text-center"
                         style="width: 10px; height: 500px;">
                         <figure class="product-media ">

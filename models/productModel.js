@@ -3,19 +3,19 @@ const mongoose=require('mongoose');
 const productSchema=new mongoose.Schema({
     product_name:{
         type:String,
-        required:true
+        required:true,
+        unique:true,
     },
     product_description:{
         type:String
     },
-    // image:[{
-    //     type:String,
-    //     required:true
-    // }],
-    // product_category:{
-    //     type:String,
-    //     required:true
-    // },
+    
+    product_category:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"categories",
+        required:true,
+        // unique:true,
+    },
     product_price:{
         type:String,
         required:true
@@ -24,7 +24,14 @@ const productSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    
+    product_discount:{
+        type:String,
+        required:true
+    },
+    image:{
+        type:String,
+        required:true
+    },
     product_status:{
         type:Boolean,
         default:true

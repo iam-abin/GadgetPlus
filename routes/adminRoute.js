@@ -2,7 +2,9 @@ const express=require('express');
 const router=express.Router();
 
 const {adminAuthenticationChecking,adminChecking} = require('../middlewares/sessionHandling')
+const multer=require('../middlewares/multer')
 const adminController=require('../controllers/adminController');
+const productHelper = require('../helpers/productHelper');
 
 
 
@@ -16,11 +18,18 @@ router.get('/block-unblock-user/:id',adminChecking,adminController.blockUnBlockU
 
 // router.get('/unBlock-user/:id',adminChecking,adminController.unBlockUser);
 
+
 router.get('/product',adminChecking,adminController.productList); 
 
 router.get('/add-product',adminChecking,adminController.addProduct);
 
-router.post('/add-product',adminChecking,adminController.postAddProduct);
+router.post('/add-product',adminChecking,multer.productUpload,adminController.postAddProduct);
+
+router.get('/edit-product/:id',adminChecking,adminController.editProduct);
+
+router.post('/edit-product/:id',adminChecking,multer.productUpload,adminController.postEditProduct)
+
+router.get('/delete-product/:id',adminChecking,adminController.deleteProduct);
 
 
 
@@ -29,6 +38,8 @@ router.get('/product-categories',adminChecking,adminController.productCategory);
 // router.get('/add-productCategory',adminChecking,adminController.addProductCategory);
 
 router.post('/add-productCategory',adminChecking,adminController.postAddProductCategory);
+
+
 
 
 

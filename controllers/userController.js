@@ -27,13 +27,13 @@ const error = (req, res) => {
     res.render('/error')
 }
 
+//---------------------------------------------------------
 const userSignup = async (req, res) => {
     res.render('user/user-signup', { user: true })
 }
 
 
 const userSignupPost = async (req, res) => {
-
     userHelper.doSignup(req.body).then((response) => {
         if (!response.userExist) {
             res.redirect('/user-login')
@@ -42,10 +42,14 @@ const userSignupPost = async (req, res) => {
         }
     })
 }
+//---------------------------------------------------------
 
+
+//---------------------------------------------------------
 
 const userLogin = async (req, res) => {
-    res.render('user/login', { user: true })
+    res.render('user/login', { user: true ,loggedInError:req.session.loggedInError})
+    req.session.loggedInError=false;
 }
 
 const userLoginPost = async (req, res) => {
@@ -57,12 +61,14 @@ const userLoginPost = async (req, res) => {
             res.redirect('/')
 
         } else {
-            res.redirect('/user-signup')
+            req.session.loggedInError=response.loggedInError;
+            res.redirect('/user-login')
         }
     })
 }
 
-// -------------------------------------------------
+//---------------------------------------------------------
+
 
 // otp login page
 const otpUser = (req, res) => {
@@ -140,16 +146,33 @@ const about = async (req, res) => {
     res.render('user/about',{loginStatus})
 }
 
-const laptop = async (req, res) => {
-    res.render('user/laptop')
+const Phone = async (req, res) => {
+    productHelper.getAllProductsWithLookup()
+    .then((response)=>{
+        res.render('user/phones',{product:response})
+    }) 
 }
 
-const Phone = async (req, res) => {
-    productHelper.getAllProducts()
+const laptop = async (req, res) => {
+    productHelper.getAllProductsWithLookup()
     .then((response)=>{
-        res.render('user/phones',{phones:response})
+        console.log(response);
+        res.status(200).render('user/laptops',{product:response})
     })
-    
+}
+
+const tab = async (req, res) => {
+    productHelper.getAllProductsWithLookup()
+    .then((response)=>{
+        res.status(200).render('user/tablets',{product:response})
+    })
+}
+
+const smartWatch = async (req, res) => {
+    productHelper.getAllProductsWithLookup()
+    .then((response)=>{
+        res.render('user/smart-watches',{product:response})
+    }) 
 }
 
 const wishlist = async (req, res) => {
@@ -196,6 +219,9 @@ const contact = async (req, res) => {
     res.render('user/contact',{loginStatus})
 }
 
+const notFound404 = async (req, res) => {
+    res.render('user/404')
+}
 
 module.exports = {
     landingPage,
@@ -210,8 +236,10 @@ module.exports = {
     otpVerifying,
     userLogout,
     about,
-    laptop,
     Phone,
+    laptop,
+    tab,
+    smartWatch,
     wishlist,
     cart,
     error,
@@ -223,6 +251,7 @@ module.exports = {
     orderDetails,
     orderSummary,
     contact,
-    product
+    product,
+    notFound404,
 
 }

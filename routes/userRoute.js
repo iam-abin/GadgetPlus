@@ -34,9 +34,13 @@ router.get('/profile',userChecking,userController.profile)
 
 router.get('/about',userController.about);
 
-router.get('/laptop',userController.laptop)
+router.get('/phone',userController.Phone);
 
-router.get('/phone',userController.Phone)
+router.get('/laptop',userController.laptop);
+
+router.get('/tab',userController.tab);
+
+router.get('/smartWatch',userController.smartWatch);
 
 router.get('/wishlist',userController.wishlist)
 
@@ -62,5 +66,6 @@ router.get('/contact',userController.contact)
 
 
 
+router.get('/404',userController.notFound404)
 
 module.exports=router;

@@ -34,32 +34,43 @@
                         <tr class="text-left">
                             <th>Name</th>
                             <th>Category</th>
-                            <th>Sub category</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Discount</th>
                             <th>Image</th>
                             <th>Update</th>
-                            <th > Status </th>
+                            <th >Status</th>
                         </tr>
                     </thead>
                     <tbody>
+
                        <% for( let i = 0; i < products.length; i++ ) { %>
-                        <tr class="text-left">
-                            <td width="15%"><%= products[i].product_name %></td>
-                            <td width="10%"><%= products[i].product_description %></td>
-                            <td width="10%">Apple</td>
-                            <td width="10%"><%= products[i].product_price %></td>
-                            <td width="10%">7</td>
-                            <td width="10%">1000</td>
-                            <td width="10%">Image</td>
-                            <td width="10%"><a href="/admin/block-user/" class="btn btn-danger btn-sm btn-brand rounded font-sm mt-15">Edit</a></td>
-                            <td > <a href="/admin/block-user/" class="btn btn-sm btn-brand rounded font-sm mt-15">Delete</a> </td>
-                            
-                        </tr>
-                       <% } %>
+                    
+                            <tr>
+                                <%= console.log(products,"uhfiuherfue") %>
+                                <td style="vertical-align: middle;" width="17%"><%= products[i].product_name %></td>
+                                <td style="vertical-align: middle;" width="12%"><%= products[i].category[0].name  %></td>
+                                <td style="vertical-align: middle;" width="12%"><%= products[i].product_price %></td>
+                                <td style="vertical-align: middle;" width="12%"><%= products[i].product_quantity %></td>
+                                <td style="vertical-align: middle;" width="12%"><%= products[i].product_discount %></td>
+                                
+                                <td style="vertical-align: middle;" width="10%"><img class="img-thumbnail" width="80" src="/product-images/<%= products[i].image %>" alt="no image avalable"></td>
+                               
+                                <td style="vertical-align: middle;" width="10%"><a href="/admin/edit-product/<%= products[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
+    
+                                <% if (products[i].product_status) { %>
+                                <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i]._id %>')" class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</button> </td>
+                                 
+                                <% } else {%>
+                                    <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i]._id %>')" class="btn btn-sm btn-success rounded font-sm mt-15">unBlock</button> </td>
+                                
+                                <% } %>
+    
+                            </tr>
                         
 
+                        <% } %>
+                        
                     </tbody>
                 </table> <!-- table-responsive.// -->
             </div>
@@ -81,3 +92,26 @@
 </section> <!-- content-main end// -->
 
 
+<script>
+    function changeProductStatus(productId){
+        console.log("clicked",productId);
+        swal("Are you sure you want to do this?", {
+            buttons: ["No!", "Yes!"],
+        }).then((res)=>{
+            if(res){
+                $.ajax({
+                    url:"/admin/delete-product/"+productId,
+                    type:'get' 
+                }).done((res)=>{
+                    swal("successful",`${res.message}`,"success").then(()=>{
+                        location.reload();
+                    })
+                }).fail((err)=>{
+                    swal("successful",`${res.message}`,"success").then(()=>{
+                        location.reload()
+                    })
+                })
+            }
+        })
+    }
+</script>
