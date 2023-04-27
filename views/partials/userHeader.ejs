@@ -84,12 +84,20 @@
                                     </li>
     
                                     <li>
+                                        
                                         <a class="sf-with-ul">Product</a>
                                         <ul>
-                                            <li><a href="/phone">Mobile</a></li>
+                                        
+                                        <% for( let i = 0; i < categoryStore.length; i++ ) { %>
+                                            <li><a href="/phone"><%= categoryStore[i].name %></a></li>
+                                        <% } %>
+
+                                        
+                                      
+                                            <!-- <li><a href="/phone">Mobile</a></li>
                                             <li><a href="/laptop">Laptop</a></li>
                                             <li><a href="/tab">Tablet</a></li>
-                                            <li><a href="/smartWatch">Smart Watch</a></li>
+                                            <li><a href="/smartWatch">Smart Watch</a></li> -->
 
                                         </ul>
                                     </li>

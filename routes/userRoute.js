@@ -6,15 +6,17 @@ const userController=require('../controllers/userController');
 
 
 
-router.get('/',userAuthenticationCheck,userController.userHome);
+router.get('/',userAuthenticationCheck,userController.landingPage);
 
-router.get('/landing-page',userController.landingPage);
+// router.get('/landing-page',userController.landingPage);
+
+router.get('/user-home',userChecking,userController.userHome);
 
 router.get('/user-signup',userController.userSignup);
 
 router.post('/user-signup',userController.userSignupPost);
 
-router.get('/user-login',userController.userLogin);
+router.get('/user-login',userAuthenticationCheck,userController.userLogin);
 
 router.post('/user-login',userController.userLoginPost);
 

@@ -10,6 +10,8 @@ const productHelper = require('../helpers/productHelper');
 
 router.get('/',adminAuthenticationChecking,adminController.adminLogin);
 
+router.get('/admin-home',adminChecking,adminController.adminHome)
+
 router.post('/adminLogin',adminController.adminLoginPost);
 
 router.get('/users-List',adminChecking,adminController.usersList);
@@ -35,12 +37,11 @@ router.get('/delete-product/:id',adminChecking,adminController.deleteProduct);
 
 router.get('/product-categories',adminChecking,adminController.productCategory); 
 
-// router.get('/add-productCategory',adminChecking,adminController.addProductCategory);
-
 router.post('/add-productCategory',adminChecking,adminController.postAddProductCategory);
 
+router.get('/edit-productCategory/:id',adminChecking,adminController.editProductCategory);
 
-
+router.get('/delete-productCategory/:id',adminChecking,adminController.deleteProductCategory)
 
 
 router.get('/orders',adminChecking,adminController.orders);

@@ -3,12 +3,12 @@
 const userAuthenticationCheck = async (req, res, next) =>{
     try {
         if(req.session.user){
-            next()
+            res.status(200).redirect('/user-home')
         } else {
-            res.status(200).redirect('/landing-page')
+            next()
         }
     } catch (error) {
-        res.status(500).send({message: "Inernal error occured"})
+        res.status(500).redirect('/error')
     }
 }
 
@@ -18,22 +18,23 @@ const userChecking = async (req, res, next ) =>{
         if(req.session.user){
             next()
         } else {
-            res.status(200).redirect('/landing-page')
+            res.status(200).redirect('/')
         }
     } catch (error) {
-        res.status(500).send({message: "Inernal error occured"})
+        res.status(500).redirect('/error')
+
     }
 }
 
 const adminAuthenticationChecking=async (req,res,next)=>{
     try{
         if(req.session.admin){
-            res.render("admin/admin-home", { layout: "layouts/adminLayout"});
+            res.redirect('/admin/admin-home')
         }else{
             next()
         }
     }catch(error){
-        res.status(500).send("Inernal error occured")
+        res.status(500).redirect('/error')
     }
 }
 
@@ -45,7 +46,7 @@ const adminChecking=(req,res,next)=>{
             res.status(200).redirect('/admin')
         }
     } catch (error) {
-        res.status(500).send("Inernal error occured")
+        res.status(500).redirect('/error')
     }
 }
 

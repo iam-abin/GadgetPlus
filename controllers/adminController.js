@@ -31,6 +31,10 @@ const adminLoginPost = async (req, res) => {
   }
 };
 
+const adminHome=(req,res)=>{
+  res.render("admin/admin-home", { layout: "layouts/adminLayout"});
+}
+
 const usersList = async (req, res) => {
 
   await adminHelper.findUsers().then((response) => {
@@ -201,6 +205,22 @@ const postAddProductCategory = (req, res) => {
 };
 
 
+const editProductCategory=(req,res)=>{
+  categoryHelper.getAcategory(req.params.id)
+  .then((response)=>{
+    console.log("response---",response,"ooooooo");
+    res.status(200).json({category:response})
+
+  })
+}
+
+const deleteProductCategory=(req,res)=>{
+  categoryHelper.softDeleteAProductCategory(req.params._id)
+  .then((response)=>{
+    resolve(response)
+  })
+}
+
 
 const orders = (req, res) => {
   res.render("admin/orders", { layout: "layouts/adminLayout" });
@@ -244,6 +264,7 @@ const adminLogout = (req, res) => {
 module.exports = {
   adminLogin,
   adminLoginPost,
+  adminHome,
   adminLogout,
   usersList,
   blockUnBlockUser,
@@ -257,6 +278,8 @@ module.exports = {
   deleteProduct,
   // addProductCategory,
   postAddProductCategory,
+  editProductCategory,
+  deleteProductCategory,
   orders,
   banners,
   coupons,
