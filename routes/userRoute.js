@@ -1,10 +1,12 @@
 const express=require('express');
 const router=express.Router();
+
 const {userAuthenticationCheck,userChecking } = require('../middlewares/sessionHandling');
+const categorySupply = require('../middlewares/categoryFetching');
 
 const userController=require('../controllers/userController');
 
-
+router.use(categorySupply);
 
 router.get('/',userAuthenticationCheck,userController.landingPage);
 
@@ -12,7 +14,7 @@ router.get('/',userAuthenticationCheck,userController.landingPage);
 
 router.get('/user-home',userChecking,userController.userHome);
 
-router.get('/user-signup',userController.userSignup);
+router.get('/user-signup',userAuthenticationCheck,userController.userSignup);
 
 router.post('/user-signup',userController.userSignupPost);
 
@@ -20,7 +22,7 @@ router.get('/user-login',userAuthenticationCheck,userController.userLogin);
 
 router.post('/user-login',userController.userLoginPost);
 
-router.get('/otp-user',userController.otpUser);
+router.get('/otp-user',userAuthenticationCheck,userController.otpUser);
 
 router.post('/otp-user',userController.otpSending);
 
@@ -36,33 +38,31 @@ router.get('/profile',userChecking,userController.profile)
 
 router.get('/about',userController.about);
 
-router.get('/phone',userController.Phone);
+router.get('/viewProduct/:id',userController.viewProduct);
 
-router.get('/laptop',userController.laptop);
+// router.get('/laptop',userController.laptop);
 
-router.get('/tab',userController.tab);
+// router.get('/tab',userController.tab);
 
-router.get('/smartWatch',userController.smartWatch);
+// router.get('/smartWatch',userController.smartWatch);
 
-router.get('/wishlist',userController.wishlist)
+router.get('/wishlist',userChecking,userController.wishlist)
 
-router.get('/cart',userController.cart)
+router.get('/cart',userChecking,userController.cart)
 
 router.get('/checkout',userChecking,userController.checkout)
 
 // router.get('/quickView',userController.quickView)
 
-router.get('/add-address',userController.addAddress)
+router.get('/add-address',userChecking,userController.addAddress)
 
-router.get('/edit-address',userController.editAddress)
+router.get('/edit-address',userChecking,userController.editAddress)
 
-router.get('/payment',userController.payment,)
+router.get('/payment',userChecking,userController.payment,)
 
-router.get('/contact',userController.contact)
+router.get('/order-details',userChecking,userController.orderDetails)
 
-router.get('/order-details',userController.orderDetails)
-
-router.get('/order-summery',userController.orderSummary)
+router.get('/order-summery',userChecking,userController.orderSummary)
 
 router.get('/contact',userController.contact)
 

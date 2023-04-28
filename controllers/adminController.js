@@ -32,7 +32,11 @@ const adminLoginPost = async (req, res) => {
 };
 
 const adminHome=(req,res)=>{
-  res.render("admin/admin-home", { layout: "layouts/adminLayout"});
+  try{
+    res.render("admin/admin-home", { layout: "layouts/adminLayout"});
+  }catch{
+    res.status(500)
+  }
 }
 
 const usersList = async (req, res) => {
@@ -83,9 +87,6 @@ const blockUnBlockUser = async (req, res) => {
 const productList = (req, res) => {
   productHelper.getAllProductsWithLookup()
     .then((responseProduct) => {
-      // categoryHelper.getAllcategory()
-      //   .then((responseCategory) => {
-
       console.log("products", responseProduct);
       // console.log("category", responseCategory);
 
@@ -135,7 +136,9 @@ const postAddProduct = (req, res) => {
     })
 };
 
-const editProduct = (req, res) => {
+const editProduct = async (req, res) => {
+
+  // let category=await categoryHelper.getAcategory()
   productHelper.editAProduct(req.params.id)
     .then((response) => {
       if (response == '') {

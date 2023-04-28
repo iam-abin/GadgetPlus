@@ -88,9 +88,9 @@
                                         <a class="sf-with-ul">Product</a>
                                         <ul>
                                         
-                                        <% for( let i = 0; i < categoryStore.length; i++ ) { %>
-                                            <li><a href="/phone"><%= categoryStore[i].name %></a></li>
-                                        <% } %>
+                                        <% allCategories.forEach(category => { %>
+                                            <li><a href="/viewProduct/<%= category._id %>"><%= category.name %></a></li>
+                                        <% }) %>
 
                                         
                                       
@@ -193,7 +193,6 @@
                             </div><!-- End .cart-dropdown -->
     
                             <% if (locals.loginStatus) { %>
-                                
                                     <div>
                                         <ul class="menu sf-arrows">
                                             <li>

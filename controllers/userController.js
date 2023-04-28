@@ -1,20 +1,15 @@
 
 const userSchema = require('../models/userModel');
 const userHelper = require('../helpers/userHelper');
-const productHelper=require('../helpers/productHelper')
-const categoryHelper=require('../helpers/categoryHelper')
+const productHelper = require('../helpers/productHelper')
+const categoryHelper = require('../helpers/categoryHelper')
 const twilio = require('../api/twilio')
 let loginStatus;
-let categoryStore;
+
 
 const landingPage = async (req, res) => {
     try {
-        await categoryHelper.getAllcategory()
-        .then((response)=>{
-            categoryStore=response;
-            console.log(categoryStore);
-            res.render('user/index',{categoryStore})
-        })
+        res.render('user/index')
     } catch (error) {
         console.log(error);
     }
@@ -22,14 +17,7 @@ const landingPage = async (req, res) => {
 
 const userHome = async (req, res) => {
     try {
-        await categoryHelper.getAllcategory()
-        .then((response)=>{
-            categoryStore=response;
-            console.log(categoryStore);
-            res.status(200).render('user/index', {
-                loginStatus,categoryStore
-            })
-        })
+        res.status(200).render('user/index', {loginStatus})
     } catch (error) {
         console.log(error);
     }
@@ -41,7 +29,7 @@ const error = (req, res) => {
 
 //---------------------------------------------------------
 const userSignup = async (req, res) => {
-    res.render('user/user-signup', { user: true ,categoryStore})
+    res.render('user/user-signup', { user: true})
 }
 
 
@@ -60,8 +48,8 @@ const userSignupPost = async (req, res) => {
 //---------------------------------------------------------
 
 const userLogin = async (req, res) => {
-    res.render('user/login', { user: true ,loggedInError:req.session.loggedInError,categoryStore})
-    req.session.loggedInError=false;
+    res.render('user/login', { user: true, loggedInError: req.session.loggedInError})
+    req.session.loggedInError = false;
 }
 
 const userLoginPost = async (req, res) => {
@@ -69,11 +57,11 @@ const userLoginPost = async (req, res) => {
     await userHelper.doLogin(req.body).then((response) => {
         if (response.loggedIn) {
             req.session.user = response.user;
-            loginStatus=req.session.user
+            loginStatus = req.session.user
             res.redirect('/')
 
         } else {
-            req.session.loggedInError=response.loggedInError;
+            req.session.loggedInError = response.loggedInError;
             res.redirect('/user-login')
         }
     })
@@ -84,11 +72,7 @@ const userLoginPost = async (req, res) => {
 
 // otp login page
 const otpUser = (req, res) => {
-    res.render('user/otp-form', {
-        user_header: true,loginStatus,
-        categoryStore,
-        categoryStore
-    })
+    res.render('user/otp-form', {user_header: true, loginStatus})
 }
 
 // otp sending in login process
@@ -102,7 +86,7 @@ const otpSending = async (req, res) => {
                 console.log(userData + "find mobile no from db");
                 req.session.tempUser = userData;
                 await twilio.sentOtp(find.phone);
-                res.render('user/otp-fill',categoryStore);
+                res.render('user/otp-fill');
             } else {
                 console.log("mobile not found");
                 res.redirect('/user-signup')
@@ -124,7 +108,7 @@ const otpVerifying = async (req, res) => {
             console.log(status);
             if (status) {
                 req.session.user = req.session.tempUser;
-                loginStatus=req.session.user
+                loginStatus = req.session.user
                 console.log("loggin successfulllllllllllllllllllll");
                 res.redirect('/')
             } else {
@@ -141,7 +125,7 @@ const otpVerifying = async (req, res) => {
 const userLogout = async (req, res) => {
     try {
         req.session.user = false;
-        loginStatus=false;
+        loginStatus = false;
         // req.session.loggedIn = false;
         res.redirect('/')
     } catch (error) {
@@ -152,53 +136,32 @@ const userLogout = async (req, res) => {
 
 
 const profile = async (req, res) => {
-    res.render('user/profile',{categoryStore,categoryStore})
+    res.render('user/profile', { categoryStore})
 }
 
 
 const about = async (req, res) => {
-    res.render('user/about',{loginStatus,categoryStore})
+    res.render('user/about', { loginStatus})
 }
 
-const Phone = async (req, res) => {
-    productHelper.getAllProductsWithLookup()
-    .then((response)=>{
-        res.render('user/phones',{product:response,categoryStore})
-    }) 
-}
-
-const laptop = async (req, res) => {
-    productHelper.getAllProductsWithLookup()
-    .then((response)=>{
-        console.log(response);
-        res.status(200).render('user/laptops',{product:response,categoryStore})
-    })
-}
-
-const tab = async (req, res) => {
-    productHelper.getAllProductsWithLookup()
-    .then((response)=>{
-        res.status(200).render('user/tablets',{product:response,categoryStore})
-    })
-}
-
-const smartWatch = async (req, res) => {
-    productHelper.getAllProductsWithLookup()
-    .then((response)=>{
-        res.render('user/smart-watches',{product:response,categoryStore})
-    }) 
+const viewProduct = async (req, res) => {
+    console.log(req.params.id,"iddddddddddddddddd");
+    productHelper.getAllProductsByCategory(req.params.id)
+        .then((response) => {
+            res.render('user/view-product', { product: response})
+        })
 }
 
 const wishlist = async (req, res) => {
-    res.render('user/wishlist',{loginStatus,categoryStore})
+    res.render('user/wishlist', { loginStatus})
 }
 
 const cart = async (req, res) => {
-    res.render('user/cart',{loginStatus,categoryStore})
+    res.render('user/cart', { loginStatus})
 }
 
 const checkout = async (req, res) => {
-    res.render('user/checkout',{loginStatus,categoryStore})
+    res.render('user/checkout', { loginStatus})
 }
 
 // const quickView = async (req, res) => {
@@ -222,7 +185,7 @@ const orderDetails = async (req, res) => {
 }
 
 const product = async (req, res) => {
-    res.render('user/product',{loginStatus})
+    res.render('user/product', { loginStatus })
 }
 
 const orderSummary = async (req, res) => {
@@ -230,7 +193,7 @@ const orderSummary = async (req, res) => {
 }
 
 const contact = async (req, res) => {
-    res.render('user/contact',{loginStatus,categoryStore})
+    res.render('user/contact', { loginStatus})
 }
 
 const notFound404 = async (req, res) => {
@@ -250,10 +213,10 @@ module.exports = {
     otpVerifying,
     userLogout,
     about,
-    Phone,
-    laptop,
-    tab,
-    smartWatch,
+    viewProduct,
+    // laptop,
+    // tab,
+    // smartWatch,
     wishlist,
     cart,
     error,

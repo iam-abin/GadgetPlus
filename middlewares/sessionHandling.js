@@ -18,11 +18,10 @@ const userChecking = async (req, res, next ) =>{
         if(req.session.user){
             next()
         } else {
-            res.status(200).redirect('/')
+            res.status(200).redirect('/user-login');
         }
     } catch (error) {
         res.status(500).redirect('/error')
-
     }
 }
 

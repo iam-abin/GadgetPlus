@@ -15,8 +15,10 @@ module.exports={
 
     getAllcategory:()=>{
         return new Promise(async (resolve, reject) => {
-            let category = await categorySchema.find();
-            resolve(category);
+           await categorySchema.find()
+           .then((result)=>{
+               resolve(result);
+           })
           });
     },
 

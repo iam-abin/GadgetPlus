@@ -1,4 +1,5 @@
 const productSchema = require('../models/productModel');
+const ObjectId=require('mongoose').Types.ObjectId
 const fs = require('fs')
 
 
@@ -24,7 +25,7 @@ module.exports = {
 
     getAllProductsWithLookup: () => {
         return new Promise(async (resolve, reject) => {
-           const a= await productSchema.aggregate([{
+            const a = await productSchema.aggregate([{
                 $lookup: {
                     from: "categories",
                     localField: "product_category",
@@ -32,14 +33,28 @@ module.exports = {
                     as: "category"
                 }
             }])
-            .then((result) => {
+                .then((result) => {
                     // console.log("=============================");
                     // console.log(a[0].category[0].name);
                     // console.log("=============================");
                     resolve(result);
-             })
-            .catch((error) => {
+                })
+                .catch((error) => {
                     console.log(error);
+                })
+        })
+    },
+
+    getAllProductsByCategory:(categoryId)=>{
+        return new Promise(async(resolve,reject)=>{
+            await productSchema.aggregate([
+                {
+                    $match:{
+                       product_category:new ObjectId(categoryId) 
+                    }
+                }
+            ]).then((result)=>{
+                resolve(result)
             })
         })
     },
@@ -62,7 +77,7 @@ module.exports = {
             if (file) {
                 new_image = file.filename;
                 try {
-                    fs.unlinkSync('/product-images/' + data.old_image)
+                    fs.unlink('/product-images/' + data.old_image)
                 } catch (error) {
                     console.log(error);
                 }
