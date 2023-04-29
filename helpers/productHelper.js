@@ -73,11 +73,17 @@ module.exports = {
 
     postEditAProduct: (data, productId, file) => {
         return new Promise(async (resolve, reject) => {
-            console.log("inside editAproduct promise", data);
+            // console.log("inside editAproduct promise", data);
             if (file) {
                 new_image = file.filename;
                 try {
-                    fs.unlink('/product-images/' + data.old_image)
+                    console.log("-----------------------");
+                    console.log(data.old_image);
+                    console.log("-----------------------");
+
+                    fs.unlink("/product-images/" + data.old_image, (err)=>{
+                        if (err) console.log(err);
+                    })
                 } catch (error) {
                     console.log(error);
                 }
@@ -109,7 +115,7 @@ module.exports = {
 
     softDeleteProduct: (productId) => {
         return new Promise(async (resolve, reject) => {
-            console.log(productId);
+            // console.log(productId);
             let product = await productSchema.findById(productId);
             product.product_status = !product.product_status;
             product.save();

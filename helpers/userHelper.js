@@ -14,23 +14,24 @@ module.exports = {
                         if (result) {
                             response.user = user;
                             response.loggedIn = true;
+                            response.logginMessage = "Login success";
                             console.log("Login success");
                             resolve(response)
                         } else {
-                            response.loggedInError = "Invalid username or passworddd";
+                            response.logginMessage = "Invalid username or passworddd";
                             //    console.log("Loggin failed");
                             resolve(response)
 
                         }
                     })
                 } else {
-                    response.loggedInError = "blocked user";
-                    // console.log("User not Found");
+                    response.logginMessage = "blocked user";
+                    // console.log("blocked user");
                     resolve(response)
                 }
             } else {
-                response.loggedInError = "Invalid username or password";
-                // console.log("User not Found");
+                response.logginMessage = "Invalid username or password";
+                // console.log("Invalid username or password");
                 resolve(response)
 
             }

@@ -55,14 +55,22 @@ const userLogin = async (req, res) => {
 const userLoginPost = async (req, res) => {
 
     await userHelper.doLogin(req.body).then((response) => {
+        console.log("----------------");
+        console.log(response);
+        console.log("----------------");
+
         if (response.loggedIn) {
             req.session.user = response.user;
             loginStatus = req.session.user
-            res.redirect('/')
+
+            // res.redirect('/')
+            return res.status(202).json({ error:false, message: response.logginMessage})
 
         } else {
-            req.session.loggedInError = response.loggedInError;
-            res.redirect('/user-login')
+            // req.session.loggedInError = response.loggedInError;
+            return res.status(401).json({ error:false,message: response.logginMessage})
+
+            // res.redirect('/user-login')
         }
     })
 }
@@ -145,7 +153,7 @@ const about = async (req, res) => {
 }
 
 const viewProduct = async (req, res) => {
-    console.log(req.params.id,"iddddddddddddddddd");
+    // console.log(req.params.id,"iddddddddddddddddd");
     productHelper.getAllProductsByCategory(req.params.id)
         .then((response) => {
             res.render('user/view-product', { product: response})

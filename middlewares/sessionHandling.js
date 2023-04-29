@@ -1,5 +1,4 @@
 
-
 const userAuthenticationCheck = async (req, res, next) =>{
     try {
         if(req.session.user){

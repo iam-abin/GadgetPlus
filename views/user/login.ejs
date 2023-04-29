@@ -1,10 +1,9 @@
-<% if (locals.loggedInError) { %>
-  <span style="text-align: center;">
-    <p class="text-danger">
-      <%= loggedInError %>
-    </p>
-  </span>
-  <% } %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<div class="text-center bg-white" >
+  <span class="text-danger d-none" style="font-size: 17px; margin-left: 10px;" id="loginError"></span>
+</div>
 
     <section class="vh-100" style="background-color: #fffdfd;">
       <div class="container py-4 h-100">
@@ -19,38 +18,39 @@
                 </div>
                 <div class="col-md-6 col-lg-7 d-flex align-items-center ">
                   <div class="card-body p-4 p-lg-5 text-black">
-                    <form action="/user-login" method="post"  class="style2" id="loginForm">
-                      <div class="d-flex align-items-center mb-2 pb-1">
-                        <h1 class="mb-0 mx-auto font-weight-bold">Login</h1>
-                      </div>
-                      <div class="form-group">
-                        <label for="emailId" class="form-label">Email ID</label>
-                        <input type="email" id="emailId" name="email" class="form-control" placeholder="Email" required>
-                      </div>
-                      <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password"  id="password" name="password" class="form-control"
-                          placeholder="Password" style="font-size: medium;" required>
-                      </div>
-                      <div class="divider">
-                        <p class="mx-auto"><a href="#" class="text-primary">Forgotten password?</a></p><br>
-                      </div>
-                      <div class="pt-1">
-                        <button class="btn btn-primary btn-block" style="width: 100%;">Login</button>
-                      </div>
-                      <div class="pt-1 mb-3">
-                        <p class="fw-bold mx-3 mb-0 text-muted" style="text-align: center;">OR</p>
-                        <a href="/otp-user" class="btn btn-outline-primary" style="width: 100%;"
-                          id="specialButton">Login with OTP</a>
-
-                          <p style="text-align: center; padding-top: 6px;">Don't have an account?<br>
-                            <a href="/user-signup" class="text-primary">Create New Account</a>
-                      </div>
-                      <!-- <div> -->
+                    <form class="style2" id="loginForm">
+                          <div class="d-flex align-items-center mb-2 pb-1">
+                            <h1 class="mb-0 mx-auto font-weight-bold">Login</h1>
+                          </div>
                         
-                        </p><br>
-                      <!-- </div> -->
+                          <div class="form-group">
+                            <label for="emailId" class="form-label">Email ID</label>
+                            <input type="email" id="emailId" name="email" class="form-control" placeholder="Email" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                              style="font-size: medium;" required>
+                          </div>
+                          <div class="divider">
+                            <p class="mx-auto"><a href="#" class="text-primary">Forgotten password?</a></p><br>
+                          </div>
+                          <div class="pt-1">
+                            <button class="btn btn-primary btn-block" type="submit" style="width: 100%;">Login</button>
+                          </div>
                     </form>
+                    <div class="pt-1 mb-3">
+                      <p class="fw-bold mx-3 mb-0 text-muted" style="text-align: center;">OR</p>
+                      <a href="/otp-user" class="btn btn-outline-primary" style="width: 100%;" id="specialButton">Login
+                        with OTP</a>
+
+                      <p style="text-align: center; padding-top: 6px;">Don't have an account?<br>
+                        <a href="/user-signup" class="text-primary">Create New Account</a>
+                    </div>
+                    <!-- <div> -->
+
+                    </p><br>
+                    <!-- </div> -->
                   </div>
                 </div>
               </div>
@@ -72,3 +72,31 @@
         padding: 1rem
       }
     </style>
+
+
+    <script>
+        $(document).ready(function () {
+        $('#loginForm').submit((e) => {
+          e.preventDefault();
+          $.ajax({
+            url: "/user-login",
+            type: 'post',
+            data: $('#loginForm').serialize()
+          }).done((res) => {
+            console.log(`succcess ${res.message}`);
+            location.reload() 
+
+          }).fail((err) => {
+            // console.log(err);
+            document.getElementById("loginError").innerHTML=`${err.responseJSON.message}`
+            document.getElementById("loginError").classList.remove('d-none')
+
+            setTimeout(()=>{
+              document.getElementById("loginError").classList.add('d-none')
+              location.reload()
+            },3000)
+
+          })
+        })
+      })
+    </script>

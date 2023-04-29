@@ -42,7 +42,7 @@ const adminHome=(req,res)=>{
 const usersList = async (req, res) => {
 
   await adminHelper.findUsers().then((response) => {
-    console.log(response);
+    // console.log(response);
     res.status(200).render("admin/users-list", {
       layout: "layouts/adminLayout",
       // admin: false,
@@ -87,7 +87,7 @@ const blockUnBlockUser = async (req, res) => {
 const productList = (req, res) => {
   productHelper.getAllProductsWithLookup()
     .then((responseProduct) => {
-      console.log("products", responseProduct);
+      // console.log("products", responseProduct);
       // console.log("category", responseCategory);
 
       res.render("admin/products-list", {
@@ -128,8 +128,8 @@ const addProduct = async (req, res) => {
 };
 
 const postAddProduct = (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
+  // console.log(req.body);
+  // console.log(req.file);
   productHelper.addProductToDb(req.body, req.file)
     .then((response) => {
       res.status(500).redirect('/admin/product')
@@ -180,7 +180,7 @@ const deleteProduct = (req, res) => {
 
 const productCategory = (req, res) => {
   categoryHelper.getAllcategory().then((category) => {
-    console.log(category);
+    // console.log(category);
     res.render("admin/product-categories", {
       layout: "layouts/adminLayout",
       categories: category
@@ -211,7 +211,7 @@ const postAddProductCategory = (req, res) => {
 const editProductCategory=(req,res)=>{
   categoryHelper.getAcategory(req.params.id)
   .then((response)=>{
-    console.log("response---",response,"ooooooo");
+    // console.log("response---",response,"ooooooo");
     res.status(200).json({category:response})
 
   })
