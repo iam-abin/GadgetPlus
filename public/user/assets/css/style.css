@@ -10136,7 +10136,7 @@ p {
     font-weight: 300;
     color: #777;
     background-color: #fafafa;
-    border: 1px solid #ebebeb;
+    border: 1px solid #b5acac;
     border-radius: 0;
     margin-bottom: 2rem;
     transition: all 0.3s;
@@ -10689,7 +10689,7 @@ small.form-text {
     font-weight: 400;
     font-size: 1.4rem;
     line-height: 1.5;
-    color: #999
+    color: #322e2e
 }
 
 .table th,
@@ -16515,12 +16515,12 @@ button:focus {
 .nav-dashboard .nav-link {
     overflow: hidden;
     position: relative;
-    font-weight: 300;
-    font-size: 1.4rem;
-    line-height: 1.5;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 2.5;
     padding: 1.4rem 0;
     color: #333;
-    border-bottom: .1rem solid #ebebeb
+    border-bottom: .2rem solid #ebebeb
 }
 
 .nav-dashboard .nav-link:before {

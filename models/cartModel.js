@@ -7,23 +7,30 @@ const cartModel=mongoose.Schema({
     },
     products:[
         {
-            productId:{
+            productItemId:{
                 type:mongoose.Schema.Types.ObjectId,
                 ref:'products'
-            }
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                default: 1,
+              },
         }
     ],
-    coupon:{
-        type:String,
-        default:0
-    },
-
+    // coupon:{
+    //     type:String,
+    //     default:0
+    // },
     totalAmount:{
         type:Number,
         reqruire:true
     },
     
-    status:Boolean,
+    // status:{
+    //     type:Boolean,
+    //     default:true
+    // }
 },
 {
     timestamps:true

@@ -61,6 +61,16 @@ module.exports = {
             }
         })
 
+    },
+
+    changePassword: (newPassword, phone) => {
+        return new Promise(async (resolve, reject) => {
+            newPassword = await bcrypt.hash(newPassword, 10);
+            let user= await userSchema.findOne({ phone: phone });
+            user.password = newPassword;
+            await user.save()
+            resolve(user)
+        })
     }
 
 }

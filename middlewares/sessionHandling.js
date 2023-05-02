@@ -12,7 +12,7 @@ const userAuthenticationCheck = async (req, res, next) =>{
 }
 
 
-const userChecking = async (req, res, next ) =>{
+const userChecking = async (req, res, next) =>{
     try {
         if(req.session.user){
             next()

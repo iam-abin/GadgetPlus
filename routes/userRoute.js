@@ -22,13 +22,24 @@ router.get('/user-login',userAuthenticationCheck,userController.userLogin);
 
 router.post('/user-login',userController.userLoginPost);
 
+
+router.get('/otp-forgotPassword',userAuthenticationCheck,userController.forgotPassword)
+
+router.post('/otp-forgotPassword',userAuthenticationCheck,userController.otpSendingForgot)
+
+router.post('/otp-fill-forgotPassword',userAuthenticationCheck,userController.otpVerifyingForgot)
+
+router.post('/change-password',userAuthenticationCheck,userController.resetPassword)
+
+
 router.get('/otp-user',userAuthenticationCheck,userController.otpUser);
 
 router.post('/otp-user',userController.otpSending);
 
 router.post('/otp-fill',userController.otpVerifying);
 
-router.get('/user-logout',userController.userLogout);
+
+router.get('/user-logout',userChecking,userController.userLogout);
 
 router.get('/error',userController.error)
 
@@ -40,21 +51,23 @@ router.get('/about',userController.about);
 
 router.get('/viewProduct/:id',userController.viewProduct);
 
-// router.get('/laptop',userController.laptop);
-
-// router.get('/tab',userController.tab);
-
-// router.get('/smartWatch',userController.smartWatch);
-
 router.get('/wishlist',userChecking,userController.wishlist)
 
+
+
 router.get('/cart',userChecking,userController.cart)
+
+router.get('/add-to-cart/:id',userChecking,userController.addToCart)
+
+router.get('/remove-cart-item/:id',userChecking,userController.removeFromCart)
+
+
 
 router.get('/checkout',userChecking,userController.checkout)
 
 // router.get('/quickView',userController.quickView)
 
-router.get('/add-address',userChecking,userController.addAddress)
+router.post('/add-address',userChecking,userController.addAddress)
 
 router.get('/edit-address',userChecking,userController.editAddress)
 

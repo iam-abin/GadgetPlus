@@ -117,9 +117,6 @@
     console.log(code)
 
     coderesult.confirm(code).then(function () {
-      // document.getElementById('verifySuccess').innerHTML = "OTP Verified"
-      // document.getElementById('p-conf').style.display = 'block';
-      // document.getElementById('n-conf').style.display = 'none';
       console.log('OTP Verified');
       axios({
         url: '/otp-user-data',
@@ -129,8 +126,6 @@
 
     }).catch(function () {
       document.getElementById('verifyErr').innerHTML = "Incorrect OTP"
-      //document.getElementById('p-conf').style.display = 'none';
-      //document.getElementById('n-conf').style.display = 'block';
       console.log('OTP Not correct');
     })
   }

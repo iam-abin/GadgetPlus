@@ -2,7 +2,6 @@ const { getAllcategory } = require('../helpers/categoryHelper');
 
 const categorySupply = async (req, res, next) => {
     try {
-
         // console.log(allCategories);
         const allCategories = await getAllcategory();
         res.locals.allCategories = allCategories;

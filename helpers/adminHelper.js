@@ -20,7 +20,9 @@ module.exports = {
         
         return new Promise(async (resolve, reject) => {
             const user = await userSchema.findById(userId);
-            
+            // if(user.isActive){
+            //     req.session.user=false
+            // }
             user.isActive = !user.isActive
             await user.save()
 

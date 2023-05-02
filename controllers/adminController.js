@@ -2,7 +2,7 @@
 const adminHelper = require("../helpers/adminHelper");
 const productHelper = require("../helpers/productHelper");
 const categoryHelper = require('../helpers/categoryHelper')
-
+const {loginStatus}=require('../controllers/userController')
 // const productSchema=require('../models/productModel');
 // const categorySchema=require('../models/category');
 
@@ -64,6 +64,7 @@ const blockUnBlockUser = async (req, res) => {
       if (result.isActive) {
         res.status(200).json({ error: false, message: 'User has been unBlocked', user: result })
       } else {
+        req.session.user=false;
         res.status(200).json({ error: false, message: 'User has been Blocked', user: result })
       }
     }).catch((error) => {
