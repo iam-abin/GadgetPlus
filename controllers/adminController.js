@@ -137,20 +137,23 @@ const postAddProduct = (req, res) => {
     })
 };
 
-const editProduct = async (req, res) => {
 
+const editProduct = async (req, res) => {
+try {
+  
+  let product=await productHelper.getAProduct(req.params.id)
   // let category=await categoryHelper.getAcategory()
-  productHelper.editAProduct(req.params.id)
-    .then((response) => {
-      if (response == '') {
+  let categories= await categoryHelper.getAllcategory()
+
+      if (product == '') {
         res.status(401).redirect('/admin')
       } else {
-        res.status(200).render('admin/edit-product', { product: response, layout: 'layouts/adminLayout' })
+        res.status(200).render('admin/edit-product', { product,categories, layout: 'layouts/adminLayout' })
       }
-    })
-    .catch((error) => {
+    
+    }catch(error){
       console.log(error);
-    })
+    }
 }
 
 const postEditProduct = (req, res) => {

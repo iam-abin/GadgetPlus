@@ -35,8 +35,8 @@
                             </div><!-- End .product-action-vertical -->
 
                            
-                            <div class="product-action">
-                                <a href="/add-to-cart/<%= product[i]._id %>" onclick="adddToCartt('<%= product[i]._id %>')" class="btn-product btn-cart"><span>add to cart</span></a>
+                            <div  class="product-action">
+                                <a href="#" data-value="<%= product[i]._id %>"  class="add-product btn-product btn-cart"><span>add to cart</span></a>
                             </div><!-- End .product-action -->
                         </figure><!-- End .product-media -->
 
@@ -71,21 +71,27 @@
 
 
 <script>
-    function addToCartt(productId){
-        
-        $.ajax({
-            url:'/add-to-cart/'+productId,
-            type:'get',
-        })
-        .done((res)=>{
-            console.log(res);
-            swal("successfull",`${res.message}`,"success")
-            .then(()=>{
-                location.reload()
+    
+    $(document).ready(function(){
+        $('.add-product').click((e) =>{
+            e.preventDefault()
+            const prodId = $('.add-product').data('value')
+            console.log('clicked', prodId)
+            $.ajax({
+                url:'/add-to-cart/'+prodId,
+                type:'get'
+            })
+            .done((res)=>{
+                console.log(res);
+                swal("successfull",`${res.message}`,"success")
+                .then(()=>{
+                    location.reload()
+                })
+            })
+            .fail((err)=>{
+                console.log(err);
             })
         })
-        .fail((err)=>{
-            console.log(err);
-        })
-    }
+    })
+   
 </script>

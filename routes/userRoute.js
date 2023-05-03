@@ -2,9 +2,12 @@ const express=require('express');
 const router=express.Router();
 
 const {userAuthenticationCheck,userChecking } = require('../middlewares/sessionHandling');
+
 const categorySupply = require('../middlewares/categoryFetching');
 
 const userController=require('../controllers/userController');
+
+
 
 router.use(categorySupply);
 
@@ -59,7 +62,7 @@ router.get('/cart',userChecking,userController.cart)
 
 router.get('/add-to-cart/:id',userChecking,userController.addToCart)
 
-router.get('/remove-cart-item/:id',userChecking,userController.removeFromCart)
+router.post('/remove-cart-item/:id',userChecking,userController.removeFromCart)
 
 
 

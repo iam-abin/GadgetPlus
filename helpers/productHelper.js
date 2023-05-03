@@ -59,7 +59,7 @@ module.exports = {
         })
     },
 
-    editAProduct: (productId) => {
+    getAProduct: (productId) => {
         return new Promise(async (resolve, reject) => {
             await productSchema.findById({ _id: productId })
                 .then((result) => {

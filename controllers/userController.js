@@ -113,7 +113,7 @@ const otpSendingForgot = async (req, res) => {
     }
 }
 
-const otpVerifyingForgot=async (req,res)=>{
+const otpVerifyingForgot = async (req, res) => {
     const phone = req.session.mobile;
     const otp = req.body.otp;
     await twilio.verifyOtp(phone, otp)
@@ -131,18 +131,18 @@ const otpVerifyingForgot=async (req,res)=>{
         })
 }
 
-const resetPassword=async (req,res)=>{
+const resetPassword = async (req, res) => {
     try {
         const phone = req.session.mobile;
-        let newPassword=req.body.confirmPassword;
-        let user=await userHelper.changePassword(newPassword,phone);
-        console.log("resetted",user,"resetted");
+        let newPassword = req.body.confirmPassword;
+        let user = await userHelper.changePassword(newPassword, phone);
+        console.log("resetted", user, "resetted");
         res.redirect('/user-login')
-        
+
     } catch (error) {
         console.log(error);
     }
-    
+
 }
 
 //---------------------------------------------------------
@@ -256,6 +256,10 @@ const cart = async (req, res) => {
     try {
         let user = req.session.user;
         let cartItems = await cartHelper.getAllCartItems(user._id)
+        console.log("cartItems");
+        console.log(cartItems);
+        console.log("cartItems");
+
         res.render('user/cart', { loginStatus, cartItems })
     } catch (error) {
         console.log(error);
@@ -264,14 +268,8 @@ const cart = async (req, res) => {
 
 const addToCart = async (req, res) => {
     let productId = req.params.id;
-    // console.log("---------------------1");
-    // console.log(productId);
-    // console.log("---------------------1");
     try {
         let user = req.session.user;
-        // console.log("---------------------2");
-        // console.log(user);
-        // console.log("---------------------2");
         let userId = user._id;
         if (user) {
             await cartHelper.addToUserCart(userId, productId)
@@ -287,10 +285,22 @@ const addToCart = async (req, res) => {
 
 
 const removeFromCart = (req, res) => {
-    console.log("hello");
-    console.log(req.params);
-    cartHelper.removeAnItemFromCart(req.params.id)
-        .then()
+    try {
+        let cartId=req.body.cartId;
+        let productId=req.params.id
+        // console.log("hello");
+        // console.log(productId);
+        // console.log(cartId);
+        // console.log("hello");
+
+        cartHelper.removeAnItemFromCart(cartId,productId)
+            .then((response)=>{
+                console.log("sucessfully deleted");
+                res.status(202).json({message:"sucessfully item removed"})
+            })
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //---------------------------------------------------------

@@ -1,3 +1,4 @@
+const { cart } = require('../controllers/userController');
 const cartSchema = require('../models/cartModel');
 const ObjectId=require('mongoose').Types.ObjectId;
 
@@ -85,7 +86,18 @@ module.exports = {
        
     },
 
-    removeAnItemFromCart:async (productId)=>{
-        
+    removeAnItemFromCart: (cartId,productId)=>{
+        return new Promise(async (resolve,reject)=>{
+            cartSchema.updateOne({_id:cartId},
+                {
+                    $pull:{products:{productItemId:productId}}
+                }
+            ).then((result)=>{
+                
+                resolve(result)
+            })
+
+
+        })
     }
 }

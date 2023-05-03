@@ -73,11 +73,11 @@
                             <div class="row gx-2">
                                 <div class="col-sm-12 mb-3">
                                     <label class="form-label">Category</label>
-                                    <select class="form-select">
-                                        <option> Phone </option>
-                                        <option>  Laptop </option>
-                                        <option> Tablet </option>
-                                        <option> SmartWatch </option>
+                                    <select class="form-select"> 
+                                        <% for( let i = 0; i < categories.length; i++ ) { %>
+                                            <option value="<%= categories[i]._id %>"> <%= categories[i].name %> </option>
+                                        <% } %>
+                                        
                                     </select>
                                 </div>
                             </div> <!-- row.// -->

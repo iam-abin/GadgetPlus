@@ -30,6 +30,8 @@
 								</tr>
 							</thead>
 
+							<%= console.log(cartItems); %>
+
 							<tbody>
 								<% for( let i=0; i < cartItems.length; i++ ) { %>
 									<tr>
@@ -59,8 +61,9 @@
 										<td class="total-col">₹<%= cartItems[i].product.product_price %>
 										</td>
 
-										<td class="remove-col"><button class="btn-remove"
-												onclick="productRemove('<%= cartItems[i].product._id %>')"><i
+										
+										<td class="remove-col"><button class="btn-remove"  
+												onclick="productRemove('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>')"><i
 													class="icon-close"></i></button></td>
 									</tr>
 									<% } %>
@@ -116,18 +119,25 @@
 
 
 <script>
-	function productRemove(productId) {
+	function productRemove(productId,cartId) {
+		console.log(cartId);
 		swal("Do you want to remove this item from cart?", {
 			buttons: ["No", "yes"],
 		}).then((res) => {
 			if (res) {
 				$.ajax({
 					url: '/remove-cart-item/' + productId,
-					type: 'get',
+					data:{
+						cartId:cartId
+					},
+					type: 'post',
 				})
 				.done((res) => {
+					swal("Successful",`${res.message}`,"success").then(()=>{
+						location.reload()
+					})
 					console.log(`${res.message}`);
-					location.reload()
+					
 				})
 				.fail((error) => {
 					console.log(error);
