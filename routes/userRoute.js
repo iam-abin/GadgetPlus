@@ -54,7 +54,9 @@ router.get('/about',userController.about);
 
 router.get('/viewProduct/:id',userController.viewProduct);
 
-router.get('/wishlist',userChecking,userController.wishlist)
+router.get('/wishlist',userChecking,userController.wishlist);
+
+router.get('/add-to-wishList/:id',userChecking,userController.addToWishList);
 
 
 

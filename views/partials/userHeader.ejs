@@ -91,7 +91,9 @@
                                         <ul>
                                         
                                         <% allCategories.forEach(category => { %>
+                                           <% if (category.status) { %>
                                             <li><a href="/viewProduct/<%= category._id %>"><%= category.name %></a></li>
+                                           <% } %>
                                         <% }) %>
 
                                         
@@ -135,7 +137,10 @@
                             <div class="dropdown cart-dropdown">
                                 <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                                     <i class="icon-shopping-cart"></i>
-                                    <span class="cart-count">2</span>
+                                    <% if (locals.count) { %>
+                                     
+                                        <span class="cart-count"><%= count %></span>
+                                    <% } %>
                                 </a>
     
                                 <div class="dropdown-menu dropdown-menu-right">

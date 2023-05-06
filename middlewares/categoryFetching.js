@@ -6,7 +6,6 @@ const categorySupply = async (req, res, next) => {
         const allCategories = await getAllcategory();
         res.locals.allCategories = allCategories;
         next();
-
     } catch (error) {
         res.status(500).redirect('/error')
 

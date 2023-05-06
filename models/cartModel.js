@@ -3,13 +3,15 @@ const mongoose=require('mongoose')
 const cartModel=mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"users"
+        ref:"users",
+        required:true
     },
     products:[
         {
             productItemId:{
                 type:mongoose.Schema.Types.ObjectId,
-                ref:'products'
+                ref:'products',
+                required:true
             },
             quantity: {
                 type: Number,

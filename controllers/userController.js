@@ -7,6 +7,10 @@ const cartHelper = require('../helpers/cartHelper')
 const twilio = require('../api/twilio');
 const adminHelper = require('../helpers/adminHelper');
 const addressHelper = require('../helpers/addressHelper');
+
+const slug = require('slugify');
+const wishListHelper = require('../helpers/wishListHelper');
+
 let loginStatus;
 
 
@@ -236,19 +240,54 @@ const about = async (req, res) => {
 }
 
 const viewProduct = async (req, res) => {
-    // console.log(req.params.id,"iddddddddddddddddd");
-    productHelper.getAllProductsByCategory(req.params.id)
-        .then((response) => {
-            res.render('user/view-product', { product: response, loginStatus })
-        })
+    try {
+        const response=await productHelper.getAllProductsByCategory(req.params.id)
+        for (let i = 0; i < response.length; i++) {
+
+            if(req.session.user){
+                const isInCart=await cartHelper.isAProductInCart(req.session.user._id,response[i]._id);
+                console.log("bbbbbbbbbbbbb");
+                console.log(response[i].product_name);
+                console.log(isInCart);
+                console.log("bbbbbbbbbbbbb");
+
+                response[i].isInCart=isInCart;
+            }
+            response[i].product_price = Number(response[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+        }
+        console.log("1111111111111111");
+        console.log(response);
+        console.log("1111111111111111");
+        res.render('user/view-products', { product: response, loginStatus })
+    } catch (error) {
+        console.log(error);
+    }
+     
 }
 
 
 
 const wishlist = async (req, res) => {
-    res.render('user/wishlist', { loginStatus })
+    try {
+        let userId=req.sesion.user._id;
+        let wishList =  wishListHelper.getAllWishListItems(userId)
+        res.render('user/wishlist', { loginStatus })
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
+const addToWishList = async (req, res) => {
+    try {
+        let productId = req.params.id;
+        let user = req.session.user._id;
+
+        wishListHelper.addItemToWishList(productId, user)
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 //---------------------------------------------------------
 
@@ -256,47 +295,63 @@ const cart = async (req, res) => {
     try {
         let user = req.session.user;
         let cartItems = await cartHelper.getAllCartItems(user._id)
+        let count=await cartHelper.getCartCount(user._id)
         console.log("cartItems");
         console.log(cartItems);
         console.log("cartItems");
 
-        res.render('user/cart', { loginStatus, cartItems })
+        res.render('user/cart', { loginStatus, cartItems,count:count })
     } catch (error) {
         console.log(error);
     }
 }
 
-const addToCart = async (req, res) => {
-    let productId = req.params.id;
+// const addToCart = async (req, res) => {
+//     try {
+//         let productId = req.params.id;
+//         let user = req.session.user;
+//         let userId = user._id;
+//         if (user) {
+//             await cartHelper.addToUserCart(userId, productId)
+//                 .then((response) => {
+//                     res.status(202).json({ error: false, message: "item added to cart" })
+//                 })
+//         }else{
+//             res.redirect('/user/user-login')
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).redirect('/404')
+//     }
+// }
+
+const addToCart=async(req,res)=>{
     try {
+        let productId = req.params.id;
         let user = req.session.user;
-        let userId = user._id;
-        if (user) {
-            await cartHelper.addToUserCart(userId, productId)
-                .then((response) => {
-                    res.status(202).json({ error: false, message: "item added to cart" })
-                })
+        let response=await cartHelper.addToUserCart(user._id,productId);
+        if(response){
+            res.status(202).json({status: "success", message: "product added to cart"})
         }
     } catch (error) {
         console.log(error);
-        res.status(500).redirect('/404')
     }
 }
 
 
 const removeFromCart = (req, res) => {
     try {
-        let cartId=req.body.cartId;
-        let productId=req.params.id
+        let cartId = req.body.cartId;
+        let productId = req.params.id
         // console.log("hello");
         // console.log(productId);
         // console.log(cartId);
         // console.log("hello");
 
-        cartHelper.removeAnItemFromCart(cartId,productId)
-            .then((response)=>{
+        cartHelper.removeAnItemFromCart(cartId, productId)
+            .then((response) => {
                 console.log("sucessfully deleted");
-                res.status(202).json({message:"sucessfully item removed"})
+                res.status(202).json({ message: "sucessfully item removed" })
             })
     } catch (error) {
         console.log(error);
@@ -382,7 +437,9 @@ module.exports = {
     userLogout,
     about,
     viewProduct,
+
     wishlist,
+    addToWishList,
 
     cart,
     addToCart,
