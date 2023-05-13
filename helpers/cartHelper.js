@@ -67,6 +67,7 @@ module.exports = {
 
     getAllCartItems: (userId) => {
         return new Promise(async (resolve, reject) => {
+            let obj = {}
             let userCartItems = await cartSchema.aggregate([
                 {
                     $match: { user: new ObjectId(userId) }
@@ -110,6 +111,31 @@ module.exports = {
 
     },
 
+    incDecProductQuantity: (userId, productId, quantity) => {
+        return new Promise(async (resolve, reject) => {
+            const cart = await cartSchema.findOne({ user: userId });
+            // console.log(cart);   //got a big output and solved
+            // console.log(",,,,,,,,,,,,,,,,,,,,,");
+            // console.log(productId);
+            // console.log(",,,,,,,,,,,,,,,,,,,,,");
+            const product = cart.products.find((items) => {
+                return items.productItemId.toString() == productId
+            }
+            );
+
+            let newQuantity = product.quantity + parseInt(quantity);
+
+            if (newQuantity < 1 || newQuantity > 10) {
+                newQuantity = 1;
+            }
+
+            product.quantity = newQuantity;
+            await cart.save();
+            resolve(newQuantity)
+
+        })
+    },
+
     removeAnItemFromCart: (cartId, productId) => {
         return new Promise(async (resolve, reject) => {
             cartSchema.updateOne({ _id: cartId },
@@ -129,24 +155,100 @@ module.exports = {
             let cart = await cartSchema.findOne({ user: userId })
             if (cart) {
                 count = cart.products.length;
+            } else {
+                count = 0
             }
-
             resolve(count)
         })
     },
 
-    isAProductInCart:async (userId,productId)=>{
+    isAProductInCart: async (userId, productId) => {
         try {
-            const cart=await cartSchema.findOne({user:userId})
-            const isInCart= await cart.products.some((product)=>{
-                product.productItemId == new ObjectId(productId)
-            })
+            // array.find((element) => element.id === itemId);
+            const cart = await cartSchema.findOne({ user: userId, 'products.productItemId': productId })
 
-            return isInCart
-            
+            console.log(cart);
+
+            if (cart) {
+                return true;
+            } else {
+                return false
+            }
+
         } catch (error) {
             console.log(error);
         }
     },
+
+    totalSubtotal: (userId, cartItems) => {
+        return new Promise(async (resolve, reject) => {
+            let cart = await cartSchema.findOne({ user: userId })
+            console.log(cart);
+            let total = 0;
+            if (cart) {
+
+                if (cartItems.length) {
+                    for (let i = 0; i < cartItems.length; i++) {
+                        total = total + (cartItems[i].quantity * cartItems[i].product.product_price);
+                    }
+                }
+                cart.totalAmount = total;
+                await cart.save()
+                console.log(total);
+                resolve(total)
+
+                // console.log("cartItemscartItemscartItems");
+                // console.log(cartItems);
+                // console.log("cartItemscartItemscartItems");
+            }else{
+                resolve(total)
+            }
+        })
+
+    },
+
+    // getTotalCartAmount: (userId) => {
+    //     return new Promise(async (resolve, reject) => {
+
+    //         let total = await cartSchema.aggregate([
+    //             {
+    //                 $match: { user: new ObjectId(userId) }
+    //             },
+    //             {
+    //                 $unwind: '$products'
+    //             },
+    //             {
+    //                 $project: {
+    //                     item: '$products.productItemId',
+    //                     quantity: '$product.quantity'
+    //                 }
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     from: 'products',
+    //                     localField: 'item',
+    //                     foreignField: '_id',
+    //                     as: 'product'
+    //                 }
+    //             },
+    //             {
+    //                 $project: {
+    //                     item: 1,
+    //                     quantity: 1,
+    //                     product: { $arrayElemAt: ['$product', 0] }
+    //                 }
+    //             },
+    //             {
+    //                 $group: {
+    //                     _id: null,
+    //                     total: { $sum: { $multiply: ['$quantity', '$product.product_price'] } }
+    //                 }
+    //             }
+    //         ])
+    //         console.log(total);
+    //     })
+
+
+    // }
 
 }

@@ -1,0 +1,124 @@
+
+
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container d-flex align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Products</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Default</li>
+                    </ol>
+
+                    <nav class="product-pager ml-auto" aria-label="Product">
+                        <a class="product-pager-link product-pager-prev" href="#" aria-label="Previous" tabindex="-1">
+                            <i class="icon-angle-left"></i>
+                            <span>Prev</span>
+                        </a>
+
+                        <a class="product-pager-link product-pager-next" href="#" aria-label="Next" tabindex="-1">
+                            <span>Next</span>
+                            <i class="icon-angle-right"></i>
+                        </a>
+                    </nav><!-- End .pager-nav -->
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="container">
+                    <div class="product-details-top">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="product-gallery product-gallery-vertical">
+                                    <div class="row">
+                                        <figure class="product-main-image">
+                                            <%= console.log("-----------------"); %>
+                                            <%= console.log(product); %>
+                                            <%= console.log("-----------------"); %>
+
+                                            <img id="product-zoom" src="/product-images/<%= product.image[0].filename %>" data-zoom-image="/product-images/<%= product.image[0].filename %>" alt="product image">
+
+                                            <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                                <i class="icon-arrows"></i>
+                                            </a>
+                                        </figure><!-- End .product-main-image -->
+
+                                        <div id="product-zoom-gallery" class="product-image-gallery">
+                                            <a class="product-gallery-item active" href="#" data-image="/product-images/<%= product.image[0].filename %>" data-zoom-image="/product-images/<%= product.image[0].filename %>">
+                                                <img src="/product-images/<%= product.image[0].filename %>" alt="product side">
+                                            </a>
+
+                                            <a class="product-gallery-item" href="#" data-image="/product-images/<%= product.image[1].filename %>" data-zoom-image="/product-images/<%= product.image[1].filename %>">
+                                                <img src="/product-images/<%= product.image[1].filename %>" alt="product cross">
+                                            </a>
+
+                                            <a class="product-gallery-item" href="#" data-image="/product-images/<%= product.image[2].filename %>" data-zoom-image="/product-images/<%= product.image[2].filename %>">
+                                                <img src="/product-images/<%= product.image[2].filename %>" alt="product with model">
+                                            </a>
+
+                                            <a class="product-gallery-item" href="#" data-image="/product-images/<%= product.image[3].filename %>" data-zoom-image="/product-images/<%= product.image[3].filename %>">
+                                                <img src="/product-images/<%= product.image[3].filename %>" alt="product back">
+                                            </a>
+                                        </div><!-- End .product-image-gallery -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .product-gallery -->
+                            </div><!-- End .col-md-6 -->
+
+                            <div class="col-md-6">
+                                <div class="product-details">
+                                    <h1 class="product-title"><%= product.product_name %></h1><!-- End .product-title -->
+
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                        </div><!-- End .ratings -->
+                                        <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
+                                    </div><!-- End .rating-container -->
+
+                                    <div class="product-price">
+                                        <%= product.product_price %>
+                                    </div><!-- End .product-price -->
+
+                                    <div class="product-content">
+                                        <p> <%= product.product_description %></p>
+                                    </div><!-- End .product-content -->
+
+                                    <div class="details-filter-row details-row-size">
+                                        <label for="size">Size:</label>
+                                        <div class="select-custom">
+                                            <select name="size" id="size" class="form-control">
+                                                <option value="#" selected="selected">Select a size</option>
+                                                <option value="s">4 Gb</option>
+                                                <option value="s">8 Gb</option>
+                                                <option value="m">16 Gb</option>
+                                            </select>
+                                        </div><!-- End .select-custom -->
+
+                                    </div><!-- End .details-filter-row -->
+
+                                    <div class="details-filter-row details-row-size">
+                                        <label for="qty">Qty:</label>
+                                        <div class="product-details-quantity">
+                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                        </div><!-- End .product-details-quantity -->
+                                    </div><!-- End .details-filter-row -->
+
+                                    <div class="product-details-action">
+                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+
+                                        <div class="details-action-wrapper">
+                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                        </div><!-- End .details-action-wrapper -->
+                                    </div><!-- End .product-details-action -->
+
+                                    <hr>
+                                </div><!-- End .product-details -->
+                            </div><!-- End .col-md-6 -->
+                        </div><!-- End .row -->
+                    </div><!-- End .product-details-top -->
+
+                    
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+       

@@ -320,7 +320,7 @@ table .form-check {
 }
 
 .text-brand {
-    color: #077787 !important
+    color: #159aa2 !important
 }
 
 .bg-primary {
@@ -328,7 +328,7 @@ table .form-check {
 }
 
 .text-primary {
-    color: #077787 !important
+    color: #159aa2 !important
 }
 
 .bg-primary-light {
@@ -487,7 +487,7 @@ table .form-check {
 }
 
 a {
-    color: #077787
+    color: #159aa2
 }
 
 body {
@@ -617,7 +617,7 @@ b {
 }
 
 .menu-aside .menu-item.active .icon {
-    color: #077787
+    color: #159aa2
 }
 
 .menu-aside .menu-item.active .menu-link {
@@ -625,7 +625,7 @@ b {
 }
 
 .menu-aside .menu-item.active .submenu a.active {
-    color: #077787 !important
+    color: #159aa2 !important
 }
 
 .menu-aside .menu-link {
@@ -726,7 +726,7 @@ b {
 .pagination-area .page-item.active .page-link,
 .pagination-area .page-item:hover .page-link {
     color: #fff;
-    background: #077787
+    background: #159aa2
 }
 
 .pagination-area .page-item .page-link {
@@ -764,7 +764,7 @@ b {
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-    color: #077787;
+    color: #159aa2;
     background-color: rgba(8, 129, 120, 0.2)
 }
 
@@ -774,7 +774,7 @@ b {
     padding: 10px 40px;
     color: #ffffff;
     border: none;
-    background-color: #077787;
+    background-color: #159aa2;
     border-radius: 4px
 }
 
@@ -806,7 +806,7 @@ b {
 .btn.btn-md {
     padding: 0.5rem 0.95rem;
     font-weight: 500;
-    background-color: #077787;
+    background-color: #159aa2;
     color: #ffffff
 }
 
@@ -815,7 +815,7 @@ b {
 }
 
 .btn.btn-xs {
-    background-color: #077787;
+    background-color: #159aa2;
     color: #ffffff;
     border: none;
     font-size: 11px;
@@ -898,7 +898,7 @@ b {
 }
 
 .btn-light:hover {
-    background-color: #077787;
+    background-color: #159aa2;
     color: #fff !important
 }
 
@@ -931,7 +931,7 @@ b {
 }
 
 .btn-brand {
-    background-color: #077787;
+    background-color: #159aa2;
     border: 0;
     color: #fff
 }
@@ -1007,7 +1007,7 @@ textarea.form-control {
 }
 
 .searchform button:hover {
-    background-color: #077787
+    background-color: #159aa2
 }
 
 .searchform button:hover i {
@@ -1021,8 +1021,8 @@ textarea.form-control {
 }
 
 .form-check-input:checked {
-    background-color: #077787;
-    border-color: #077787
+    background-color: #159aa2;
+    border-color: #159aa2
 }
 
 .select2-container--default .select2-selection--single {
@@ -1395,7 +1395,7 @@ textarea.form-control {
 }
 
 .progress-bar {
-    background-color: #077787
+    background-color: #159aa2
 }
 
 .new-member-list {
@@ -1426,7 +1426,7 @@ textarea.form-control {
 }
 
 .verti-timeline .event-list.active .event-timeline-dot {
-    color: #077787
+    color: #159aa2
 }
 
 .verti-timeline .event-list:last-child {
@@ -1477,7 +1477,7 @@ textarea.form-control {
 
 .badge.bg-primary[href]:focus,
 .badge.bg-primary[href]:hover {
-    background-color: #077787 !important
+    background-color: #159aa2 !important
 }
 
 .badge.bg-light {
@@ -1490,13 +1490,13 @@ textarea.form-control {
 }
 
 .badge-soft-primary {
-    color: #077787;
+    color: #159aa2;
     background-color: rgba(85, 230, 150, 0.18)
 }
 
 .badge-soft-primary[href]:focus,
 .badge-soft-primary[href]:hover {
-    color: #077787;
+    color: #159aa2;
     text-decoration: none;
     background-color: rgba(85, 230, 150, 0.18)
 }
@@ -1838,7 +1838,7 @@ a[class*='card'] {
 }
 
 a[class*='card']:hover .title {
-    color: #077787
+    color: #159aa2
 }
 
 .itemlist {
@@ -1887,7 +1887,7 @@ a[class*='card']:hover .title {
 }
 
 .itemside a.title:hover {
-    color: #077787
+    color: #159aa2
 }
 
 a.itemside {
@@ -1939,7 +1939,7 @@ a.itemside:hover .title {
 }
 
 .card-product-grid a.title:hover {
-    color: #077787
+    color: #159aa2
 }
 
 .card-product-grid:hover {
@@ -2080,7 +2080,7 @@ ul.row-sm {
     width: 7px;
     border-radius: 100%;
     height: 7px;
-    background: #077787
+    background: #159aa2
 }
 
 .list-check {
@@ -2117,7 +2117,7 @@ ul.row-sm {
 
 .list-normal li:before {
     content: "\2022";
-    color: #077787;
+    color: #159aa2;
     display: inline-block;
     width: 1em;
     margin-left: -1em
@@ -2138,7 +2138,7 @@ ul.row-sm {
 }
 
 .list-menu a:hover {
-    color: #077787
+    color: #159aa2
 }
 
 .cols-two {
@@ -3778,7 +3778,7 @@ body.offcanvas-active {
     line-height: 17px;
     display: block;
     padding: 0;
-    background-color: #077787
+    background-color: #159aa2
 }
 
 .main-header .nav-item.dropdown {
@@ -3787,7 +3787,7 @@ body.offcanvas-active {
 
 .main-header .nav-link:hover {
     background-color: transparent;
-    color: #077787
+    color: #159aa2
 }
 
 .main-header .col-search {
@@ -3815,7 +3815,7 @@ body.offcanvas-active {
 }
 
 .nav-item img.rounded-circle:hover {
-    border-color: #077787
+    border-color: #159aa2
 }
 
 .content-header {

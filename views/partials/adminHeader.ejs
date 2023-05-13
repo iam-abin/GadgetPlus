@@ -18,11 +18,14 @@
     <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
-   
+
     <!-- datatable -->
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-     -->
-     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- toastify js -->
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 
 </head>
@@ -31,7 +34,7 @@
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="index.html" class="brand-wrap"  style="text-decoration: none;">
+            <a href="index.html" class="brand-wrap" style="text-decoration: none;">
                 <h2>Admin Panel</h2>
             </a>
             <div>
@@ -41,7 +44,7 @@
         </div>
         <nav class="navBar">
             <ul class="menu-aside nav-bar-ul">
-                <li class="menu-item nav-bar-ul-li" onclick="colo(1)" id="li1">
+                <li class="menu-item nav-bar-ul-li active" onclick="colo(1)" id="li1">
                     <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
@@ -49,48 +52,46 @@
 
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/users-List"> <i class="icon material-icons md-person"></i>
-                        <span class="text">Users</span>
+                        <span class="text">Users </span>
                     </a>
                 </li>
 
 
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/product"> <i
-                            class="icon material-icons md-shopping_bag"></i>
-                        <span class="text">Products</span>
+                    <a class="menu-link" href="/admin/product"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Product </span>
                     </a>
                     </div>
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/product-categories"> 
+                    <a class="menu-link" href="/admin/product-categories">
                         <i class="icon material-icons md-local_offer"></i>
-                        <span class="text">Category</span>
+                        <span class="text">Category </span>
                     </a>
                     </div>
                 </li>
 
-               
+
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
-                        <span class="text">Orders</span>
+                        <span class="text">Order </span>
                     </a>
                 </li>
 
 
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/banner"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Banners</span>
+                        <span class="text">Banner </span>
                     </a>
                 </li>
 
-                
+
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupon">  <i class="icon material-icons md-stars"></i>
-                        <span class="text">Coupons</span>
+                    <a class="menu-link" href="/admin/coupon"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Coupon </span>
                     </a>
                 </li>
-               
             </ul>
             <hr>
             <ul class="menu-aside">
@@ -153,6 +154,15 @@
                 </ul>
             </div>
 
-            
+
 
         </header>
+
+        <script>
+            $(document).ready(function(){
+                $('.nav-bar-ul').on('click','li',function(){
+                    $('.nav-bar-ul .active').removeClass('active');
+                    $(this).addClass('active')
+                })
+            })
+        </script>

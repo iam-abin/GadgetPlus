@@ -33,7 +33,7 @@
                                 <td style="vertical-align: middle;" width="12%"><%= products[i].product_quantity %></td>
                                 <td style="vertical-align: middle;" width="12%"><%= products[i].product_discount %></td>
                                 
-                                <td style="vertical-align: middle;" width="10%"><img class="img-thumbnail" width="80" src="/product-images/<%= products[i].image %>" alt="no image avalable"></td>
+                                <td style="vertical-align: middle;" width="10%"><img class="img-thumbnail" width="80" src="/product-images/<%= products[i].image[0].filename %>" alt="no image avalable"></td>
                                
                                 <td style="vertical-align: middle;" width="10%"><a href="/admin/edit-product/<%= products[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
     
@@ -55,18 +55,7 @@
             </div>
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
-    <div class="pagination-area mt-15 mb-50">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-start">
-                <li class="page-item active"><a class="page-link" href="/?page=1">01</a></li>
-                <li class="page-item"><a class="page-link" href="/?page=2">02</a></li>
-                <li class="page-item"><a class="page-link" href="/?page=3">03</a></li>
-                <li class="page-item"><a class="page-link" href="/?page=4">04</a></li>
-                <li class="page-item"><a class="page-link" href="/?page=5"><i class="material-icons md-chevron_right"></i></a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+
 </section> <!-- content-main end// -->
 
 

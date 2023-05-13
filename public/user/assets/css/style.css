@@ -16553,9 +16553,11 @@ button:focus {
 }
 
 .card-dashboard {
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
     background-color: #f9f9f9;
-    border: .1rem solid #ebebeb
+    border: 0.1rem solid #c7b2b2;
+    border-radius: 20px;
+    box-shadow: 2px 1px #bccddb;
 }
 
 .card-dashboard .card-title {

@@ -10,55 +10,52 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="table-responsive">
+                        <% if (!orders.length) { %>
+                         <h1>No Orders Yet</h1>
+                        <% } else { %>
+
                         <table class="table table-hover" id="orderTable">
                             <thead>
                                 <tr>
-                                    <th>#ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col" class="text-end"> Action </th>
+                                    <th>ORDER ID</th>
+                                    <th scope="col">USER NAME</th>
+                                    <th scope="col">DATE</th>
+                                    <th scope="col">AMOUNT</th>
+                                    <th scope="col">PAYMENT TYPE</th>
+                                    <th scope="col">STATUS</th>
+                                    <th scope="col"> VIEW DETAILS </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>0901</td>
-                                    <td><b>Marvin McKinney</b></td>
-                                    <td><template class="__cf_email__" data-cfemail="aec3cfdcd8c7c0eecbd6cfc3dec2cb80cdc1c3">[email&#160;protected]</template></td>
-                                    <td>$9.00</td>
-                                    <td><span class="badge rounded-pill alert-warning">Pending</span></td>
-                                    <td>03.12.2020</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
+                                <% for( let i = 0; i < orders.length; i++ ) { %>
+                                    <tr>
+                                        <td><%= orders[i]._id %></td>
+                                        <td><%= orders[i].userDetails[0].name %> </td>
+                                        <td><%= orders[i].orderDate %></td>
+                                        <td><%= orders[i].totalAmountInr %></td>
+                                        <td><%= orders[i].paymentMethod %></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span></td>
+                                        <td >
+                                            <a href="/admin/order-details/<%= orders[i]._id %>" class="btn btn-md rounded font-sm">Details</a>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                                
                                 
                             </tbody>
                         </table>
+                        <% } %>
+
                     </div> <!-- table-responsive //end -->
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
-            <div class="pagination-area mt-15 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-                    </ul>
-                </nav>
-            </div>
         </section> <!-- content-main end// -->
         
+
+        <!-- <script>
+            function getOrderDetailsOfThisOrder(orderId){
+                console.log(orderId);
+
+                $.ajax
+            }
+        </script> -->

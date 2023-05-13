@@ -4,10 +4,11 @@ const router=express.Router();
 const {userAuthenticationCheck,userChecking } = require('../middlewares/sessionHandling');
 
 const categorySupply = require('../middlewares/categoryFetching');
+// const cartCountSupply=require('../middlewares/cartUtility')
 
 const userController=require('../controllers/userController');
 
-
+// router.use(cartCountSupply);
 
 router.use(categorySupply);
 
@@ -52,9 +53,11 @@ router.get('/profile',userChecking,userController.profile)
 
 router.get('/about',userController.about);
 
-router.get('/viewProduct/:id',userController.viewProduct);
+router.get('/viewProduct/:id',userController.viewProducts);
 
-router.get('/wishlist',userChecking,userController.wishlist);
+router.get('/quick-view/:id',userController.viewAProduct);  //display 4 images with image zoom
+
+// router.get('/wishlist',userChecking,userController.wishlist);
 
 router.get('/add-to-wishList/:id',userChecking,userController.addToWishList);
 
@@ -64,23 +67,34 @@ router.get('/cart',userChecking,userController.cart)
 
 router.get('/add-to-cart/:id',userChecking,userController.addToCart)
 
+router.post('/quantity-change',userChecking,userController.incDecQuantity)
+
 router.post('/remove-cart-item/:id',userChecking,userController.removeFromCart)
 
 
 
-router.get('/checkout',userChecking,userController.checkout)
-
-// router.get('/quickView',userController.quickView)
 
 router.post('/add-address',userChecking,userController.addAddress)
 
-router.get('/edit-address',userChecking,userController.editAddress)
+router.get('/edit-address/:id',userChecking,userController.editAddress)
+
+router.post('/edit-address',userChecking,userController.editAddressPost)
+
 
 router.get('/payment',userChecking,userController.payment,)
 
+// ----------------------------------------------------------------------------------------------------
+
+router.get('/checkout',userChecking,userController.checkout)
+
+router.post('/place-order',userChecking,userController.placeOrder)
+
+
+router.get('/order-success',userChecking,userController.orderSuccess)
+// ----------------------------------------------------------------------------------------------------
+
 router.get('/order-details',userChecking,userController.orderDetails)
 
-router.get('/order-summery',userChecking,userController.orderSummary)
 
 router.get('/contact',userController.contact)
 

@@ -17,11 +17,11 @@ const productSchema=new mongoose.Schema({
         // unique:true,
     },
     product_price:{
-        type:String,
+        type:Number,
         required:true
     },
     product_quantity:{
-        type:String,
+        type:Number,
         required:true
     },
     product_discount:{
@@ -29,7 +29,7 @@ const productSchema=new mongoose.Schema({
         required:true
     },
     image:{
-        type:String,
+        type:Array,
         required:true
     },
     product_status:{

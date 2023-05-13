@@ -2,9 +2,11 @@
 const adminHelper = require("../helpers/adminHelper");
 const productHelper = require("../helpers/productHelper");
 const categoryHelper = require("../helpers/categoryHelper");
-const { loginStatus } = require("../controllers/userController");
+const orderHelper = require('../helpers/orderHepler')
 
-const slug=require('slugify')
+const { currencyFormat } = require("../controllers/userController");
+
+const slug = require('slugify')
 // const productSchema=require('../models/productModel');
 // const categorySchema=require('../models/category');
 
@@ -108,8 +110,8 @@ const productList = (req, res) => {
     console.log("products", responseProduct);
     // console.log("category", responseCategory);
 
-    for(let i=0;i<responseProduct.length;i++){
-      responseProduct[i].product_price=Number(responseProduct[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+    for (let i = 0; i < responseProduct.length; i++) {
+      responseProduct[i].product_price = Number(responseProduct[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
     }
 
     res.render("admin/products-list", {
@@ -135,8 +137,11 @@ const addProduct = async (req, res) => {
 
 const postAddProduct = (req, res) => {
   // console.log(req.body);
-  // console.log(req.file);
-  productHelper.addProductToDb(req.body, req.file).then((response) => {
+  // console.log("hi");
+  // console.log(req.files);
+  // console.log("hi");
+
+  productHelper.addProductToDb(req.body, req.files).then((response) => {
     res.status(500).redirect("/admin/product");
   });
 };
@@ -146,6 +151,11 @@ const editProduct = async (req, res) => {
     let product = await productHelper.getAProduct(req.params.id);
     // let category=await categoryHelper.getAcategory()
     let categories = await categoryHelper.getAllcategory();
+
+    console.log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+    console.log(product);
+    console.log(categories);
+    console.log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
     if (product == "") {
       res.status(401).redirect("/admin");
@@ -197,6 +207,8 @@ const deleteProduct = (req, res) => {
   });
 };
 
+// ----------------------------------------------
+
 const productCategory = (req, res) => {
   categoryHelper.getAllcategory().then((category) => {
     // console.log(category);
@@ -208,43 +220,84 @@ const productCategory = (req, res) => {
 };
 
 const postAddProductCategory = (req, res) => {
-  categoryHelper
-    .addCategoryTooDb(req.body)
+  categoryHelper.addCategoryTooDb(req.body)
     .then((category) => {
       res.status(200).redirect("/admin/product-categories");
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((error) => {
+      res.status(500).json({ error: true, message: "Category already Exist!!!" })
+    })
+
 };
 
 const editProductCategory = (req, res) => {
   console.log("----------------------------");
+  console.log(req.params);
   categoryHelper.getAcategory(req.params.id).then((response) => {
     // console.log("response---",response,"ooooooo");
     res.status(200).json({ category: response });
   });
 };
 
+const editProductCategoryPost = (req, res) => {
+  try {
+    console.log("===========================");
+    console.log(req.body);
+    categoryHelper.editCategory(req.body)
+      .then((response) => {
+        res.status(202).json({ message: "category updated" })
+      })
+
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
 const deleteProductCategory = (req, res) => {
   console.log(req.params.id);
   categoryHelper.softDeleteAProductCategory(req.params.id)
-  .then((response) => {
-    if(response.status){
-      res.status(200).json({error:false, message:"category listed",listed:true})
-    }else{
-      res.status(200).json({error:false, message:"category unlisted",listed:false})
+    .then((response) => {
+      if (response.status) {
+        res.status(200).json({ error: false, message: "category listed", listed: true })
+      } else {
+        res.status(200).json({ error: false, message: "category unlisted", listed: false })
+      }
+
+    });
+};
+
+// ----------------------------------------------
+
+
+const productOrders = async (req, res) => {
+  try {
+    let orders = await orderHelper.getAllOrders();
+
+    for (let i = 0; i < orders.length; i++) {
+      orders[i].totalAmountInr = orders[i].totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' ,maximumFractionDigits:0})
     }
 
-  });
+    res.render("admin/orders", { layout: "layouts/adminLayout", orders });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const orders = (req, res) => {
-  res.render("admin/orders", { layout: "layouts/adminLayout" });
-};
+const productOrderDetails = async (req,res) => {
+  try {
+    console.log(req.params);
+    const orderId=req.params.id;
+    let orderedUserdetails=await orderHelper.getOrderedUserDetailsAddress(orderId); //got user details
+    let productDetails=orderHelper.getOrderedProductsDetails(orderId);
+    res.render('admin/order-details.ejs',{orderedUserdetails , layout: "layouts/adminLayout" })
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const banners = (req, res) => {
-  res.render('admin/banner',{layout: "layouts/adminLayout" })
+  res.render('admin/banner', { layout: "layouts/adminLayout" })
 };
 
 const coupons = (req, res) => {
@@ -296,8 +349,10 @@ module.exports = {
   // addProductCategory,
   postAddProductCategory,
   editProductCategory,
+  editProductCategoryPost,
   deleteProductCategory,
-  orders,
+  productOrders,
+  productOrderDetails,
   banners,
   coupons,
   userProfile,

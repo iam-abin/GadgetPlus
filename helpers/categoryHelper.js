@@ -10,9 +10,15 @@ module.exports={
                 description: productData.categoryDescription,
               });
               console.log("hello1");
-              await category.save();
-              console.log("hello");
-              resolve(category._id);
+              await category.save()
+              .then(()=>{
+                  console.log("hello");
+                  resolve(category._id);
+              }).catch((error)=>{
+                console.log("hello error");
+                reject(error)
+              })
+              
         })
     },
 
@@ -31,6 +37,19 @@ module.exports={
             .then((result)=>{
                 resolve(result)
             })
+        })
+    },
+
+    editCategory:(categoryAfterEdit)=>{
+        return new Promise(async(resolve,reject)=>{
+            let category=await categorySchema.findById({_id:categoryAfterEdit.categoryId});
+            // console.log(category);
+            category.name=categoryAfterEdit.categoryName;
+            category.description=categoryAfterEdit.categoryDescription;
+
+            await category.save()
+
+            resolve(category)
         })
     },
 

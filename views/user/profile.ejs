@@ -4,13 +4,14 @@
 		<div class="dashboard">
 			<div class="container">
 				<div class="row mt-3">
-					<aside class="col-md-4 col-lg-3" style="background-color: rgb(32, 165, 214);">
+					<aside class="col-md-4 col-lg-3" style="background-color: #fafafa">
 						<div class="d-flex flex-column align-items-center text-center">
 							<img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin"
 								class="rounded-circle p-1 bg-primary" width="110" style=" margin-top: 20px;">
 							<div class="mt-3">
 								<h4>
 									<%= loginStatus.name %>
+
 								</h4>
 							</div>
 						</div>
@@ -24,13 +25,12 @@
 								<a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-address"
 									role="tab" aria-controls="tab-orders" aria-selected="false">Manage Address</a>
 							</li>
-							<li class="nav-item">
+							<!-- <li class="nav-item">
 								<a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads"
 									role="tab" aria-controls="tab-downloads" aria-selected="false">My Orders </a>
-							</li>
-
+							</li> -->
 							<li class="nav-item">
-								<a class="nav-link" href="#">Change Password</a>
+								<a class="nav-link" href="/order-details" aria-selected="false">My Orders </a>
 							</li>
 						</ul>
 					</aside><!-- End .col-lg-3 -->
@@ -39,15 +39,42 @@
 						<div class="tab-content">
 							<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
 								aria-labelledby="tab-dashboard-link">
-								<p>Hello <span class="font-weight-normal text-dark">User</span> (not <span
-										class="font-weight-normal text-dark">User</span>? <a href="#">Log out</a>)
-									<br>
-									From your account dashboard you can view your <a href="#tab-orders"
-										class="tab-trigger-link link-underline">recent orders</a>, manage your <a
-										href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>,
-									and <a href="#tab-account" class="tab-trigger-link">edit your password and account
-										details</a>.
-								</p>
+								<div class="card mb-4" style=" border: 1px solid;">
+									<div class="card-body text-center">
+										<div class="row">
+											<div class="col-sm-3">
+												<p class="mb-0">Full Name</p>
+											</div>
+											<div class="col-sm-9">
+												<p class="text-muted mb-0">
+													<%= loginStatus.name %>
+												</p>
+											</div>
+										</div>
+										<hr>
+										<div class="row">
+											<div class="col-sm-3">
+												<p class="mb-0">Email</p>
+											</div>
+											<div class="col-sm-9">
+												<p class="text-muted mb-0">
+													<%= loginStatus.email %>
+												</p>
+											</div>
+										</div>
+										<hr>
+										<div class="row">
+											<div class="col-sm-3">
+												<p class="mb-0">Phone</p>
+											</div>
+											<div class="col-sm-9">
+												<p class="text-muted mb-0">
+													<%= loginStatus.phone %>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div><!-- .End .tab-pane -->
 
 							<div class="tab-pane fade" id="tab-orders" role="tabpanel"
@@ -68,34 +95,220 @@
 
 							<div class="tab-pane fade" id="tab-address" role="tabpanel"
 								aria-labelledby="tab-address-link">
-								<p>The following addresses will be used on the checkout page by default.</p>
-								<div class="text-right ">
+								<!-- <p>The following addresses will be used on the checkout page by default.</p> -->
+								<!-- <div class="text-right ">
 									<a class="btn btn-primary mb-2 nav-link " id="tab-orders-link" data-toggle="tab"
 										href="#tab-addAddress" role="tab" aria-controls="tab-orders"
 										aria-selected="false">Add Address</a>
+								</div> -->
+
+				
+
+<!-- =======Add address Modal======= -->
+								<div class="modal fade " id="AddAddress" tabindex="-1"
+									aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Add address</h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body ">
+												<form class="p-3" id="add-address-form">
+													<div class="row ">
+														<div class="col-sm-6">
+															<label>First Name *</label>
+															<input name="fname" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+
+														<input name="id" value="<%= loginStatus._id %>" type="text" hidden>
+
+														<div class="col-sm-6">
+															<label>Last Name *</label>
+															<input name="lname" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+													</div><!-- End .row -->
+													<div class="row">
+														<div class="col-sm-6">
+															<label>Mobile number *</label>
+															<input name="mobile" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+
+														<div class="col-sm-6">
+															<label>Email address *</label>
+															<input name="email" type="email" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+													</div><!-- End .row -->
+													<label>Address *</label>
+													<input name="address" type="text" class="form-control" required>
+
+
+													<div class="row">
+														<div class="col-sm-6">
+															<label>Country *</label>
+															<input name="country" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+
+														<div class="col-sm-6">
+
+															<label>State *</label>
+															<input name="state" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+													</div><!-- End .row -->
+
+
+													<div class="row">
+														<div class="col-sm-6">
+															<label>City *</label>
+															<input name="city" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+
+														<div class="col-sm-6">
+
+															<label>Pincode *</label>
+															<input name="pincode" type="text" class="form-control"
+																required>
+														</div><!-- End .col-sm-6 -->
+													</div><!-- End .row -->
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary"
+															data-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+
+												</form>
+											</div>
+											
+										</div>
+									</div>
 								</div>
+<!-- =======End Add address Modal======= -->
+
+<!-- =======Edit address Modal======= -->
+<div class="modal fade " id="EditAddress" tabindex="-1"
+aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body ">
+			<form class="p-3" id="edit-address-form">
+				<div class="row ">
+					<div class="col-sm-6">
+						<label>First Name *</label>
+						<input name="fname" type="text" class="form-control" id="fname" required>
+					</div><!-- End .col-sm-6 -->
+
+					<input name="addressId" id="addressId"  type="text" hidden>
+
+					<div class="col-sm-6">
+						<label>Last Name *</label>
+						<input name="lname" type="text" id="lname" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+				</div><!-- End .row -->
+				<div class="row">
+					<div class="col-sm-6">
+						<label>Mobile number *</label>
+						<input name="mobile" id="mobile" type="text" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+
+					<div class="col-sm-6">
+						<label>Email address *</label>
+						<input name="email" id="email" type="email" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+				</div><!-- End .row -->
+				<label>Address *</label>
+				<input name="address" id="address" type="text" class="form-control" required>
+
+
+				<div class="row">
+					<div class="col-sm-6">
+						<label>Country *</label>
+						<input name="country" id="country" type="text" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+
+					<div class="col-sm-6">
+
+						<label>State *</label>
+						<input name="state" id="state" type="text" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+				</div><!-- End .row -->
+
+
+				<div class="row">
+					<div class="col-sm-6">
+						<label>City *</label>
+						<input name="city" id="city" type="text" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+
+					<div class="col-sm-6">
+
+						<label>Pincode *</label>
+						<input name="pincode" id="pincode" type="text" class="form-control"
+							required>
+					</div><!-- End .col-sm-6 -->
+				</div><!-- End .row -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Update</button>
+				</div>
+
+			</form>
+		</div>
+		
+	</div>
+</div>
+</div>
+<!-- =======End Edit address Modal======= -->
+
+
 								<div class="row">
 									<div class="col-lg-6">
-										<% for( let i = 0; i < addresses.length; i++ ) { %>
+										<% for( let i=0; i < addresses.length; i++ ) { %>
 											<div class="card card-dashboard">
 												<div class="card-body">
 													<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-	
-													<p><%= addresses[i].first_name %> <%= addresses[i].last_name %><br>
+
+													<p>
+														<%= addresses[i].first_name %>
+														<%= addresses[i].last_name %><br>
 														<%= addresses[i].email_id %><br>
 														<%= addresses[i].mobile %><br>
 														<%= addresses[i].address %><br>
-														
+
 														<%= addresses[i].city %><br>
 														<%= addresses[i].state %><br>
 														<%= addresses[i].country %><br>
 														<%= addresses[i].pincode %><br>
 
-														<a href="#">Edit <i class="icon-edit"></i></a>
+														<a type="button" class="btn btn-primary" data-toggle="modal"
+													data-target="#EditAddress" onclick="getAddress('<%= addresses[i]._id %>')" data-whatever="@mdo">Edit Address +</a>
 													</p>
 												</div><!-- End .card-body -->
 											</div><!-- End .card-dashboard -->
-										<% } %>
+											<% } %>
 									</div><!-- End .col-lg-6 -->
 
 									<div class="col-lg-6">
@@ -103,12 +316,10 @@
 											<div class="card-body">
 												<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
 
-												<!-- <p>You have not set up this type of address yet.<br>
-													<a data-bs-toggle="modal" data-bs-target="#exampleModal1"
-															data-bs-whatever="@getbootstrap">Edit 
-															<i class="icon-edit"></i></a> -->
 
-													<a href="#exampleModal1">Edit <i class="icon-edit"></i></a>
+												<a type="button" class="btn btn-primary" data-toggle="modal"
+													data-target="#AddAddress" data-whatever="@mdo">Add New Address +</a>
+
 												</p>
 											</div><!-- End .card-body -->
 										</div><!-- End .card-dashboard -->
@@ -123,71 +334,7 @@
 
 							<div class="tab-pane fade" id="tab-addAddress" role="tabpanel"
 								aria-labelledby="tab-account-link">
-								<form action="#" id="add-address-form"
-									style="background-color: aliceblue; padding: 12px;">
-									<div class="row">
-										<div class="col-sm-6">
-											<label>First Name *</label>
-											<input name="fname" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-
-										<input name="id" value="<%= loginStatus._id %>" type="text" hidden>
-
-										<div class="col-sm-6">
-											<label>Last Name *</label>
-											<input name="lname" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-									</div><!-- End .row -->
-
-									<div class="row">
-										<div class="col-sm-6">
-											<label>Mobile number *</label>
-											<input name="mobile" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-
-										<div class="col-sm-6">
-											<label>Email address *</label>
-											<input name="email" type="email" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-									</div><!-- End .row -->
-
-
-									<label>Address *</label>
-									<input name="address" type="text" class="form-control" required>
-
-
-									<div class="row">
-										<div class="col-sm-6">
-											<label>Country *</label>
-											<input name="country" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-
-										<div class="col-sm-6">
-
-											<label>State *</label>
-											<input name="state" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-									</div><!-- End .row -->
-
-
-									<div class="row">
-										<div class="col-sm-6">
-											<label>City *</label>
-											<input name="city" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-
-										<div class="col-sm-6">
-
-											<label>Pincode *</label>
-											<input name="pincode" type="text" class="form-control" required>
-										</div><!-- End .col-sm-6 -->
-									</div><!-- End .row -->
-
-									<button type="submit" class="btn btn-outline-primary-2">
-										<span>SAVE</span>
-										<i class="icon-long-arrow-right"></i>
-									</button>
-								</form>
+								My orders are
 							</div><!-- .End .tab-pane -->
 						</div>
 					</div><!-- End .col-lg-9 -->
@@ -198,92 +345,7 @@
 			<!--End add address -->
 
 
-			<!-- Modal Edit address-->
-
-
-			<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form action="#" id="add-address-form" style="background-color: aliceblue; padding: 12px;">
-								<div class="row">
-									<div class="col-sm-6">
-										<label>First Name *</label>
-										<input name="fname" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-
-									<input name="id" value="<%= loginStatus._id %>" type="text" hidden>
-
-									<div class="col-sm-6">
-										<label>Last Name *</label>
-										<input name="lname" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-								</div><!-- End .row -->
-
-								<div class="row">
-									<div class="col-sm-6">
-										<label>Mobile number *</label>
-										<input name="mobile" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-
-									<div class="col-sm-6">
-										<label>Email address *</label>
-										<input name="email" type="email" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-								</div><!-- End .row -->
-
-
-								<label>Address *</label>
-								<input name="address" type="text" class="form-control" required>
-
-
-								<div class="row">
-									<div class="col-sm-6">
-										<label>Country *</label>
-										<input name="country" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-
-									<div class="col-sm-6">
-
-										<label>State *</label>
-										<input name="state" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-								</div><!-- End .row -->
-
-
-								<div class="row">
-									<div class="col-sm-6">
-										<label>City *</label>
-										<input name="city" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-
-									<div class="col-sm-6">
-
-										<label>Pincode *</label>
-										<input name="pincode" type="text" class="form-control" required>
-									</div><!-- End .col-sm-6 -->
-								</div><!-- End .row -->
-
-								<button type="submit" class="btn btn-outline-primary-2">
-									<span>SAVE</span>
-									<i class="icon-long-arrow-right"></i>
-								</button>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Create Coupon</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!--End Modal Edit address-->
+			
 
 		</div><!-- End .dashboard -->
 	</div><!-- End .page-content -->
@@ -309,6 +371,20 @@
 					}).then(() => {
 						console.log(res.message);
 						location.reload()
+						// setTimeout(()=>{
+						// 	Toastify({
+						// 		text: "Address added ",
+						// 		duration: 3000,
+						// 		newWindow: true,
+						// 		close: true,
+						// 		gravity: "top", // `top` or `bottom`
+						// 		position: "center", // `left`, `center` or `right`
+						// 		stopOnFocus: true, // Prevents dismissing of toast on hover
+						// 		style: {
+						// 			background: "yellow",
+						// 		},
+						// 		}).showToast();
+						// },1000)
 						// location.href = "#tab-addAddress"
 					})
 				})
@@ -317,4 +393,56 @@
 				})
 		})
 	})
+
+
+	function getAddress(addressId){
+		console.log(addressId);
+		$.ajax({
+			url:'/edit-address/'+addressId,
+			type:'get',
+
+		}).done((res)=>{
+			console.log(res.address);
+			document.getElementById('addressId').value=res.address._id;
+			document.getElementById('fname').value=res.address.first_name;
+			document.getElementById('lname').value=res.address.last_name;
+			document.getElementById('mobile').value=res.address.mobile;
+			document.getElementById('email').value=res.address.email_id;
+			document.getElementById('address').value=res.address.address;
+			document.getElementById('country').value=res.address.country;
+			document.getElementById('state').value=res.address.state;
+			document.getElementById('city').value=res.address.city;
+			document.getElementById('pincode').value=res.address.pincode;
+		})
+		.fail((error)=>{
+			console.log(error);
+		})
+	}
+
+
+	$(document).ready(function () {
+		$('#edit-address-form').submit((e) => {
+			e.preventDefault();
+			$.ajax({
+				url: '/edit-address',
+				type: 'post',
+				data: $('#edit-address-form').serialize()
+			})
+				.done((res) => {
+					swal({
+						title: "Success",
+						text: "Address Updated.",
+						icon: "success",
+						button: "OK",
+					}).then(() => {
+						console.log(res.message);
+						location.reload()
+					})
+				})
+				.fail((err) => {
+					console.log(err);
+				})
+		})
+	})
+
 </script>

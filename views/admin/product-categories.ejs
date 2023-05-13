@@ -39,24 +39,25 @@
                       <%= categories[i].description %>
                     </td>
                     <td width="20%">
-                      <button class="btn btn-danger btn-sm btn-brand rounded font-sm mt-15"
-                        data-id="<%= categories[i]._id %>" id="editButton">
+                      <button type="button" onclick="getCategory('<%= categories[i]._id %>')" class="btn btn-primary"
+                        style="height: 35px" data-bs-whatever="@getbootstrap">
                         Edit
                       </button>
 
                       <% if (categories[i].status) { %>
-                        <button id="delete-category<%= categories[i]._id %>" class="btn btn-sm btn-success rounded font-sm mt-15"
+                        <button id="delete-category<%= categories[i]._id %>"
+                          class="btn btn-sm btn-success rounded font-sm mt-15"
                           onclick="deleteACategory('<%= categories[i]._id %>') ">
                           Listed
                         </button>
-                      <% } else { %>
-                        <button id="delete-category<%= categories[i]._id %>" class="btn btn-sm btn-danger rounded font-sm mt-15"
-                          onclick="deleteACategory('<%= categories[i]._id %>') ">
-                          Unlisted
-                        </button>
+                        <% } else { %>
+                          <button id="delete-category<%= categories[i]._id %>"
+                            class="btn btn-sm btn-danger rounded font-sm mt-15"
+                            onclick="deleteACategory('<%= categories[i]._id %>') ">
+                            Unlisted
+                          </button>
 
-                      <% } %>
-
+                          <% } %>
                     </td>
                   </tr>
                   <% } %>
@@ -74,7 +75,7 @@
 </section>
 <!-- content-main end// -->
 
-<!-- Modal -->
+<!-- Modal Add Category-->
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -107,40 +108,50 @@
   </div>
 </div>
 
-<div class="modal fade" id="editCAtegory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--End Modal Add Category-->
+
+<!-- Modal Edit Category-->
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
+        <h5 class="modal-title" id="exampleModalLabel">
+          Edit Category
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <% for( let i=0; i < categories.length; i++ ) { %>
-          <form action="/admin/add-productCategory" method="post">
-            <div class="mb-3">
-              <label for="recipient-name" class="col-form-label">Category Name</label>
-              <input type="text" class="form-control" value="<%= categories[i].name %>" name="categoryName"
-                id="recipient-name" />
-            </div>
-            <div class="mb-3">
-              <label for="message-text" class="col-form-label">Category Description</label>
-              <textarea class="form-control" value="<%= categories[i].description %>" name="categoryDescription"
-                id="message-text"></textarea>
-            </div>
-            <div>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-              </button>
-              <button type="submit" class="btn ms-auto d-block btn-primary">
-                Create category
-              </button>
-            </div>
-          </form>
-          <% } %>
+        <form action="/admin/edit-productCategoryPost" id="edit-category-form" method="post">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Category Name</label>
+            <input type="text" class="form-control" id="categoryName" name="categoryName" />
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Category Description</label>
+            <textarea class="form-control" id="categoryDescription" name="categoryDescription"></textarea>
+          </div>
+
+          <div class="mb-3" style="display: none">
+            <label for="" class="col-form-label"> id </label>
+            <input type="text" class="form-control" id="categoryId" name="categoryId" />
+          </div>
+
+          <div>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" class="btn ms-auto d-block btn-primary">
+              Update category
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
+<!--End Modal Edit Category-->
 
 <script>
   function deleteACategory(categoryId) {
@@ -153,49 +164,81 @@
           type: "get",
         }).done((res) => {
           if (res) {
-            swal("successfull", `${res.message}`, "success")
-              .then(() => {
+            if (res.listed) {  //to show green button and green toast message
 
-                if(res.listed){
-                  const button=document.getElementById('delete-category'+categoryId);
-                  document.getElementById('delete-category'+categoryId).classList.remove('btn-danger');
-                  document.getElementById('delete-category'+categoryId).classList.add('btn-success');
-                  button.innerHTML="Listed"
+              Toastify({
+                text: `${res.message}`,
+                duration: 3000,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "green",
+                },
+              }).showToast();
 
-                }else{
-                  const button=document.getElementById('delete-category'+categoryId);
-                  document.getElementById('delete-category'+categoryId).classList.add('btn-danger');
-                  document.getElementById('delete-category'+categoryId).classList.remove('btn-success');
-                  button.innerHTML="UnListed"
-               
-                }
-                console.log(res.listed);
-                // location.reload()
-              })
+              const button = document.getElementById(
+                "delete-category" + categoryId
+              );
+              document.getElementById("delete-category" + categoryId).classList.remove("btn-danger");
+              document.getElementById("delete-category" + categoryId).classList.add("btn-success");
+              button.innerHTML = "Listed";
+            } else {
+
+              Toastify({
+                text: `${res.message}`,
+                duration: 3000,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "red",
+                },
+              }).showToast();
+
+              const button = document.getElementById("delete-category" + categoryId);
+              document.getElementById("delete-category" + categoryId).classList.add("btn-danger");
+              document.getElementById("delete-category" + categoryId ).classList.remove("btn-success");
+              button.innerHTML = "UnListed";
+            }
+            console.log(res.listed);
           }
         });
       }
     });
   }
 
-  // $("#editButton").click((e) => {
-  //   swal("Are you sure you want to delete this", {
-  //     buttons: ["cancel", "ok"],
+  function getCategory(categoryId) {
+    console.log(categoryId);
 
-  //   }).then((res) => {
+    $.ajax({
+      url: "/admin/edit-productCategory/" + categoryId,
+      type: "get",
+    })
+      .done((res) => {
+        console.log(res);
+        $("#categoryName").val(res.category.name);
+        $("#categoryDescription").val(res.category.description);
+        $("#categoryId").val(res.category._id);
+        $("#myModal").modal("show");
+      })
+      .fail((err) => {
+        swal("Error", `${err.responseJSON.message}`, "error");
+      });
+  }
 
-  //     if (res) {
-  //       let id = $(this).data("id");
-  //       console.log(id);
-  //       $.ajax({
-  //         url: "/admin/edit-productCategory/" + id,
-  //         type:'get'
-  //       })
-  //       .done((res)=>{
-  //         console.log("========================");
-  //       })
-  //     }
 
-  //   });
-  // });
+  // $(document).ready(function(){
+  //   $('#edit-category-form').submit((e)=>{
+  //     e.preventDefault();
+
+  //     const categoryId=$('#categoryId').val();
+  //     console.log(categoryId);
+  //     $.ajax({
+  //       url:'/admin/edit-productCategoryPost/'+categoryId,
+  //       type:'post',
+  //       data:$('#edit-category-form').serialize()
+  //     })
+  //   })
+  // })
 </script>

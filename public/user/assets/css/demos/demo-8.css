@@ -34,7 +34,7 @@
 .header .compare-dropdown:focus .dropdown-toggle,
 .header .compare-dropdown.active .cart-txt,
 .header .compare-dropdown.active .dropdown-toggle {
-    color: #eea287
+    color: #008ac9
 }
 
 .header .wishlist-link {
@@ -43,7 +43,7 @@
 
 .header .wishlist-link:hover .wishlist-txt,
 .header .wishlist-link:focus .wishlist-txt {
-    color: #eea287
+    color: #008ac9
 }
 
 .header .wishlist-link .wishlist-count,
@@ -192,7 +192,7 @@ hr {
 }
 
 .intro-content .highlight {
-    color: #eea287
+    color: #008ac9
 }
 
 .intro-subtitle {
@@ -216,7 +216,7 @@ hr {
 
 .intro-title strong {
     font-size: 18rem;
-    color: #eea287
+    color: #008ac9
 }
 
 .intro-text {
@@ -281,8 +281,8 @@ hr {
     padding-left: 1rem;
     padding-right: 1rem;
     min-width: 140px;
-    color: #eea287;
-    border: 0.2rem solid #eea287
+    color: #008ac9;
+    border: 0.2rem solid #008ac9
 }
 
 .banner .banner-link.btn:hover,
@@ -438,7 +438,7 @@ hr {
 .product.product-2 .btn-product:hover,
 .product.product-2 .btn-product:focus {
     color: #fff;
-    background-color: #eea287
+    background-color: #008ac9
 }
 
 .product.product-2 .btn-product:hover span,
@@ -466,7 +466,7 @@ hr {
 
 .product.product-2 .btn-product-icon:hover,
 .product.product-2 .btn-product-icon:focus {
-    background-color: #eea287
+    background-color: #008ac9
 }
 
 .trending {
@@ -524,7 +524,7 @@ hr {
 }
 
 .recent-arrivals .nav.nav-border-anim .nav-link:before {
-    background-color: #eea287
+    background-color: #008ac9
 }
 
 .recent-arrivals .heading .title {
@@ -558,7 +558,7 @@ hr {
 
 .icon-box-card .icon-box-icon {
     font-size: 3rem;
-    color: #eea287
+    color: #008ac9
 }
 
 .icon-box-card .icon-box-title {
@@ -575,8 +575,8 @@ hr {
 .icon-box-card:hover,
 .icon-box-card:focus {
     color: #fff;
-    border-color: #eea287;
-    background-color: #eea287
+    border-color: #008ac9;
+    background-color: #008ac9
 }
 
 .icon-box-card:hover .icon-box-title,
@@ -622,7 +622,7 @@ hr {
 }
 
 .footer .widget-about-info a {
-    color: #eea287
+    color: #008ac9
 }
 
 .footer .widget-title {
@@ -678,7 +678,7 @@ hr {
 
     .intro-title strong {
         font-size: 18rem;
-        color: #eea287
+        color: #008ac9
     }
 
     .intro-text {
@@ -715,7 +715,7 @@ hr {
 
     .intro-title strong {
         font-size: 18rem;
-        color: #eea287
+        color: #008ac9
     }
 
     .intro-text {
@@ -762,7 +762,7 @@ hr {
 
     .intro-title strong {
         font-size: 18rem;
-        color: #eea287
+        color: #008ac9
     }
 
     .intro-text {
@@ -800,7 +800,7 @@ hr {
 
     .intro-title strong {
         font-size: 15rem;
-        color: #eea287
+        color: #008ac9
     }
 
     .intro-content .btn {

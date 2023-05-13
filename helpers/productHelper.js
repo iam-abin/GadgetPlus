@@ -4,9 +4,11 @@ const fs = require('fs')
 
 
 module.exports = {
-    addProductToDb: (data, file) => {
+    addProductToDb: (data, files) => {
         return new Promise(async (resolve, reject) => {
-            console.log(file);
+            let imagesArray = (Object.values(files)).flat(1);
+            console.log("imagesArray",imagesArray,"imagesArray");
+            // console.log(files);
             await productSchema.create({
                 product_name: data.product_name,
                 product_description: data.product_description,
@@ -14,7 +16,7 @@ module.exports = {
                 product_price: data.price,
                 product_quantity: data.quantity,
                 product_discount: data.discount,
-                image: file.filename,
+                image: imagesArray
             }).then((result) => {
                 resolve(result);
             }).catch((error) => {
@@ -120,6 +122,28 @@ module.exports = {
             product.product_status = !product.product_status;
             product.save();
             resolve(product);
+        })
+    },
+
+    decreaseStock:(cartItems)=>{
+        return new Promise(async (resolve,reject)=>{
+            console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+            // console.log("decreaseStock0",cartItems);
+            for(let i=0;i<cartItems.length;i++){
+                let product = await productSchema.findById({_id:cartItems[i].item});
+                // console.log("decreaseStock1",product);
+                const isProductAvailableInStock=(product.product_quantity-cartItems[i].quantity)>0 ? true : false;
+                if(isProductAvailableInStock){
+                    product.product_quantity=product.product_quantity-cartItems[i].quantity;
+                }
+                // else{
+
+                // }
+                await product.save();
+                // console.log("decreaseStock2",product);
+            }
+            console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+            resolve(true)
         })
     }
 

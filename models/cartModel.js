@@ -26,7 +26,7 @@ const cartModel=mongoose.Schema({
     // },
     totalAmount:{
         type:Number,
-        reqruire:true
+        required:true
     },
     
     // status:{

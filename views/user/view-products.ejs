@@ -1,5 +1,5 @@
 <main class="main">
-	
+
 	<nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
 		<div class="container">
 			<ol class="breadcrumb">
@@ -74,69 +74,71 @@
 					</div><!-- End .toolbox -->
 
 					<div class="products mb-3">
-						<div class="row justify-content-center">
+						<div class="row ">
 
 							<% for( let i=0; i < product.length; i++ ) { %>
 
-								<% if (product[i].product_status && ) { %>
+								<% if (product[i].product_status ) { %>
 									<!-- product[i].product_status && product[i].category[0].name =='phone' -->
 
 									<div class="col-6 col-md-4 col-lg-4">
 										<div class="product product-7 ">
 											<figure class="product-media">
-												<a href="product.html">
-													<img src="/product-images/<%= product[i].image %>"
+												<a href="/quick-view/<%= product[i]._id %>">
+													<img src="/product-images/<%= product[i].image[0].filename %>"
 														alt="Product image" class="product-image">
 												</a>
 
 												<div class="product-action-vertical">
-													<a href="#" data-value="<%= product[i]._id %>" class="add-produtToWishlist btn-product-icon btn-wishlist btn-expandable"><span>add
+													<a href="#" data-value="<%= product[i].product_name %>"
+														class="add-produtToWishlist btn-product-icon btn-wishlist btn-expandable"><span>add
 															to wishlist</span></a>
 
-													<a href="popup/quickView.html"
-														class="btn-product-icon btn-quickview"
-														title="Quick view"><span>Quick view</span></a>
+
 												</div><!-- End .product-action-vertical -->
 
-												<div class="product-action">
-													<a  data-value="<%= product[i]._id %>"  class="add-product btn-product btn-cart"><span>add to cart</span></a>
-												</div><!-- End .product-action -->
+												<% if (!product[i].isInCart) { %>
+													<% if (loginStatus) { %>
+														<div class="product-action">
+														<a href="#" data-value="<%= product[i]._id %>"
+															class="add-product btn-product btn-cart"><span>add to cart</span></a>
+														</div><!-- End .product-action -->
+													<% } else {%>
+															<div class="product-action">
+																<a href="/user-login"
+																	class=" btn-product btn-cart"><span>add tocart</span></a>
+															</div><!-- End .product-action -->
+													<% } %>
+
+												<% } else { %>
+													<div class="product-action">
+														<a href="/cart"
+															class="view-cart-products btn-product btn"><span>View
+																in cart</span></a>
+													</div><!-- End .product-action -->
+																	
+												<% } %>
+
 											</figure><!-- End .product-media -->
 
 											<div class="product-body">
-												<div class="product-cat">
-													<a href="#">Women</a>
-												</div><!-- End .product-cat -->
-												<h3 class="product-title"><a href="product.html"><%= product[i].product_name %></a></h3><!-- End .product-title -->
+												<h3 class="product-title"><a href="product.html">
+														<%= product[i].product_name %>
+													</a></h3><!-- End .product-title -->
 												<div class="product-price">
 													<%= product[i].product_price %>
 												</div><!-- End .product-price -->
-												
+
 												<div class="product-price">
 													<%= product[i]._id %>
 												</div>
 
-												<div class="product-nav product-nav-thumbs">
-													<a href="#" class="active">
-														<img src="/user/assets/images/products/product-4-thumb.jpg"
-															alt="product desc">
-													</a>
-													<a href="#">
-														<img src="/user/assets/images/products/product-4-2-thumb.jpg"
-															alt="product desc">
-													</a>
-
-													<a href="#">
-														<img src="/user/assets/images/products/product-4-3-thumb.jpg"
-															alt="product desc">
-													</a>
-												</div><!-- End .product-nav -->
 											</div><!-- End .product-body -->
 										</div><!-- End .product -->
 									</div><!-- End .col-sm-6 col-lg-4 -->
-								<% } %>
+									<% } %>
 
-							<% } %>
+										<% } %>
 
 						</div><!-- End .row -->
 					</div><!-- End .products -->
@@ -433,9 +435,9 @@
 <script>
 
 	$(document).ready(function () {
-		$('.add-product').click((e) => {
+		$('.add-product').click(function (e) {
 			e.preventDefault()
-			const prodId = $('.add-product').data('value')
+			const prodId = $(this).data('value')
 			console.log('clicked', prodId)
 			$.ajax({
 				url: '/add-to-cart/' + prodId,
@@ -443,10 +445,28 @@
 			})
 				.done((res) => {
 					console.log(res);
+					console.log("abi");
 					swal("successfull", `${res.message}`, "success")
 						.then(() => {
 							location.reload()
 						})
+
+					// var newElement=$('')
+
+					// Toastify({
+					// 	text: `${res.message}`,
+					// 	duration: 3000,
+						
+					// 	newWindow: true,
+					// 	close: true,
+					// 	gravity: "top", // `top` or `bottom`
+					// 	position: "center", // `left`, `center` or `right`
+					// 	stopOnFocus: true, // Prevents dismissing of toast on hover
+					// 	style: {
+					// 		background: "linear-gradient(to right, #00b09b, #96c93d)",
+					// 	},
+						
+					// }).showToast();
 				})
 				.fail((err) => {
 					console.log(err);
@@ -454,24 +474,46 @@
 		})
 	})
 
+	// or
+
+	// $('.add-product').on('click',function(e) {
+	// 	e.preventDefault()
+	// 	const prodId = $(this).data('value')
+	// 	console.log('clicked', prodId)
+	// 	$.ajax({
+	// 		url: '/add-to-cart/' + prodId,
+	// 		type: 'get'
+	// 	})
+	// 		.done((res) => {
+	// 			console.log(res);
+	// 			console.log("abi");
+	// 			// swal("successfull", `${res.message}`, "success")
+	// 			// 	.then(() => {
+	// 			// 		location.reload()
+	// 			// 	})
+	// 		})
+	// 		.fail((err) => {
+	// 			console.log(err);
+	// 		})
+	// })
 
 
-	$(document).ready(function(){
-		$('.add-produtToWishlist').click((e)=>{
+	$(document).ready(function () {
+		$('.add-produtToWishlist').click(function (e) {
 			e.preventDefault();
-			const productId=$('.add-produtToWishlist').data('value');
+			const productId = $(this).data('value');
 			// console.log("hjjjjjjjjjj",productId);
 			$.ajax({
-				url:'/add-to-wishList/'+productId,
-				type:'get'
+				url: '/add-to-wishList/' + productId,
+				type: 'get'
 			})
-			.done((res)=>{
-				swal("successfull",`${res.message}`,"success")
-				.then(()=>{
-					location.reload()
+				.done((res) => {
+					swal("successfull", `${res.message}`, "success")
+						.then(() => {
+							location.reload()
+						})
 				})
-			})
-			.fail((err)=>{
+				.fail((err) => {
 					console.log(err);
 				})
 		})

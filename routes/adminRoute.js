@@ -41,10 +41,15 @@ router.post('/add-productCategory',adminChecking,adminController.postAddProductC
 
 router.get('/edit-productCategory/:id',adminChecking,adminController.editProductCategory);
 
+router.post('/edit-productCategoryPost',adminChecking,adminController.editProductCategoryPost);
+
 router.get('/delete-productCategory/:id',adminChecking,adminController.deleteProductCategory)
 
 
-router.get('/orders',adminChecking,adminController.orders);
+router.get('/orders',adminChecking,adminController.productOrders);
+
+router.get('/order-details/:id',adminChecking,adminController.productOrderDetails);
+
 
 router.get('/banner',adminChecking,adminController.banners);
 

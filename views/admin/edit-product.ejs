@@ -22,12 +22,6 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="product_name" class="form-label">Product Category</label>
-                                <input type="text" name="product_category" value="<%= product.product_category %>" placeholder="Type here" class="form-control"
-                                    id="product_category">
-                            </div>
-
-                            <div class="mb-4">
                                 <label class="form-label" for="product_price">Price</label>
                                 <input type="text" placeholder="%" value="<%= product.product_price %>" name="price" class="form-control" id="product_price">
                             </div>
@@ -58,24 +52,51 @@
                         </div>
                     </div> <!-- card end// -->
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-6">
                     <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="input-upload">
-                                <label class="form-label">Image</label>
-                                <img src="/product-images/<%= product.image %>" style="width: 100px; height: 72px;" alt="">
-                                <input class="form-control" type="file" name="img">
-
-                                <input type="hidden" value="<%= product.image %> " name="old_image">
+                        <div class="card-body  ">
+                            <div class="d-flex flex-wrap flex-row">
+                                <div class="input-upload ">
+                                    <label class="form-label">Image 1</label>
+                                    <img src="/product-images/<%= product.image[0].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
+                                    <input class="form-control" type="file" name="img1" multiple>
+                                </div>
+    
+                                <div class=" input-upload">
+                                    <label class="form-label">Image 2</label>
+                                    <img src="/product-images/<%= product.image[1].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
+                                    <input class="form-control" type="file" name="img2">
+                                </div>
                             </div>
-
+                            <div class="d-flex flex-wrap flex-row">
+                                <div class=" input-upload">
+                                    <label class="form-label">Image 3</label>
+                                    <img src="/product-images/<%= product.image[2].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
+                                    <input class="form-control" type="file" name="img3">
+                                </div>
+    
+                                <div class=" input-upload">
+                                    <label class="form-label">Image 4</label>
+                                    <img src="/product-images/<%= product.image[3].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
+                                    <input class="form-control" type="file" name="img4">
+                                </div>
+                            </div>
                             <br>
                             <div class="row gx-2">
                                 <div class="col-sm-12 mb-3">
                                     <label class="form-label">Category</label>
-                                    <select class="form-select"> 
+                                    <select class="form-select" name="product_category">
+
                                         <% for( let i = 0; i < categories.length; i++ ) { %>
-                                            <option value="<%= categories[i]._id %>"> <%= categories[i].name %> </option>
+                                            <% if (categories[i].status) { %>
+                                                <% if (categories[i]._id == product.product_category) { %>
+                                                    <option value="<%= categories[i]._id %>" selected> <%= categories[i].name %> </option>
+                                                <% } else{ %>
+                                                    <option value="<%= categories[i]._id %>"> <%= categories[i].name %> </option>
+                                                <% } %>
+
+                                            <% } %>
+                                           
                                         <% } %>
                                         
                                     </select>
