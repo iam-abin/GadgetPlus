@@ -13,7 +13,7 @@
                             <span>
                                 <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2020, 4:34PM</b>
                             </span> <br>
-                            <small class="text-muted">Order ID: 3453012</small>
+                            <small class="text-muted">Order ID:  <%= orderdetails._id %></small>
                         </div>
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
@@ -39,9 +39,9 @@
                                     <h6 class="mb-1">Customer</h6>
                                     <p class="mb-1">
                                       
-                                        <%= orderedUserdetails.address.first_name %> <%= orderedUserdetails.address.last_name %>  <template class="__cf_email__" data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template> <br> +91 <%= orderedUserdetails.address.mobile %>
+                                        <%= orderdetails.address.first_name %> <%= orderdetails.address.last_name %>  <template class="__cf_email__" data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template> <br> +91 <%= orderdetails.address.mobile %>
                                     </p>
-                                    <a href="/admin/userProfile/<%= orderedUserdetails.user %><%=  %>">View profile</a>
+                                    <a href="/admin/userProfile/<%= orderdetails.user %><%=  %>">View profile</a>
                                 </div>
                             </article>
                         </div> <!-- col// -->
@@ -53,7 +53,7 @@
                                 <div class="text">
                                     <h6 class="mb-1">Order info</h6>
                                     <p class="mb-1">
-                                        Shipping: Fargo express <br> Pay method: card <br> Status: new
+                                        Shipping: Fargo express <br> Pay method: <%= orderdetails.paymentMethod %> <br> Status: new
                                     </p>
                                     <a href="#">Download info</a>
                                 </div>
@@ -67,10 +67,10 @@
                                 <div class="text">
                                     <h6 class="mb-1">Deliver to</h6>
                                     <p class="mb-1">
-                                        City : <%= orderedUserdetails.address.city %>
+                                        City : <%= orderdetails.address.city %>
                                     </p>
                                     <p class="mb-1">
-                                        Address : <%= orderedUserdetails.address.address %>
+                                        Address : <%= orderdetails.address.address %>
                                     </p>
                                 </div>
                             </article>
@@ -89,39 +89,27 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <a class="itemside" href="#">
-                                                    <div class="left">
-                                                        <img src="assets/imgs/items/1.jpg" width="40" height="40" class="img-xs" alt="Item">
-                                                    </div>
-                                                    <div class="info"> T-shirt blue, XXL size </div>
-                                                </a>
-                                            </td>
-                                            <td> $44.25 </td>
-                                            <td> 2 </td>
-                                            <td class="text-end"> $99.50 </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a class="itemside" href="#">
-                                                    <div class="left">
-                                                        <img src="assets/imgs/items/2.jpg" width="40" height="40" class="img-xs" alt="Item">
-                                                    </div>
-                                                    <div class="info"> Winter jacket for men </div>
-                                                </a>
-                                            </td>
-                                            <td> $7.50 </td>
-                                            <td> 2 </td>
-                                            <td class="text-end"> $15.00 </td>
-                                        </tr>
-                                        
+                                        <% for( let i = 0; i < productDetails.length; i++ ) { %>
+                                            <tr>
+                                                <td>
+                                                    <a class="itemside" href="#">
+                                                        <div class="left">
+                                                            <img src="/product-images/<%= productDetails[i].orderedProduct.image[0].filename %>" width="40" height="40" class="img-xs" alt="Item">
+                                                        </div>
+                                                        <div class="info"> <%= productDetails[i].orderedProduct.product_name %> </div>
+                                                    </a>
+                                                </td>
+                                                <td> <%= productDetails[i].orderedProduct.product_price %> </td>
+                                                <td> <%= productDetails[i].orderedItems.quantity %> </td>
+                                                <td class="text-end"> <%= productDetails[i].orderedProduct.product_price*productDetails[i].orderedItems.quantity %> </td>
+                                            </tr>
+                                        <% } %>
                                         <tr>
                                             <td colspan="4">
                                                 <article class="float-end">
                                                     <dl class="dlist">
                                                         <dt>Subtotal:</dt>
-                                                        <dd>$973.35</dd>
+                                                        <dd></dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt>Shipping cost:</dt>
@@ -129,7 +117,7 @@
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt>Grand total:</dt>
-                                                        <dd> <b class="h5">$983.00</b> </dd>
+                                                        <dd> <b class="h5"><%= orderdetails.totalAmount %></b> </dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt class="text-muted">Status:</dt>

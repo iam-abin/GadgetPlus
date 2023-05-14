@@ -9,7 +9,7 @@ const adminHelper = require('../helpers/adminHelper');
 const addressHelper = require('../helpers/addressHelper');
 const orderHepler = require('../helpers/orderHepler')
 
-const slug = require('slugify');
+const slugify = require('slugify');
 const wishListHelper = require('../helpers/wishListHelper');
 
 let loginStatus;
@@ -474,6 +474,7 @@ const checkout = async (req, res) => {     //to view details and price products 
         const user = req.session.user;
 
         let cartItems = await cartHelper.getAllCartItems(user._id);
+
         let totalAmount = await cartHelper.totalSubtotal(user._id, cartItems);
         totalAmount=totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
         const userAddress = await addressHelper.findAddresses(user._id);
@@ -500,7 +501,21 @@ const placeOrder = async (req, res) => {
         let userId=req.body.userId
 
         let cartItems = await cartHelper.getAllCartItems(userId);
-        const totalAmount = await cartHelper.totalSubtotal(userId, cartItems); // instesd find cart using user id and take total amound from that 
+
+        if(!cartItems.length){
+           return res.json({error:true,message:"Please add items to cart before checkout"})
+        }
+
+
+        if(req.body.addressSelected==undefined ){
+            return res.json({ error:true, message: "Please Choose Address" })
+        }
+
+        if(req.body.payment==undefined ){
+            return res.json({ error:true, message: "Please Choose Payment Method" })
+        }
+
+        const totalAmount = await cartHelper.totalSubtotal(userId, cartItems); // instead find cart using user id and take total amound from that 
 
         console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 
@@ -511,23 +526,13 @@ const placeOrder = async (req, res) => {
         console.log(req.body.addressSelected);
         console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 
-        if(req.body.addressSelected==undefined ){
-            res.status(202).json({ error:true, message: "Please Choose Address" })
-        }
 
-        if(req.body.payment==undefined ){
-            res.status(202).json({ error:true, message: "Please Choose Payment Method" })
-        }
-        // || req.body.addressSelected==undefined)
-
-        if (req.body.payment === 'COD') {
+        if (req.body.payment == 'COD') {
             const placeOrder = await orderHepler.orderPlacing(req.body, totalAmount,cartItems)
                 .then(async (response) => {
                     await productHelper.decreaseStock(cartItems);
-
-
-
-
+                    await cartHelper.clearCart(userId);
+                    cartCount = await cartHelper.getCartCount(userId)
                     res.status(202).json({ message: "Purchase Done" })
                 })
         }
@@ -552,8 +557,9 @@ const orderSuccess = (req, res) => {
 const orderDetails = async (req, res) => {
     try {
         const user=req.session.user;
-        const userOrderDetails=await orderHepler.getOrderDetails(user._id);
+        const userOrderDetails=await orderHepler.getAllOrderDetailsOfAUser(user._id);
         console.log("orders",userOrderDetails);
+
         res.render('user/order-details',{userOrderDetails,loginStatus,cartCount})
     } catch (error) {
         

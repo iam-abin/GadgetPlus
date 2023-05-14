@@ -37,7 +37,7 @@ module.exports = {
                 orderDate: date,
                 totalAmount: totalAmount,
                 paymentMethod: 'COD',
-                addressLookedup: status,
+                orderStatus: status,
                 orderedItems: orderedItems
             })
             await ordered.save();
@@ -66,7 +66,7 @@ module.exports = {
         })
     },
 
-    getOrderDetails: (userId) => {
+    getAllOrderDetailsOfAUser: (userId) => {
         return new Promise(async (resolve, reject) => {
             const userOrderDetails = await orderSchema.aggregate([
                 {
@@ -94,9 +94,12 @@ module.exports = {
 
     //------------------=--------------------------------------------------
 
-    getOrderedUserDetailsAddress: (orderId) => {
+    getOrderedUserDetailsAndAddress: (orderId) => {
         return new Promise(async(resolve,reject)=>{
             await orderSchema.aggregate([
+                {
+                    $match: { _id: new ObjectId(orderId) }
+                },
                 
                 {
                     $lookup:{
@@ -107,11 +110,10 @@ module.exports = {
                     }
                 },
                 {
-                    $match: { _id: new ObjectId(orderId) }
-                },
-                {
                     $project:{
                         user:1,
+                        totalAmount:1,
+                        paymentMethod:1,
                         address:{
                             $arrayElemAt:['$userAddress',0]
                         }
@@ -132,6 +134,15 @@ module.exports = {
 
     //------------------=--------------------------------------------------
 
+    // orderDetails:(orderId)=>{
+    //    return new Promise(async (resolve,reject)=>{
+    //     await orderSchema.find({_id:orderId}).
+    //     then((result)=>{
+    //         // console.log("totalAmount",result[0].totalAmount);
+    //         resolve(result[0])
+    //     })
+    //    })
+    // },
 
     getOrderedProductsDetails: (orderId) => {
         return new Promise(async(resolve,reject)=>{
@@ -140,21 +151,22 @@ module.exports = {
                     $match:{_id: new ObjectId(orderId)}
                 },
                 {
-                    $project:{
-                        products:{
-                            $arrayElemAt:['$orderedItems',0]
-                        }
+                    $unwind:'$orderedItems'
+                },
+                {
+                    $lookup:{
+                        from:'products',
+                        localField:'orderedItems.product',
+                        foreignField:'_id',
+                        as:'orderedProduct'
                     }
                 },
                 {
-                    $project:{
-                        quantity:{
-                            $arrayElemAt:'$products'
-                        }
-                    }
+                    $unwind:'$orderedProduct'
                 }
             ]).then((result)=>{
                 console.log("orders",result);
+                resolve(result)
             })
         })
     }

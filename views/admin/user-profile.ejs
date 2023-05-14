@@ -55,6 +55,45 @@
                     </div> <!--  row.// -->
                 </div> <!--  card-body.// -->
             </div> <!--  card.// -->
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <% if (!userOrderDetails.length) { %>
+                         <h1>No Orders Yet</h1>
+                        <% } else { %>
+
+                        <table class="table table-hover" id="orderTable">
+                            <thead>
+                                <tr>
+                                    <th>ORDER ID</th>
+                                    <th scope="col">DATE</th>
+                                    <th scope="col">AMOUNT</th>
+                                    <th scope="col">PAYMENT TYPE</th>
+                                    <th scope="col">STATUS</th>
+                                    <th scope="col"> VIEW DETAILS </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( let i = 0; i < userOrderDetails.length; i++ ) { %>
+                                    <tr>
+                                        <td><%= userOrderDetails[i]._id %></td>
+                                        <td><%= userOrderDetails[i].orderDate %></td>
+                                        <td><%= userOrderDetails[i].totalAmount %></td>
+                                        <td><%= userOrderDetails[i].paymentMethod %></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%= userOrderDetails[i].orderStatus %></span></td>
+                                        <td >
+                                            <a href="/admin/order-details/<%= userOrderDetails[i]._id %>" class="btn btn-md rounded font-sm">Details</a>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <% } %>
+
+                    </div> <!-- table-responsive //end -->
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
             
         </section> <!-- content-main end// -->
         

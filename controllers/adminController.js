@@ -6,7 +6,8 @@ const orderHelper = require('../helpers/orderHepler')
 
 const { currencyFormat } = require("../controllers/userController");
 
-const slug = require('slugify')
+const slugify = require('slugify');
+const cartHelper = require("../helpers/cartHelper");
 // const productSchema=require('../models/productModel');
 // const categorySchema=require('../models/category');
 
@@ -275,7 +276,7 @@ const productOrders = async (req, res) => {
     let orders = await orderHelper.getAllOrders();
 
     for (let i = 0; i < orders.length; i++) {
-      orders[i].totalAmountInr = orders[i].totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' ,maximumFractionDigits:0})
+      orders[i].totalAmountInr = orders[i].totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
     }
 
     res.render("admin/orders", { layout: "layouts/adminLayout", orders });
@@ -284,13 +285,15 @@ const productOrders = async (req, res) => {
   }
 };
 
-const productOrderDetails = async (req,res) => {
+const productOrderDetails = async (req, res) => {
   try {
     console.log(req.params);
-    const orderId=req.params.id;
-    let orderedUserdetails=await orderHelper.getOrderedUserDetailsAddress(orderId); //got user details
-    let productDetails=orderHelper.getOrderedProductsDetails(orderId);
-    res.render('admin/order-details.ejs',{orderedUserdetails , layout: "layouts/adminLayout" })
+    const orderId = req.params.id;
+    let orderdetails = await orderHelper.getOrderedUserDetailsAndAddress(orderId); //got user details
+    // let orderDetails= await orderHelper.getOrderDetails(orderId)
+    let productDetails = await orderHelper.getOrderedProductsDetails(orderId); //got ordered products details
+    
+    res.render('admin/order-details', { orderdetails, productDetails, layout: "layouts/adminLayout" })
   } catch (error) {
     console.log(error);
   }
@@ -304,13 +307,14 @@ const coupons = (req, res) => {
   res.render("admin/coupon", { layout: "layouts/adminLayout" });
 };
 
-const userProfile = (req, res) => {
-  adminHelper
-    .findAUser(req.params.id)
-    .then((response) => {
+const userProfile = async (req, res) => {
+  const userOrderDetails=await orderHelper.getAllOrderDetailsOfAUser(req.params.id);
+  adminHelper.findAUser(req.params.id).then((response) => {
+
       res.render("admin/user-profile", {
         layout: "layouts/adminLayout",
         user: response,
+        userOrderDetails
       });
     })
     .catch((error) => {
@@ -338,7 +342,6 @@ module.exports = {
   adminLogout,
   usersList,
   blockUnBlockUser,
-  // unBlockUser,
   productList,
   addProduct,
   postAddProduct,

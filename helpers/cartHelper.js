@@ -200,55 +200,25 @@ module.exports = {
                 // console.log("cartItemscartItemscartItems");
                 // console.log(cartItems);
                 // console.log("cartItemscartItemscartItems");
-            }else{
+            } else {
                 resolve(total)
             }
         })
 
     },
 
-    // getTotalCartAmount: (userId) => {
-    //     return new Promise(async (resolve, reject) => {
+    clearCart: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            await cartSchema.findOneAndUpdate(
+                { user: userId },
+                { $set: { products: [] } }, 
+                { new: true })
 
-    //         let total = await cartSchema.aggregate([
-    //             {
-    //                 $match: { user: new ObjectId(userId) }
-    //             },
-    //             {
-    //                 $unwind: '$products'
-    //             },
-    //             {
-    //                 $project: {
-    //                     item: '$products.productItemId',
-    //                     quantity: '$product.quantity'
-    //                 }
-    //             },
-    //             {
-    //                 $lookup: {
-    //                     from: 'products',
-    //                     localField: 'item',
-    //                     foreignField: '_id',
-    //                     as: 'product'
-    //                 }
-    //             },
-    //             {
-    //                 $project: {
-    //                     item: 1,
-    //                     quantity: 1,
-    //                     product: { $arrayElemAt: ['$product', 0] }
-    //                 }
-    //             },
-    //             {
-    //                 $group: {
-    //                     _id: null,
-    //                     total: { $sum: { $multiply: ['$quantity', '$product.product_price'] } }
-    //                 }
-    //             }
-    //         ])
-    //         console.log(total);
-    //     })
+                .then((result)=>{
+                    resolve(result)
+                })
+        })
 
-
-    // }
+    }
 
 }
