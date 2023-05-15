@@ -1,4 +1,4 @@
-// const userSchema = require("../models/userModel");
+
 const adminHelper = require("../helpers/adminHelper");
 const productHelper = require("../helpers/productHelper");
 const categoryHelper = require("../helpers/categoryHelper");
@@ -6,6 +6,7 @@ const orderHelper = require('../helpers/orderHepler')
 
 const { currencyFormat } = require("../controllers/userController");
 
+var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
 const cartHelper = require("../helpers/cartHelper");
 // const productSchema=require('../models/productModel');

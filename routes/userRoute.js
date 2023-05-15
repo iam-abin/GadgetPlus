@@ -93,8 +93,9 @@ router.post('/place-order',userChecking,userController.placeOrder)
 router.get('/order-success',userChecking,userController.orderSuccess)
 // ----------------------------------------------------------------------------------------------------
 
-router.get('/order-details',userChecking,userController.orderDetails)
+router.get('/orders',userChecking,userController.orders)
 
+router.get('/order-details/:id',userChecking,userController.productOrderDetails)
 
 router.get('/contact',userController.contact)
 

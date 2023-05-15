@@ -9,6 +9,7 @@ const adminHelper = require('../helpers/adminHelper');
 const addressHelper = require('../helpers/addressHelper');
 const orderHepler = require('../helpers/orderHepler')
 
+var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
 const wishListHelper = require('../helpers/wishListHelper');
 
@@ -554,17 +555,37 @@ const orderSuccess = (req, res) => {
 
 //to find all orders details of a user
 
-const orderDetails = async (req, res) => {
+const orders = async (req, res) => {
     try {
         const user=req.session.user;
         const userOrderDetails=await orderHepler.getAllOrderDetailsOfAUser(user._id);
         console.log("orders",userOrderDetails);
 
-        res.render('user/order-details',{userOrderDetails,loginStatus,cartCount})
+        res.render('user/orders-user',{userOrderDetails,loginStatus,cartCount})
     } catch (error) {
         
     }
 }
+
+const productOrderDetails = async (req, res) => {
+    try {
+      console.log(req.params);
+      const orderId = req.params.id;
+      let orderdetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
+      // let orderDetails= await orderHelper.getOrderDetails(orderId)
+      let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
+
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>");
+      console.log("orderdetails",orderdetails);
+      console.log("productDetails",productDetails);
+      console.log("loginStatus",loginStatus);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>");
+      
+      res.render('user/order-details-user', { orderdetails, productDetails,loginStatus})
+    } catch (error) {
+      console.log(error);
+    }
+  }
 // ----------------------------------------------------------------------------------------------------
 
 
@@ -623,7 +644,10 @@ module.exports = {
     placeOrder,
     orderSuccess,
 
-    orderDetails,
+    orders,
+    productOrderDetails,
+
+
     contact,
     notFound404,
     currencyFormat,
