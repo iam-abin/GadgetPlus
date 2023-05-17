@@ -18,10 +18,18 @@ const orderSchema = mongoose.Schema(
         ],
         address:mongoose.Schema.Types.ObjectId,
         orderDate:Date,
+        coupon:{
+            type: String,
+            default: null
+        },
         totalAmount: Number,
         // finalAmount:Number,
         paymentMethod: String,
-        orderStatus: String
+        orderStatus: {
+            type:String,
+            enum:['pending', 'processing','confirmed', 'shipped', 'out for delivery' ,'delivered', 'cancelPending' ,'canceled'],
+            default:'pending'
+        }
     },
     {
         timestamps: true,

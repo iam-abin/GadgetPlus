@@ -22,10 +22,11 @@ function orderDate() {
 module.exports = {
     orderPlacing: (order, totalAmount, cartItems) => {
         return new Promise(async (resolve, reject) => {
-            let status = order.payment == 'COD' ? 'placed' : 'pending';
+            let status = order.payment == 'COD' ? 'confirmed' : 'pending';
             let date = orderDate();
             let userId = order.userId;
             // let address= await addressSchema.findById({_id:order.addressSelected});
+            let paymentMethod=order.payment;
             let addressId = order.addressSelected;
             let orderedItems = cartItems
             console.log("orderedItems", orderedItems);
@@ -36,7 +37,7 @@ module.exports = {
                 address: addressId,
                 orderDate: date,
                 totalAmount: totalAmount,
-                paymentMethod: 'COD',
+                paymentMethod: paymentMethod,
                 orderStatus: status,
                 orderedItems: orderedItems
             })

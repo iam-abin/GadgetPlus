@@ -70,7 +70,7 @@
 												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-plus"></i></button>
 											</div><!-- End .cart-product-quantity -->
 										</td>
-										<td id="productPrice<%= cartItems[i].product._id %>" class="total-col">₹<%= cartItems[i].product.product_price %>
+										<td id="productPrice<%= cartItems[i].product._id %>" class="total-col">₹<%= cartItems[i].product.product_price * cartItems[i].quantity %>
 										</td>
 
 										
@@ -82,20 +82,6 @@
 
 							</tbody>
 						</table><!-- End .table table-wishlist -->
-
-						<div class="cart-bottom">
-							<div class="cart-discount">
-								<form action="#">
-									<div class="input-group">
-										<input type="text" class="form-control" required placeholder="coupon code">
-										<div class="input-group-append">
-											<button class="btn btn-outline-primary-2" type="submit"><i
-													class="icon-long-arrow-right"></i></button>
-										</div><!-- .End .input-group-append -->
-									</div><!-- End .input-group -->
-								</form>
-							</div><!-- End .cart-discount -->
-						</div><!-- End .cart-bottom -->
 					</div><!-- End .col-lg-9 -->
 					<aside class="col-lg-3">
 						<div class="summary summary-cart">
@@ -180,6 +166,7 @@
 			if(res){
 				console.log(res.message);
 				// if(!res.error){
+					
 					document.getElementById('incDec'+productId).innerHTML=res.message.quantity
 					document.getElementById('totalAmount').innerHTML=res.message.totalAmount
 					let total=res.message.quantity*price

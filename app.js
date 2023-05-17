@@ -7,6 +7,7 @@ const path = require("path");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const nocache = require("nocache");
+const methodOverride=require('method-override');
 
 const connectDb = require("./config/db");
 
@@ -25,6 +26,7 @@ app.use(expressLayouts); //middleware that helps to create reusable layouts for 
 app.use(logger("dev"));
 app.use(express.urlencoded({ extended: false })); //for parsing form data
 app.use(express.json()); //for parsing json
+app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));

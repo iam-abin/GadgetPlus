@@ -207,6 +207,16 @@ module.exports = {
 
     },
 
+    totalAmount:(userId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            const cart=await cartSchema.findOne({user:userId})
+            console.log(cart);
+            console.log(cart.totalAmount);
+            resolve(cart.totalAmount)
+        })
+    },
+
     clearCart: (userId) => {
         return new Promise(async (resolve, reject) => {
             await cartSchema.findOneAndUpdate(
@@ -220,5 +230,6 @@ module.exports = {
         })
 
     }
+
 
 }

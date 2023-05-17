@@ -2,7 +2,8 @@
 const adminHelper = require("../helpers/adminHelper");
 const productHelper = require("../helpers/productHelper");
 const categoryHelper = require("../helpers/categoryHelper");
-const orderHelper = require('../helpers/orderHepler')
+const orderHelper = require('../helpers/orderHepler');
+const coupenHelper=require('../helpers/coupenHelper')
 
 const { currencyFormat } = require("../controllers/userController");
 
@@ -304,9 +305,57 @@ const banners = (req, res) => {
   res.render('admin/banner', { layout: "layouts/adminLayout" })
 };
 
-const coupons = (req, res) => {
-  res.render("admin/coupon", { layout: "layouts/adminLayout" });
+const coupons = async (req, res) => {
+  try {
+    let coupons=await coupenHelper.getAllCoupons();
+    
+    res.render("admin/coupon", { coupons,layout: "layouts/adminLayout" });
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+const postAddCoupon=async (req,res)=>{
+  console.log("hello");
+  coupenHelper.addCouponToDb(req.body)
+  .then((coupon)=>{
+    res.status(202).redirect('/admin/coupon')
+  })
+}
+
+const editCoupon = async (req,res)=>{
+  try {
+    const couponData=await coupenHelper.getACoupenData(req.params.id);
+    res.status(200).json({couponData})
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const editCouponPost= (req,res)=>{
+  try {
+    console.log("heloooooooooooooooooo");
+    console.log(req.body);
+    const response= coupenHelper.editCoupon(req.body);
+    // res.status(202).json({message:"coupon details updated"})
+    res.redirect('/admin/coupon')
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const deleteCoupon=async (req,res)=>{
+  try {
+
+    // console.log(req.params.id);
+    // console.log("helooooooooooooooooooooooooooooooo");
+    const response=await coupenHelper.deleteACoupon(req.params.id);
+    res.json({message:"coupon deleted successfully"})
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const userProfile = async (req, res) => {
   const userOrderDetails=await orderHelper.getAllOrderDetailsOfAUser(req.params.id);
@@ -359,6 +408,10 @@ module.exports = {
   productOrderDetails,
   banners,
   coupons,
+  postAddCoupon,
+  editCoupon,
+  editCouponPost,
+  deleteCoupon,
   userProfile,
   // isLogged
 };

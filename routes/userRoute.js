@@ -85,9 +85,11 @@ router.get('/payment',userChecking,userController.payment,)
 
 // ----------------------------------------------------------------------------------------------------
 
-router.get('/checkout',userChecking,userController.checkout)
+router.get('/checkout',userChecking,userController.checkout);
 
-router.post('/place-order',userChecking,userController.placeOrder)
+router.post('/apply-coupon',userChecking,userController.applyCoupon)
+
+router.post('/place-order',userChecking,userController.placeOrder);
 
 
 router.get('/order-success',userChecking,userController.orderSuccess)

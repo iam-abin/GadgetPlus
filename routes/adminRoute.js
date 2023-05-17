@@ -53,7 +53,20 @@ router.get('/order-details/:id',adminChecking,adminController.productOrderDetail
 
 router.get('/banner',adminChecking,adminController.banners);
 
+
+
 router.get('/coupon',adminChecking,adminController.coupons);
+
+router.post('/add-coupon',adminChecking,adminController.postAddCoupon)
+
+router.get('/edit-coupon/:id',adminChecking,adminController.editCoupon)
+
+router.post('/edit-coupon',adminChecking,adminController.editCouponPost)
+
+
+router.get('/delete-coupon/:id',adminChecking,adminController.deleteCoupon)
+
+
 
 router.get('/userProfile/:id',adminChecking,adminController.userProfile);
 

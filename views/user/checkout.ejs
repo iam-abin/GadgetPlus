@@ -21,7 +21,7 @@
 			<div class="container">
 				<form id="checkout-form">
 					<div class="row">
-						<div class="col-lg-9">
+						<div class="col-lg-8">
 							<div class="col-lg-6">
 								<div class="card card-dashboard">
 									<div class="card-body">
@@ -73,8 +73,19 @@
 
 							</div><!-- End .row -->
 
-						</div><!-- End .col-lg-9 -->
-						<aside class="col-lg-3">
+						</div><!-- End .col-lg-8 -->
+
+						<aside class="col-lg-4">
+							<div class=" d-flex">
+								<input type="text" id="couponCode" style="width: 15%x; height: 45px;" class="form-control"
+									placeholder="coupon code">
+
+								<a style="width: 50px; height: 45px;" onclick="applyCoupon('<%= totalAmount %>')" class="btn btn-outline-primary ">
+									<i class="icon-long-arrow-right text-dark"></i> </a>
+							</div>
+							<span id="couponApplySuccess" class="text-success"></span>
+							<span id="couponApplyFail" class="text-danger"></span>
+
 							<div class="summary">
 								<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
@@ -91,7 +102,7 @@
 										<% for( let i=0; i < cartItems.length; i++ ) { %>
 											<tr>
 												<td><a href="#">
-														<%= cartItems[i].product.product_name %>
+														<%= cartItems[i].product.product_name %> x <%= cartItems[i].quantity %>
 													</a></td>
 												<td>
 													<%= cartItems[i].product.product_price %>
@@ -100,21 +111,21 @@
 											<% } %>
 
 
-												<!-- <tr class="summary-subtotal">
-											<td>Subtotal:</td>
-											<td>$160.00</td>
-										</tr> -->
-												<!-- End .summary-subtotal -->
-												<!-- <tr class="summary-subtotal">
-											<td>Discount:</td>
-											<td>$160.00</td>
-										</tr> -->
-												<tr class="summary-total">
-													<td>Total:</td>
-													<td>
-														<%= totalAmount %>
-													</td>
-												</tr><!-- End .summary-total -->
+											<tr class="summary-subtotal">
+												<td>Subtotal:</td>
+												<td><%= totalAmount %></td>
+											</tr> 
+											<!-- End .summary-subtotal -->
+											<tr class="summary-subtotal">
+												<td>Discount:</td>
+												<td id="discount" class="text-success">0.00</td>
+											</tr>
+											<tr class="summary-total">
+												<td>Total:</td>
+												<td id="totalAmount">
+													<%= totalAmount %>
+												</td>
+											</tr><!-- End .summary-total -->
 									</tbody>
 								</table><!-- End .table table-summary -->
 
@@ -349,7 +360,7 @@
 							style: {
 								background: "linear-gradient(to right, #00b09b, #96c93d)",
 							},
-				
+
 						}).showToast();
 					} else {
 
@@ -457,5 +468,37 @@
 				})
 		})
 	})
+
+
+	function applyCoupon(totalAmount){
+		const couponCode=document.getElementById('couponCode').value;
+		console.log(couponCode);
+
+		$.ajax({
+			url:'/apply-coupon',
+			type:'post',
+			data:{
+				couponCode:couponCode,
+			}
+		})
+		.done((res)=>{
+			if(res.status){
+				console.log("hello");
+				console.log(res);
+				document.getElementById('couponApplyFail').classList.add('d-none')
+				document.getElementById('couponApplySuccess').classList.remove('d-none')
+				document.getElementById('couponApplySuccess').innerHTML=res.message
+				document.getElementById('discount').innerHTML=-res.discount
+				document.getElementById('totalAmount').innerHTML=res.cart.totalAmount
+			}else{
+				console.log(res);
+				document.getElementById('couponApplySuccess').classList.add('d-none')
+				document.getElementById('couponApplyFail').classList.remove('d-none')
+				document.getElementById('couponApplyFail').innerHTML=res.message
+
+
+			}
+		})
+	}
 
 </script>

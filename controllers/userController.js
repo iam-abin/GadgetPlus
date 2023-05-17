@@ -1,5 +1,6 @@
 
 const userSchema = require('../models/userModel');
+const couponSchema=require('../models/couponModel')
 const userHelper = require('../helpers/userHelper');
 const productHelper = require('../helpers/productHelper')
 const categoryHelper = require('../helpers/categoryHelper')
@@ -7,7 +8,8 @@ const cartHelper = require('../helpers/cartHelper')
 const twilio = require('../api/twilio');
 const adminHelper = require('../helpers/adminHelper');
 const addressHelper = require('../helpers/addressHelper');
-const orderHepler = require('../helpers/orderHepler')
+const orderHepler = require('../helpers/orderHepler');
+const couponHelper=require('../helpers/coupenHelper')
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
@@ -496,12 +498,30 @@ const checkout = async (req, res) => {     //to view details and price products 
 
 }
 
+const applyCoupon=async(req,res)=>{
+    try {
+        const user=req.session.user
+        const {totalAmount,couponCode}=req.body;
+        console.log("hhhhhhhhhhhhh",couponCode);
+        console.log("hhhhhhhhhhhhh",totalAmount);
+        const response=await couponHelper.applyCoupon(user._id,couponCode);
+
+        console.log("responseddddddddddddddddd",response);
+        res.status(202).json(response);
+
+
+    } catch (error) {
+        
+    }
+}
+
 
 const placeOrder = async (req, res) => {
     try {
         let userId=req.body.userId
 
         let cartItems = await cartHelper.getAllCartItems(userId);
+        let coupon=await couponSchema.find({user:userId})
 
         if(!cartItems.length){
            return res.json({error:true,message:"Please add items to cart before checkout"})
@@ -516,8 +536,11 @@ const placeOrder = async (req, res) => {
             return res.json({ error:true, message: "Please Choose Payment Method" })
         }
 
-        const totalAmount = await cartHelper.totalSubtotal(userId, cartItems); // instead find cart using user id and take total amound from that 
-
+        
+        const totalAmount = await cartHelper.totalAmount(userId); // instead find cart using user id and take total amound from that 
+        console.log(totalAmount,"totalAmount");
+        
+        console.log(userId,"userId");
         console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 
         console.log(cartItems);
@@ -640,7 +663,7 @@ module.exports = {
     editAddress,
     editAddressPost,
     payment,
-
+    applyCoupon,
     placeOrder,
     orderSuccess,
 
