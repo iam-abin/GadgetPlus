@@ -19,6 +19,29 @@ function orderDate() {
     return date
 }
 
+function orderStatusCount(orderStatuses){
+    let counts={};
+
+    orderStatuses.forEach(oneStatus => {
+        let status=oneStatus.orderStatus
+        // console.log(typeof status);
+        if(counts[status]){
+            counts[status]++;
+        }else{
+            counts[status]=1;
+        }
+
+        counts.pending=1; //need to remove after adding razorpay
+        counts.processing=6;
+        counts.cancelPending=7;
+        counts.canceled=3
+
+    });
+    console.log(counts);
+    return counts
+}
+
+
 module.exports = {
     orderPlacing: (order, totalAmount, cartItems) => {
         return new Promise(async (resolve, reject) => {
@@ -65,6 +88,18 @@ module.exports = {
                     resolve(result)
                 })
         })
+    },
+
+    getAllOrderStatusesCount: async()=>{
+        try {
+            const orderStatuses= await orderSchema.find().select({_id:0,orderStatus:1})
+
+            const eachOrderStatusCount= orderStatusCount(orderStatuses);
+
+            return eachOrderStatusCount
+        } catch (error) {
+            console.log(error);
+        }
     },
 
     getAllOrderDetailsOfAUser: (userId) => {

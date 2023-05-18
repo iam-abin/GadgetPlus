@@ -52,36 +52,36 @@
 
     /*Sale statistics Chart*/
     if ($('#myChart2').length) {
+        
         var ctx = document.getElementById("myChart2");
+        let orderStatus=JSON.parse(document.getElementById('orderStatus').value)
+
+        console.log(orderStatus);
+        console.log(orderStatus.pending);
+
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-            labels: ['pending', 'processing','confirmed', 'shipped', 'out for delivery' ,'delivered', 'cancelPending' ,'canceled'],
+            labels: ['pending','confirmed', 'shipped', 'out for delivery' ,'delivered' ,'canceled'],
             datasets: [
                 {
                     label: "US",
-                    backgroundColor: "#5897fb",
+                    backgroundColor: [
+                        "#5897fb",
+                        "#FFC154",
+                        "#47B39C",  
+                        "#EC6B56",
+                        "#EA5F89",
+                        "#57167E",
+
+                    ],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+
                     barThickness:10,
-                    data: [233,321,783,900]
+                    data: [orderStatus.pending,orderStatus.confirmed,orderStatus.shipped,orderStatus.outForDelivery,orderStatus.delivered,orderStatus.canceled]
                 }, 
-                {
-                    label: "Europe",
-                    backgroundColor: "#7bcf86",
-                    barThickness:10,
-                    data: [408,547,675,734]
-                },
-                {
-                    label: "Asian",
-                    backgroundColor: "#ff9076",
-                    barThickness:10,
-                    data: [208,447,575,634]
-                },
-                {
-                    label: "Africa",
-                    backgroundColor: "#d595e5",
-                    barThickness:10,
-                    data: [123,345,122,302]
-                },
+                
             ]
             },
             options: {

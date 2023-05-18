@@ -45,7 +45,7 @@
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-dark"><%= orders[i].orderStatus %></span>
                                             <% } else if (orders[i].orderStatus == 'shipped') {%>
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-info"><%= orders[i].orderStatus %></span>
-                                            <% } else if (orders[i].orderStatus == 'out for delivery') {%>
+                                            <% } else if (orders[i].orderStatus == 'outForDelivery') {%>
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span>
                                             <% } else if (orders[i].orderStatus == 'delivered') {%>
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-success"><%= orders[i].orderStatus %></span>
@@ -65,10 +65,10 @@
                                             <% } else if (orders[i].orderStatus == 'processing') {%>
                                                 <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','confirmed','shipped')" class="btn btn-warning-light rounded font-sm">confirmed</a>
                                             <% } else if (orders[i].orderStatus == 'confirmed') {%>
-                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','shipped','out for delivery')" class="btn btn-warning-light rounded font-sm">shipped</a>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','shipped','outForDelivery')" class="btn btn-warning-light rounded font-sm">shipped</a>
                                             <% } else if (orders[i].orderStatus == 'shipped') {%>
-                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','out for delivery','delivered')" class="btn  btn-warning-light rounded font-sm">out for delivery</a>
-                                            <% } else if (orders[i].orderStatus == 'out for delivery') {%>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','outForDelivery','delivered')" class="btn  btn-warning-light rounded font-sm">out for delivery</a>
+                                            <% } else if (orders[i].orderStatus == 'outForDelivery') {%>
                                                 <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','delivered','d-none')" class="btn btn-warning-light rounded font-sm">delivered</a>
                                             <% } %>
 

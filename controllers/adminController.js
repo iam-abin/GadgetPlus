@@ -32,17 +32,25 @@ const adminLogin = async (req, res) => {
 };
 
 const adminLoginPost = async (req, res) => {
-  if (req.body.email === email && req.body.password === password) {
-    req.session.admin = true;
-    res.redirect("/admin");
-  } else {
-    res.redirect("/admin");
+  try {
+    if (req.body.email === email && req.body.password === password) {
+      req.session.admin = true;
+      res.redirect("/admin");
+    } else {
+      res.redirect("/admin");
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
-const adminHome = (req, res) => {
+const adminHome = async(req, res) => {
   try {
-    res.render("admin/admin-home", { layout: "layouts/adminLayout" });
+
+    const orderStatus=await orderHelper.getAllOrderStatusesCount()
+
+
+    res.render("admin/admin-home", { orderStatus, layout: "layouts/adminLayout" });
   } catch {
     res.status(500);
   }
@@ -60,9 +68,9 @@ const salesReport = async (req,res)=>{
       salesData.push({_id ,userName, orderDate , totalAmount ,paymentMethod , orderStatus})
     });
 
-    console.log("ssssssssssssssssss");
-    console.log(salesData);
-    console.log("ssssssssssssssssss");
+    // console.log("ssssssssssssssssss");
+    // console.log(salesData);
+    // console.log("ssssssssssssssssss");
 
     const csvFields=["Id","Name","Order Date","Amount","Payment Method","Order Status"];
     const csvData = await csvParser.json2csv(salesData,{csvFields})
