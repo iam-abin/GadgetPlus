@@ -24,6 +24,7 @@
                                     <th scope="col">PAYMENT TYPE</th>
                                     <th scope="col">STATUS</th>
                                     <th scope="col"> VIEW DETAILS </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,7 +35,52 @@
                                         <td><%= orders[i].orderDate %></td>
                                         <td><%= orders[i].totalAmountInr %></td>
                                         <td><%= orders[i].paymentMethod %></td>
-                                        <td><span class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span></td>
+                                        <td>
+<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+                                            <% if (orders[i].orderStatus == 'pending') { %>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span>
+                                            <% } else if (orders[i].orderStatus == 'processing') {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-secondary"><%= orders[i].orderStatus %></span>
+                                            <% } else if (orders[i].orderStatus == 'confirmed') {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-dark"><%= orders[i].orderStatus %></span>
+                                            <% } else if (orders[i].orderStatus == 'shipped') {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-info"><%= orders[i].orderStatus %></span>
+                                            <% } else if (orders[i].orderStatus == 'out for delivery') {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span>
+                                            <% } else if (orders[i].orderStatus == 'delivered') {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-success"><%= orders[i].orderStatus %></span>
+                                            <% } else if (orders[i].orderStatus == 'cancelPending') {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span>
+                                            <% } else {%>
+                                                <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-danger"><%= orders[i].orderStatus %></span>
+                                            <% } %>
+                                        
+<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+                                        </td>
+                                        <td >
+<!-- 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
+                                                                                    
+                                            <% if (orders[i].orderStatus == 'pending') { %>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','processing','confirmed')" class="btn btn-warning-light rounded font-sm">processing</a>
+                                            <% } else if (orders[i].orderStatus == 'processing') {%>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','confirmed','shipped')" class="btn btn-warning-light rounded font-sm">confirmed</a>
+                                            <% } else if (orders[i].orderStatus == 'confirmed') {%>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','shipped','out for delivery')" class="btn btn-warning-light rounded font-sm">shipped</a>
+                                            <% } else if (orders[i].orderStatus == 'shipped') {%>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','out for delivery','delivered')" class="btn  btn-warning-light rounded font-sm">out for delivery</a>
+                                            <% } else if (orders[i].orderStatus == 'out for delivery') {%>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','delivered','d-none')" class="btn btn-warning-light rounded font-sm">delivered</a>
+                                            <% } %>
+
+
+                                            
+                                            
+
+<!-- 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
+
+                                        </td>
+
+
                                         <td >
                                             <a href="/admin/order-details/<%= orders[i]._id %>" class="btn btn-md rounded font-sm">Details</a>
                                         </td>
@@ -50,10 +96,44 @@
         </section> <!-- content-main end// -->
         
 
-        <!-- <script>
-            function getOrderDetailsOfThisOrder(orderId){
+        <script>
+            function changeOrderStatus(orderId,status,nextButtonValue){
                 console.log(orderId);
+                console.log(status);
 
-                $.ajax
+                // let buttonId='changeStatus'+orderId;
+                // let statusId='status'+orderId;
+                $.ajax({
+                    url:'/admin/order-status',
+                    type:'post',
+                    data:{
+                        orderId:orderId,
+                        status:status
+                    }
+                })
+                .done((res)=>{
+                    if(res){
+                        if(!res.error){
+                            swal('Do you want to change the order Status',{
+                                buttons:["No","Yes"]
+                            })
+                            .then(()=>{
+                                window.location.reload();
+                            })
+
+                            // const a = document.getElementById("status"+orderId)
+                            // a.innerHTML=status
+                            // document.getElementById(buttonId).innerHtml=nextButtonValue
+
+                        }
+
+
+                      
+                    }
+
+                })
+                .fail((err)=>{
+                    console.log(err);
+                })
             }
-        </script> -->
+        </script>

@@ -54,9 +54,9 @@
     if ($('#myChart2').length) {
         var ctx = document.getElementById("myChart2");
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
-            labels: ["900", "1200", "1400", "1600"],
+            labels: ['pending', 'processing','confirmed', 'shipped', 'out for delivery' ,'delivered', 'cancelPending' ,'canceled'],
             datasets: [
                 {
                     label: "US",

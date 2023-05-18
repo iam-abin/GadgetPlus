@@ -10,6 +10,7 @@ const { currencyFormat } = require("../controllers/userController");
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
 const cartHelper = require("../helpers/cartHelper");
+const orderHepler = require("../helpers/orderHepler");
 // const productSchema=require('../models/productModel');
 // const categorySchema=require('../models/category');
 
@@ -278,10 +279,23 @@ const productOrders = async (req, res) => {
     let orders = await orderHelper.getAllOrders();
 
     for (let i = 0; i < orders.length; i++) {
-      orders[i].totalAmountInr = orders[i].totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
+      orders[i].totalAmountInr = orders[i].totalAmount
+      // .toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
     }
 
     res.render("admin/orders", { layout: "layouts/adminLayout", orders });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const changeProductOrderStatus=async(req,res)=>{
+  try {
+    console.log("Hello");
+    // console.log(req.body.status);
+    // console.log(req.body.orderId);
+    const response= await orderHepler.changeOrderStatus(req.body.orderId,req.body.status);
+    res.status(202).json(response)
   } catch (error) {
     console.log(error);
   }
@@ -405,6 +419,7 @@ module.exports = {
   editProductCategoryPost,
   deleteProductCategory,
   productOrders,
+  changeProductOrderStatus,
   productOrderDetails,
   banners,
   coupons,

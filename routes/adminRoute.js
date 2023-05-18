@@ -48,6 +48,8 @@ router.get('/delete-productCategory/:id',adminChecking,adminController.deletePro
 
 router.get('/orders',adminChecking,adminController.productOrders);
 
+router.post('/order-status',adminChecking,adminController.changeProductOrderStatus);
+
 router.get('/order-details/:id',adminChecking,adminController.productOrderDetails);
 
 

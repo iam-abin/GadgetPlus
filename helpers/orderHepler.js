@@ -93,6 +93,27 @@ module.exports = {
         })
     },
 
+    changeOrderStatus:async (orderId,changeStatus)=>{
+        try {
+            
+           const orderstatusChange=await orderSchema.findOneAndUpdate({_id:orderId},
+            {
+                $set:{
+                    orderStatus:changeStatus
+                }
+            })
+
+            if(orderstatusChange){
+                return {error:false,message:'order status updated'}
+            }else{
+                return {error:true,message:'something goes wrong updation failed'}
+            }
+
+        } catch (error) {
+            throw new Error('failed to change status!something wrong');
+        }
+    },
+
     //------------------=--------------------------------------------------
 
     getOrderedUserDetailsAndAddress: (orderId) => {
