@@ -103,37 +103,42 @@
 
                 // let buttonId='changeStatus'+orderId;
                 // let statusId='status'+orderId;
-                $.ajax({
-                    url:'/admin/order-status',
-                    type:'post',
-                    data:{
-                        orderId:orderId,
-                        status:status
-                    }
+                swal('Do you want to change the order Status',{
+                        buttons:["No","Yes"]
                 })
-                .done((res)=>{
+                .then((res)=>{
                     if(res){
-                        if(!res.error){
-                            swal('Do you want to change the order Status',{
-                                buttons:["No","Yes"]
-                            })
-                            .then(()=>{
-                                window.location.reload();
-                            })
+                        $.ajax({
+                            url:'/admin/order-status',
+                            type:'post',
+                            data:{
+                                orderId:orderId,
+                                status:status
+                            }
+                        })
+                        .done((res)=>{
+                            if(res){
+                                if(!res.error){
+                                
+                                    window.location.reload();
+                                    // const a = document.getElementById("status"+orderId)
+                                    // a.innerHTML=status
+                                    // document.getElementById(buttonId).innerHtml=nextButtonValue
 
-                            // const a = document.getElementById("status"+orderId)
-                            // a.innerHTML=status
-                            // document.getElementById(buttonId).innerHtml=nextButtonValue
-
-                        }
+                                }
 
 
-                      
+                            
+                            }
+
+                        })
+                        .fail((err)=>{
+                            console.log(err);
+                        })
                     }
-
+                            
                 })
-                .fail((err)=>{
-                    console.log(err);
-                })
+                           
+                
             }
         </script>

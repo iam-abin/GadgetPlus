@@ -10,9 +10,11 @@ const productHelper = require('../helpers/productHelper');
 
 router.get('/',adminAuthenticationChecking,adminController.adminLogin);
 
+router.post('/adminLogin',adminController.adminLoginPost);
+
 router.get('/admin-home',adminChecking,adminController.adminHome)
 
-router.post('/adminLogin',adminController.adminLoginPost);
+router.get('/sales-report',adminChecking,adminController.salesReport)
 
 router.get('/users-List',adminChecking,adminController.usersList);
 

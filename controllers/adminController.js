@@ -9,6 +9,8 @@ const { currencyFormat } = require("../controllers/userController");
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
+const csvParser= require('json-2-csv');
+
 const cartHelper = require("../helpers/cartHelper");
 const orderHepler = require("../helpers/orderHepler");
 // const productSchema=require('../models/productModel');
@@ -45,6 +47,36 @@ const adminHome = (req, res) => {
     res.status(500);
   }
 };
+
+const salesReport = async (req,res)=>{
+  try {
+    let salesData=[];
+    const sales= await orderHelper.getAllOrders();
+    
+    
+    sales.forEach(sale => {
+      const {_id , orderDate , totalAmount ,paymentMethod , orderStatus}=sale
+      const userName= sale.userDetails[0].name;
+      salesData.push({_id ,userName, orderDate , totalAmount ,paymentMethod , orderStatus})
+    });
+
+    console.log("ssssssssssssssssss");
+    console.log(salesData);
+    console.log("ssssssssssssssssss");
+
+    const csvFields=["Id","Name","Order Date","Amount","Payment Method","Order Status"];
+    const csvData = await csvParser.json2csv(salesData,{csvFields})
+
+    res.setHeader("Content-Type","text/csv");
+    res.setHeader("Content-Disposition","attachment: filename = Sales-Report.csv");
+    res.status(200).end(csvData);
+    
+
+  } catch (error) {
+    console.log(error);
+  }
+
+}
 
 const usersList = async (req, res) => {
   await adminHelper
@@ -403,6 +435,7 @@ module.exports = {
   adminLogin,
   adminLoginPost,
   adminHome,
+  salesReport,
   adminLogout,
   usersList,
   blockUnBlockUser,
