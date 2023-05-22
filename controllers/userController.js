@@ -15,6 +15,7 @@ const razorpay=require('../api/razorpay')
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
+const {dateFormat}=require('../controllers/adminController')
 const wishListHelper = require('../helpers/wishListHelper');
 
 let loginStatus;
@@ -328,9 +329,10 @@ const cart = async (req, res) => {
         let user = req.session.user;
         let cartItems = await cartHelper.getAllCartItems(user._id)
         cartCount = await cartHelper.getCartCount(user._id)
+
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
         
-        totalandSubTotal = currencyFormat(totalandSubTotal)
+        totalandSubTotal = currencyFormatWithFractional(totalandSubTotal)
         console.log("cartItems");
         console.log(cartItems);
         console.log("cartItems");
@@ -624,6 +626,11 @@ const orders = async (req, res) => {
     try {
         const user=req.session.user;
         const userOrderDetails=await orderHepler.getAllOrderDetailsOfAUser(user._id);
+        for (let i = 0; i < userOrderDetails.length; i++) {
+            userOrderDetails[i].orderDate=dateFormat(userOrderDetails[i].orderDate);
+            userOrderDetails[i].totalAmount=currencyFormat(userOrderDetails[i].totalAmount);
+            
+        }
         console.log("orders",userOrderDetails);
 
         res.render('user/orders-user',{userOrderDetails,loginStatus,cartCount})
@@ -670,9 +677,12 @@ const notFound404 = async (req, res) => {
 
 // convert a number to a indian currency format
 function currencyFormat(amount){
-    return amount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
 }
 
+function currencyFormatWithFractional(amount){
+    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR'})
+}
 
 module.exports = {
     landingPage,
@@ -722,4 +732,5 @@ module.exports = {
     errorPage,
     notFound404,
     currencyFormat,
+    currencyFormatWithFractional,
 }

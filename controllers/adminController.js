@@ -8,7 +8,7 @@ const coupenHelper = require('../helpers/coupenHelper');
 // const PDFDocument = require('pdfkit');
 // const fs = require('fs');
 
-const { currencyFormat } = require("../controllers/userController");
+const { currencyFormat ,currencyFormatWithFractional } = require("../controllers/userController");
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
@@ -226,8 +226,8 @@ const productList = (req, res) => {
     // console.log("category", responseCategory);
 
     for (let i = 0; i < responseProduct.length; i++) {
-      responseProduct[i].product_price = Number(responseProduct[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' ,minimumFractionDigits:0})
-      responseProduct[i].product_discount = Number(responseProduct[i].product_discount).toLocaleString('en-in', { style: 'currency', currency: 'INR' ,minimumFractionDigits:0})
+      responseProduct[i].product_price = Number(responseProduct[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
+      responseProduct[i].product_discount = Number(responseProduct[i].product_discount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
 
     }
 
@@ -405,10 +405,12 @@ const productOrders = async (req, res) => {
     let orders = await orderHelper.getAllOrders();
 
     for (let i = 0; i < orders.length; i++) {
-      orders[i].totalAmountInr = orders[i].totalAmount
-      // .toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
+     
+      orders[i].totalAmount =  currencyFormat(orders[i].totalAmount)
+      orders[i].orderDate = dateFormat(orders[i].orderDate)
     }
 
+    console.log(orders, "hi");
     res.render("admin/orders", { layout: "layouts/adminLayout", orders });
   } catch (error) {
     console.log(error);
@@ -430,11 +432,28 @@ const changeProductOrderStatus = async (req, res) => {
 const productOrderDetails = async (req, res) => {
   try {
     console.log(req.params);
+    
     const orderId = req.params.id;
     let orderdetails = await orderHelper.getOrderedUserDetailsAndAddress(orderId); //got user details
     // let orderDetails= await orderHelper.getOrderDetails(orderId)
     let productDetails = await orderHelper.getOrderedProductsDetails(orderId); //got ordered products details
 
+    const userId=productDetails[0].user
+    let coupensUsed = coupenHelper.getUserUsedCoupens(userId)
+
+    // for (let i = 0; i < orderdetails.length; i++) {
+    //   orderdetails[i].discount = currencyFormat(orderdetails[i].discount)
+    // }
+
+    for (let i = 0; i < productDetails.length; i++) {
+      productDetails[i].orderedProduct.totalPriceOfOrderedProducts = currencyFormat(productDetails[i].orderedProduct.product_price*productDetails[i].orderedItems.quantity);
+      productDetails[i].orderedProduct.product_price = currencyFormat(productDetails[i].orderedProduct.product_price);
+    }
+
+    orderdetails.totalAmount=currencyFormat(orderdetails.totalAmount)
+    console.log("productDetails");
+    console.log(productDetails);
+    console.log("productDetails");
     res.render('admin/order-details', { orderdetails, productDetails, layout: "layouts/adminLayout" })
   } catch (error) {
     console.log(error);
@@ -447,15 +466,18 @@ const banners = (req, res) => {
 
 const coupons = async (req, res) => {
   try {
-    let coupons = await coupenHelper.getAllCoupons();
+    let allCoupons = await coupenHelper.getAllCoupons();
+    // console.log("coupons,coupons", allCoupons);
 
-    console.log(coupons);
-    for (let i = 0; i < coupons.length; i++) {
-      coupons[i].discount = Number(coupons[i].discount).toLocaleString('en-in', { style: 'currency', currency: 'INR' ,minimumFractionDigits:0})
-      
+    for (let i = 0; i < allCoupons.length; i++) {
+      allCoupons[i].discount = currencyFormat(allCoupons[i].discount)
+
+      allCoupons[i].expiryDate = dateFormat(allCoupons[i].expiryDate)
     }
-    console.log(coupons);
-    res.render("admin/coupon", { coupons, layout: "layouts/adminLayout" });
+
+    // console.log("hi", allCoupons, "hi");
+    res.render("admin/coupon", { coupons: allCoupons, layout: "layouts/adminLayout" });
+
   } catch (error) {
     console.log(error);
   }
@@ -505,6 +527,10 @@ const deleteCoupon = async (req, res) => {
 
 const userProfile = async (req, res) => {
   const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(req.params.id);
+  for(let i=0;i<userOrderDetails.length;i++){
+    userOrderDetails[i].totalAmount=currencyFormat(userOrderDetails[i].totalAmount);
+    userOrderDetails[i].orderDate=dateFormat(userOrderDetails[i].orderDate)
+  }
   adminHelper.findAUser(req.params.id).then((response) => {
 
     res.render("admin/user-profile", {
@@ -523,13 +549,9 @@ const adminLogout = (req, res) => {
   res.redirect("/admin");
 };
 
-// const isLogged=(req,res,next)=>{
-//     if(req.session.admin){
-//         next();
-//     }else{
-//         res.redirect('/admin/adminLogin')
-//     }
-// }
+function dateFormat(date){
+  return date.toISOString().slice(0, 10)
+}
 
 module.exports = {
   adminLogin,
@@ -563,4 +585,6 @@ module.exports = {
   deleteCoupon,
   userProfile,
   // isLogged
+
+  dateFormat
 };

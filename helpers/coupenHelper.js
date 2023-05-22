@@ -2,6 +2,7 @@ const couponSchema = require('../models/couponModel')
 const cartSchema = require('../models/cartModel')
 
 const voucherCode=require('voucher-code-generator')
+const orderSchema = require('../models/orderModel')
 
 module.exports = {
     addCouponToDb: (couponData) => {
@@ -41,7 +42,7 @@ module.exports = {
 
     getAllCoupons: () => {
         return new Promise(async (resolve, reject) => {
-            await couponSchema.find()
+            await couponSchema.find().lean()
                 .then((result) => {
                     resolve(result)
                 })
@@ -61,7 +62,7 @@ module.exports = {
         return new Promise(async (resolve,reject)=>{
             let coupon=await couponSchema.findById({_id:couponAfterEdit.couponId})
             coupon.couponName=couponAfterEdit.couponName;
-            coupon.code =couponAfterEdit.couponCode;
+            // coupon.code =couponAfterEdit.couponCode;
             coupon.discount=couponAfterEdit.couponAmount;
             coupon.expiryDate=couponAfterEdit.couponExpiry;
 
@@ -91,6 +92,7 @@ module.exports = {
                     // totalAmount=totalAmount-coupon.discount
                     // console.log("1111111111111",typeof totalAmount);
                     cart.totalAmount = cart.totalAmount - coupon.discount;
+                    cart.coupon=couponCode;
                     // console.log("2222222222222",typeof cart.totalAmount);
                     await cart.save()
                     // console.log("3333333333333");
@@ -103,6 +105,24 @@ module.exports = {
             } else {
                 resolve({ status: false, message: "invalid Coupon code" })
             }
+        })
+    },
+
+    getUserUsedCoupens:(userId)=>{
+        return new Promise(async (resolve,reject)=>{
+            let coupons = await couponSchema.aggregate([
+                {
+                    $match:{isActive:"Active"}
+                },
+                {
+                    $unwind:"$usedBy"
+                },
+                {
+                    $match:{usedBy:userId}
+                }
+            ])
+
+            console.log("aggregate coupons",coupons);
         })
     }
 

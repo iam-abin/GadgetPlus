@@ -20,10 +20,10 @@ const cartModel=mongoose.Schema({
               },
         }
     ],
-    // coupon:{
-    //     type:String,
-    //     default:0
-    // },
+    coupon:{
+        type:String,
+        default:null
+    },
     totalAmount:{
         type:Number,
         required:true

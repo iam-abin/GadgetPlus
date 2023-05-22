@@ -114,10 +114,10 @@
                         <label for="recipient-name" class="col-form-label">Coupon Name</label>
                         <input type="text" class="form-control" name="couponName" id="couponNme">
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Coupon Code</label>
                         <input type="text" class="form-control" name="couponCode" id="couponCode">
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Discount Amount</label>
                         <input type="text" class="form-control" name="couponAmount" id="couponAmont">
@@ -186,7 +186,7 @@
             .done((res) => {
                 if (res) {
                     document.getElementById('couponNme').value = res.couponData.couponName;
-                    document.getElementById('couponCode').value = res.couponData.code;
+                    // document.getElementById('couponCode').value = res.couponData.code;
                     document.getElementById('couponAmont').value = res.couponData.discount;
                     document.getElementById('couponExpiring').value = res.couponData.expiryDate;
                     document.getElementById('couponIdd').value = res.couponData._id;
