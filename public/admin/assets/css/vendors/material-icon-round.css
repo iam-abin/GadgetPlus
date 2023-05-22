@@ -8,6 +8,14 @@
   src: url("../../fonts/material-icon/MaterialIcons-Round.woff2") format("woff2"), url("../../fonts/material-icon/MaterialIcons-Round.woff") format("woff"), url("../../fonts/material-icon/MaterialIcons-Round.ttf") format("truetype");
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
 .material-icons {
   font-family: "Material Icons Round";
   font-weight: normal;
@@ -5788,5 +5796,10 @@
 
 .md-travel_explore:after {
   content: '\e8e8';
+}
+
+.pdf-icon:after {
+  color: red;
+  font-size: 24px;
 }
 /*# sourceMappingURL=round.css.map */

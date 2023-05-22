@@ -9,7 +9,9 @@ const twilio = require('../api/twilio');
 const adminHelper = require('../helpers/adminHelper');
 const addressHelper = require('../helpers/addressHelper');
 const orderHepler = require('../helpers/orderHepler');
-const couponHelper=require('../helpers/coupenHelper')
+const couponHelper=require('../helpers/coupenHelper');
+
+const razorpay=require('../api/razorpay')
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
@@ -327,11 +329,11 @@ const cart = async (req, res) => {
         let cartItems = await cartHelper.getAllCartItems(user._id)
         cartCount = await cartHelper.getCartCount(user._id)
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
-
+        
         totalandSubTotal = currencyFormat(totalandSubTotal)
-        // console.log("cartItems");
-        // console.log(totalandSubTotal);
-        // console.log("cartItems");
+        console.log("cartItems");
+        console.log(cartItems);
+        console.log("cartItems");
         res.render('user/cart', { loginStatus, cartItems, cartCount, totalAmount: totalandSubTotal })
     } catch (error) {
         console.log(error);
@@ -383,16 +385,24 @@ const incDecQuantity = async (req, res) => {
         // console.log("user",user);
         // console.log("productId",productId);
         // console.log("quantity",quantity);
-        obj.quantity = await cartHelper.incDecProductQuantity(user._id, productId, quantity)
+
+        response = await cartHelper.incDecProductQuantity(user._id, productId, quantity)
+
+        obj.quantity=response.newQuantity;
 
         let cartItems = await cartHelper.getAllCartItems(user._id)
         obj.totalAmount = await cartHelper.totalSubtotal(user._id, cartItems)
+
         obj.totalAmount = obj.totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
         // console.log(obj);
-        res.status(202).json({ message: obj })
-        // .catch((error)=>{
-        //     res.json({error:true,message:"Quantity must be between 1 - 10"})
-        // })
+
+        
+        if(response.isOutOfStock){
+            res.status(202).json({ OutOfStock:true, message: obj })
+        }else{
+            res.status(202).json({ OutOfStock:false, message: obj })
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -533,7 +543,7 @@ const placeOrder = async (req, res) => {
         }
 
         if(req.body.payment==undefined ){
-            return res.json({ error:true, message: "Please Choose Payment Method" })
+            return res.json({ error:true, message: "Please Choose A Payment Method" })
         }
 
         
@@ -553,18 +563,50 @@ const placeOrder = async (req, res) => {
 
         if (req.body.payment == 'COD') {
             const placeOrder = await orderHepler.orderPlacing(req.body, totalAmount,cartItems)
-                .then(async (response) => {
+                .then(async (orderDetails) => {
                     await productHelper.decreaseStock(cartItems);
                     await cartHelper.clearCart(userId);
                     cartCount = await cartHelper.getCartCount(userId)
-                    res.status(202).json({ message: "Purchase Done" })
+                    res.status(202).json({ success:'COD', message: "Purchase Done" })
                 })
         }
+        else if(req.body.payment=='razorpay'){
+            await orderHepler.orderPlacing(req.body, totalAmount ,cartItems)
+            .then(async (orderDetails)=>{
+                // console.log("responseresponseresponseorderDetails",orderDetails);
+                await razorpay.razorpayOrderCreate(orderDetails._id,orderDetails.totalAmount)
+                .then((razorpayOrderDetails)=>{
+                    res.json({success: 'razorpay',orderDetails,razorpayOrderDetails ,razorpaykeyId:process.env.RAZORPAY_KEY_ID})
+                })
 
+            })
+        }
 
     } catch (error) {
         console.log(error);
     }
+}
+
+//razorpay payment verification
+const verifyPayment = async(req,res)=>{
+    const userId=req.session.user._id;
+    console.log("verifyPaymentverifyPaymentverifyPayment",req.body);
+    await razorpay.verifyPaymentSignature(req.body)
+    .then(async (response)=>{
+        console.log(response);
+        if(response.signatureIsValid){
+            console.log("order razorpay successfullllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+            await orderHepler.changeOrderStatus(req.body['orderDetails[_id]'],"confirmed");
+            let cartItems = await cartHelper.getAllCartItems(userId);
+            await productHelper.decreaseStock(cartItems);
+            await cartHelper.clearCart(userId);
+
+
+            res.status(200).json({status :true})
+        }else{
+            res.status(200).json({status :false})
+        }
+    })
 }
 
 const orderSuccess = (req, res) => {
@@ -618,6 +660,10 @@ const contact = async (req, res) => {
     res.render('user/contact', { loginStatus, cartCount })
 }
 
+const errorPage=(req,res)=>{
+    res.render('error')
+}
+
 const notFound404 = async (req, res) => {
     res.render('user/404')
 }
@@ -665,6 +711,7 @@ module.exports = {
     payment,
     applyCoupon,
     placeOrder,
+    verifyPayment,
     orderSuccess,
 
     orders,
@@ -672,6 +719,7 @@ module.exports = {
 
 
     contact,
+    errorPage,
     notFound404,
     currencyFormat,
 }

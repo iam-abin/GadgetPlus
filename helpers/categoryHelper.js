@@ -48,8 +48,14 @@ module.exports={
             category.description=categoryAfterEdit.categoryDescription;
 
             await category.save()
+            .then((category)=>{
 
-            resolve(category)
+                resolve(category)
+            })
+            .catch((error)=>{
+                // console.log("catchhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                reject(error)
+            })
         })
     },
 

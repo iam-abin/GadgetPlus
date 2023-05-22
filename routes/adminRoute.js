@@ -14,7 +14,9 @@ router.post('/adminLogin',adminController.adminLoginPost);
 
 router.get('/admin-home',adminChecking,adminController.adminHome)
 
-router.get('/sales-report',adminChecking,adminController.salesReport)
+router.get('/sales-report',adminChecking,adminController.salesReport);
+
+// router.get('/sales-report-pdf',adminChecking,adminController.salesReportPdf);
 
 router.get('/users-List',adminChecking,adminController.usersList);
 

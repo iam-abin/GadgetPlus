@@ -77,7 +77,7 @@
 
 						<aside class="col-lg-4">
 							<div class=" d-flex">
-								<input type="text" id="couponCode" style="width: 15%x; height: 45px;" class="form-control"
+								<input type="text" name="couponCode" id="couponCode" style="width: 15%x; height: 45px;" class="form-control"
 									placeholder="coupon code">
 
 								<a style="width: 50px; height: 45px;" onclick="applyCoupon('<%= totalAmount %>')" class="btn btn-outline-primary ">
@@ -130,8 +130,6 @@
 								</table><!-- End .table table-summary -->
 
 
-
-
 								<div class="accordion-summary" id="accordion-payment">
 									<div class="card">
 										<div class="card-header" id="heading-3">
@@ -146,9 +144,8 @@
 										<div class="card-header" id="heading-4">
 											<h2 class="card-title">
 												<h2 class="card-title">
-													<input type="radio" id="online" name="payment"
-														value="onlinePayment"> <label for="online">Online
-														Payment</label><br>
+													<input type="radio" id="razorpay" name="payment"
+														value="razorpay"> <label for="razorpay">Razorpay</label><br>
 												</h2>
 											</h2>
 										</div><!-- End .card-header -->
@@ -168,7 +165,7 @@
 	</div><!-- End .page-content -->
 </main><!-- End .main -->
 
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 <!-- =======Add address Modal======= -->
@@ -347,10 +344,10 @@
 				type: 'post',
 				data: $('#checkout-form').serialize()
 			})
-				.done((res) => {
-					if (res.error) {
+				.done((response) => {
+					if (response.error) {
 						Toastify({
-							text: `${res.message}`,
+							text: `${response.message}`,
 							duration: 3000,
 							newWindow: true,
 							close: true,
@@ -363,22 +360,113 @@
 
 						}).showToast();
 					} else {
+						switch (response.success){
+							case 'COD':
+								console.log("payment done");
+								location.href = "/order-success"
+								break;
 
-						console.log("payment done");
-						location.href = "/order-success"
+							case 'razorpay':
+								console.log("razorpay");
+
+								razorpayPayment(response);
+						}
+						
 					}
 				})
-				.fail((err) => {
+				.fail((error) => {
 					console.log("Error occured");
-					console.log(err);
+					console.log(error);
 				})
 		})
 	})
+
+
+	function razorpayPayment(orderinfo){
+		console.log("inside ejs razorpayPayment function");
+		const options = {
+			
+			"key": `${orderinfo.razorpaykeyId}`, // Enter the Key ID generated from the Dashboard
+			"amount": orderinfo.razorpayOrderDetails.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+			"currency": "INR",
+			"name": "gadgetPlus",  //your business name
+			"description": "Test Transaction",
+			"image": "/user/assets/images/logo.png",
+			"order_id": `${orderinfo.razorpayOrderDetails.id}`, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+			"handler": function (response){
+				// alert(response.razorpay_payment_id);
+				// alert(response.razorpay_order_id);
+				// alert(response.razorpay_signature);
+				console.log(response.razorpay_payment_id);
+				console.log(response.razorpay_order_id);
+				console.log("response.razorpay_signature",response.razorpay_signature);
+
+				verifyPaymentSignature(response, orderinfo.orderDetails, orderinfo.razorpayOrderDetails);
+
+			},
+			"prefill": {
+				"name": "abin varghese",
+				"email": "abinvarghese@gmail.com",
+				"contact": "8934327744"
+			},
+			"notes": {
+				"address": "Razorpay Corporate Office"
+			},
+			"theme": {
+				"color": "#3399cc"
+			}
+		};
+
+		console.log("new Razorpay(options)");
+		const rzp1 = new Razorpay(options);
+		rzp1.open();
+		
+	}
+
+
+	function verifyPaymentSignature(payment,orderDetails,razorpayOrderDetails){
+		console.log("function verifyPaymentSignature(payment,orderDetails,razorpayOrderDetails)");
+		$.ajax({
+			url:'/verify-payment',
+			method:'post',
+			data:{
+				payment,
+				orderDetails,
+				razorpayOrderDetails
+			},
+			success:(response)=>{
+				if(response.status){
+					swal({
+						title: "Good job!",
+						text: "Payment successfull!",
+						icon: "success",
+						button: "Ok!",
+					})
+					.then(()=>{
+						location.href='/order-success'
+					})
+				}else{
+					swal({
+						title: "sorry!",
+						text: "Payment failed",
+						icon: "error",
+						button: "Ok!",
+					})
+					.then(() => {
+						location.href = '/cart'
+					})
+				}
+			}
+
+
+		})
+	}
 </script>
 
 <script>
 
 	$(document).ready(function () {
+				
 		$('#add-address-form').submit((e) => {
 			e.preventDefault();
 			$.ajax({

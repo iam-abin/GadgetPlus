@@ -23,19 +23,20 @@
                                     <th scope="col">AMOUNT</th>
                                     <th scope="col">PAYMENT TYPE</th>
                                     <th scope="col">STATUS</th>
-                                    <th scope="col"> VIEW DETAILS </th>
-                                    <th></th>
+                                    <th scope="col">CHANGE STATUS</th>
+                                    <th>VIEW DETAILS</th>
+                                    <th>CANCEL</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% for( let i = 0; i < orders.length; i++ ) { %>
                                     <tr>
-                                        <td><%= orders[i]._id %></td>
-                                        <td><%= orders[i].userDetails[0].name %> </td>
-                                        <td><%= orders[i].orderDate %></td>
-                                        <td><%= orders[i].totalAmountInr %></td>
-                                        <td><%= orders[i].paymentMethod %></td>
-                                        <td>
+                                        <td width="10%" ><%= orders[i]._id %></td>
+                                        <td width="10%" ><%= orders[i].userDetails[0].name %> </td>
+                                        <td width="10%" ><%= orders[i].orderDate %></td>
+                                        <td width="7%" ><%= orders[i].totalAmountInr %></td>
+                                        <td width="7%" ><%= orders[i].paymentMethod %></td>
+                                        <td width="10%" >
 <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
                                             <% if (orders[i].orderStatus == 'pending') { %>
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span>
@@ -57,7 +58,7 @@
                                         
 <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
                                         </td>
-                                        <td >
+                                        <td width="10%" >
 <!-- 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
                                                                                     
                                             <% if (orders[i].orderStatus == 'pending') { %>
@@ -80,9 +81,12 @@
 
                                         </td>
 
-
-                                        <td >
+                                        <td  width="10%" >
                                             <a href="/admin/order-details/<%= orders[i]._id %>" class="btn btn-md rounded font-sm">Details</a>
+                                        </td>
+
+                                        <td width="10%">
+                                            <a href="/admin/order-details/<%= orders[i]._id %>" class="btn btn-md rounded font-sm">cancel request</a>
                                         </td>
                                     </tr>
                                 <% } %>

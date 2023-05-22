@@ -3,18 +3,19 @@ const adminHelper = require("../helpers/adminHelper");
 const productHelper = require("../helpers/productHelper");
 const categoryHelper = require("../helpers/categoryHelper");
 const orderHelper = require('../helpers/orderHepler');
-const coupenHelper=require('../helpers/coupenHelper')
+const coupenHelper = require('../helpers/coupenHelper');
+
+// const PDFDocument = require('pdfkit');
+// const fs = require('fs');
 
 const { currencyFormat } = require("../controllers/userController");
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
-const csvParser= require('json-2-csv');
+const csvParser = require('json-2-csv');
 
 const cartHelper = require("../helpers/cartHelper");
 const orderHepler = require("../helpers/orderHepler");
-// const productSchema=require('../models/productModel');
-// const categorySchema=require('../models/category');
 
 const email = "admin@gmail.com";
 const password = "123";
@@ -44,11 +45,9 @@ const adminLoginPost = async (req, res) => {
   }
 };
 
-const adminHome = async(req, res) => {
+const adminHome = async (req, res) => {
   try {
-
-    const orderStatus=await orderHelper.getAllOrderStatusesCount()
-
+    const orderStatus = await orderHelper.getAllOrderStatusesCount()
 
     res.render("admin/admin-home", { orderStatus, layout: "layouts/adminLayout" });
   } catch {
@@ -56,35 +55,107 @@ const adminHome = async(req, res) => {
   }
 };
 
-const salesReport = async (req,res)=>{
+const salesReport = async (req, res) => {
   try {
-    let salesData=[];
-    const sales= await orderHelper.getAllOrders();
-    
-    
+    let salesData = [];
+    const sales = await orderHelper.getAllOrders();
+
     sales.forEach(sale => {
-      const {_id , orderDate , totalAmount ,paymentMethod , orderStatus}=sale
-      const userName= sale.userDetails[0].name;
-      salesData.push({_id ,userName, orderDate , totalAmount ,paymentMethod , orderStatus})
+      const { _id, orderDate, totalAmount, paymentMethod, orderStatus } = sale
+      const userName = sale.userDetails[0].name;
+      salesData.push({ _id, userName, orderDate, totalAmount, paymentMethod, orderStatus })
     });
 
-    // console.log("ssssssssssssssssss");
-    // console.log(salesData);
-    // console.log("ssssssssssssssssss");
+    const csvFields = ["Id", "Name", "Order Date", "Amount", "Payment Method", "Order Status"];
+    const csvData = await csvParser.json2csv(salesData, { csvFields })
 
-    const csvFields=["Id","Name","Order Date","Amount","Payment Method","Order Status"];
-    const csvData = await csvParser.json2csv(salesData,{csvFields})
-
-    res.setHeader("Content-Type","text/csv");
-    res.setHeader("Content-Disposition","attachment: filename = Sales-Report.csv");
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attachment: filename = Sales-Report.csv");
     res.status(200).end(csvData);
-    
 
   } catch (error) {
     console.log(error);
   }
-
 }
+
+// const salesReportPdf=async (req,res)=>{
+//   try {
+//     const sales= await orderHelper.getAllOrders();
+
+//     function createInvoice(invoice, path) {
+//       let doc = new PDFDocument({ margin: 50 });
+
+//       // generateHeader(doc); // Invoke `generateHeader` function.
+//       generateFooter(doc); // Invoke `generateFooter` function.
+
+
+//       res.setHeader('Content-Type', 'application/pdf');
+//       res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
+//       doc.pipe(res);
+//       doc.end();
+
+//     }
+
+//     // function generateHeader(doc) {
+//     //   doc.image('../../public/user/assets/images/logo.png', 50, 45, { width: 50 })
+//     //     .fillColor('#444444')
+//     //     .fontSize(20)
+//     //     .text('ACME Inc.', 110, 57)
+//     //     .fontSize(10)
+//     //     .text('123 Main Street', 200, 65, { align: 'right' })
+//     //     .text('New York, NY, 10025', 200, 80, { align: 'right' })
+//     //     .moveDown();
+//     // }
+
+//     function generateFooter(doc) {
+//       doc.fontSize(
+//         10,
+//       ).text(
+//         'Payment is due within 15 days. Thank you for your business.',
+//         50,
+//         780,
+//         { align: 'center', width: 500 },
+//       );
+//     }
+
+//     const invoice = {
+//       shipping: {
+//         name: 'John Doe',
+//         address: '1234 Main Street',
+//         city: 'San Francisco',
+//         state: 'CA',
+//         country: 'US',
+//         postal_code: 94111,
+//       },
+//       items: [
+//         {
+//           item: 'TC 100',
+//           description: 'Toner Cartridge',
+//           quantity: 2,
+//           amount: 6000,
+//         },
+//         {
+//           item: 'USB_EXT',
+//           description: 'USB Cable Extender',
+//           quantity: 1,
+//           amount: 2000,
+//         },
+//       ],
+//       subtotal: 8000,
+//       paid: 0,
+//       invoice_nr: 1234,
+//     };
+
+//     // createInvoice(invoice, 'invoice.pdf');
+
+
+//     console.log("hello");
+//     res.redirect('/admin')
+
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 const usersList = async (req, res) => {
   await adminHelper
@@ -155,7 +226,9 @@ const productList = (req, res) => {
     // console.log("category", responseCategory);
 
     for (let i = 0; i < responseProduct.length; i++) {
-      responseProduct[i].product_price = Number(responseProduct[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+      responseProduct[i].product_price = Number(responseProduct[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' ,minimumFractionDigits:0})
+      responseProduct[i].product_discount = Number(responseProduct[i].product_discount).toLocaleString('en-in', { style: 'currency', currency: 'INR' ,minimumFractionDigits:0})
+
     }
 
     res.render("admin/products-list", {
@@ -198,6 +271,7 @@ const editProduct = async (req, res) => {
 
     console.log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
     console.log(product);
+    console.log("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
     console.log(categories);
     console.log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
@@ -269,7 +343,12 @@ const postAddProductCategory = (req, res) => {
       res.status(200).redirect("/admin/product-categories");
     })
     .catch((error) => {
-      res.status(500).json({ error: true, message: "Category already Exist!!!" })
+      if (error.code === 11000) {
+        res.status(500).json({ error: true, message: "Category already Exist!!!" })
+      } else {
+        res.status(500).redirect('/error')
+      }
+
     })
 
 };
@@ -284,17 +363,24 @@ const editProductCategory = (req, res) => {
 };
 
 const editProductCategoryPost = (req, res) => {
-  try {
-    console.log("===========================");
-    console.log(req.body);
-    categoryHelper.editCategory(req.body)
-      .then((response) => {
-        res.status(202).json({ message: "category updated" })
-      })
-
-  } catch (error) {
-    console.log(error);
-  }
+  console.log("===========================");
+  console.log(req.body);
+  // let categoryData=JSON.parse(req.body)
+  // console.log(categoryData)
+  console.log(typeof req.body.categoryName);
+  console.log(typeof req.body.categoryDescription);
+  categoryHelper.editCategory(req.body)
+    .then((response) => {
+      res.status(202).json({ message: "category updated" })
+    })
+    .catch((error) => {
+      console.log("abiiiiiiiiiiiiiiiiiiiiiii");
+      if (error.code === 11000) {
+        res.status(500).json({ error: true, message: "Category already Exist!!!" })
+      } else {
+        res.status(500).redirect('/error')
+      }
+    })
 
 }
 
@@ -329,12 +415,12 @@ const productOrders = async (req, res) => {
   }
 };
 
-const changeProductOrderStatus=async(req,res)=>{
+const changeProductOrderStatus = async (req, res) => {
   try {
     console.log("Hello");
     // console.log(req.body.status);
     // console.log(req.body.orderId);
-    const response= await orderHepler.changeOrderStatus(req.body.orderId,req.body.status);
+    const response = await orderHepler.changeOrderStatus(req.body.orderId, req.body.status);
     res.status(202).json(response)
   } catch (error) {
     console.log(error);
@@ -348,7 +434,7 @@ const productOrderDetails = async (req, res) => {
     let orderdetails = await orderHelper.getOrderedUserDetailsAndAddress(orderId); //got user details
     // let orderDetails= await orderHelper.getOrderDetails(orderId)
     let productDetails = await orderHelper.getOrderedProductsDetails(orderId); //got ordered products details
-    
+
     res.render('admin/order-details', { orderdetails, productDetails, layout: "layouts/adminLayout" })
   } catch (error) {
     console.log(error);
@@ -361,36 +447,42 @@ const banners = (req, res) => {
 
 const coupons = async (req, res) => {
   try {
-    let coupons=await coupenHelper.getAllCoupons();
-    
-    res.render("admin/coupon", { coupons,layout: "layouts/adminLayout" });
+    let coupons = await coupenHelper.getAllCoupons();
+
+    console.log(coupons);
+    for (let i = 0; i < coupons.length; i++) {
+      coupons[i].discount = Number(coupons[i].discount).toLocaleString('en-in', { style: 'currency', currency: 'INR' ,minimumFractionDigits:0})
+      
+    }
+    console.log(coupons);
+    res.render("admin/coupon", { coupons, layout: "layouts/adminLayout" });
   } catch (error) {
     console.log(error);
   }
 };
 
-const postAddCoupon=async (req,res)=>{
+const postAddCoupon = async (req, res) => {
   console.log("hello");
   coupenHelper.addCouponToDb(req.body)
-  .then((coupon)=>{
-    res.status(202).redirect('/admin/coupon')
-  })
+    .then((coupon) => {
+      res.status(202).redirect('/admin/coupon')
+    })
 }
 
-const editCoupon = async (req,res)=>{
+const editCoupon = async (req, res) => {
   try {
-    const couponData=await coupenHelper.getACoupenData(req.params.id);
-    res.status(200).json({couponData})
+    const couponData = await coupenHelper.getACoupenData(req.params.id);
+    res.status(200).json({ couponData })
   } catch (error) {
     console.log(error);
   }
 }
 
-const editCouponPost= (req,res)=>{
+const editCouponPost = (req, res) => {
   try {
     console.log("heloooooooooooooooooo");
     console.log(req.body);
-    const response= coupenHelper.editCoupon(req.body);
+    const response = coupenHelper.editCoupon(req.body);
     // res.status(202).json({message:"coupon details updated"})
     res.redirect('/admin/coupon')
   } catch (error) {
@@ -398,29 +490,29 @@ const editCouponPost= (req,res)=>{
   }
 }
 
-const deleteCoupon=async (req,res)=>{
+const deleteCoupon = async (req, res) => {
   try {
 
     // console.log(req.params.id);
     // console.log("helooooooooooooooooooooooooooooooo");
-    const response=await coupenHelper.deleteACoupon(req.params.id);
-    res.json({message:"coupon deleted successfully"})
-    
+    const response = await coupenHelper.deleteACoupon(req.params.id);
+    res.json({ message: "coupon deleted successfully" })
+
   } catch (error) {
     console.log(error);
   }
 }
 
 const userProfile = async (req, res) => {
-  const userOrderDetails=await orderHelper.getAllOrderDetailsOfAUser(req.params.id);
+  const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(req.params.id);
   adminHelper.findAUser(req.params.id).then((response) => {
 
-      res.render("admin/user-profile", {
-        layout: "layouts/adminLayout",
-        user: response,
-        userOrderDetails
-      });
-    })
+    res.render("admin/user-profile", {
+      layout: "layouts/adminLayout",
+      user: response,
+      userOrderDetails
+    });
+  })
     .catch((error) => {
       console.log(error);
     });
@@ -444,6 +536,7 @@ module.exports = {
   adminLoginPost,
   adminHome,
   salesReport,
+  // salesReportPdf,
   adminLogout,
   usersList,
   blockUnBlockUser,

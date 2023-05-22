@@ -1,6 +1,7 @@
 const { cart } = require('../controllers/userController');
 const cartSchema = require('../models/cartModel');
-const productSchema = require('../models/productModel')
+const productSchema = require('../models/productModel');
+const productHelper=require('../helpers/productHelper')
 const ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = {
@@ -64,7 +65,6 @@ module.exports = {
     },
 
 
-
     getAllCartItems: (userId) => {
         return new Promise(async (resolve, reject) => {
             let obj = {}
@@ -100,7 +100,18 @@ module.exports = {
                 }
             ]);
 
+             for(let i=0;i<userCartItems.length;i++){
+                let outOfStock=  await productHelper.isOutOfStock(userCartItems[i].item)
+                userCartItems[i].product.isOutOfStock=outOfStock;
+                console.log(outOfStock);
+            }
 
+            // userCartItems.forEach(async (product) => {
+            //     let isoutOfStock= await productHelper.isOutOfStock(product.item)
+            //     userCartItems.product.isOutOfStock=isoutOfStock;
+            // });
+
+            console.log("--------------------------------------");
             console.log("--------------------------------------");
             console.log(userCartItems);
             console.log("--------------------------------------");
@@ -114,24 +125,28 @@ module.exports = {
     incDecProductQuantity: (userId, productId, quantity) => {
         return new Promise(async (resolve, reject) => {
             const cart = await cartSchema.findOne({ user: userId });
-            // console.log(cart);   //got a big output and solved
-            // console.log(",,,,,,,,,,,,,,,,,,,,,");
-            // console.log(productId);
-            // console.log(",,,,,,,,,,,,,,,,,,,,,");
-            const product = cart.products.find((items) => {
+            console.log(cart);   //got a big output and solved
+            console.log(",,,,,,,,,,,,,,,,,,,,,");
+            console.log(productId);
+            console.log(",,,,,,,,,,,,,,,,,,,,,");
+            const cartProduct = cart.products.find((items) => {
                 return items.productItemId.toString() == productId
             }
             );
 
-            let newQuantity = product.quantity + parseInt(quantity);
+            let newQuantity = cartProduct.quantity + parseInt(quantity);
 
             if (newQuantity < 1 || newQuantity > 10) {
                 newQuantity = 1;
             }
 
-            product.quantity = newQuantity;
+            const isOutOfStock = await productHelper.isOutOfStock(productId,newQuantity)
+
+            console.log("isoutofstock cartHelper");
+            cartProduct.quantity = newQuantity;
             await cart.save();
-            resolve(newQuantity)
+
+            resolve({newQuantity,isOutOfStock})
 
         })
     },

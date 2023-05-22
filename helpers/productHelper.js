@@ -1,5 +1,6 @@
+const { resolve } = require('path');
 const productSchema = require('../models/productModel');
-const ObjectId=require('mongoose').Types.ObjectId
+const ObjectId = require('mongoose').Types.ObjectId
 const fs = require('fs')
 
 
@@ -7,7 +8,7 @@ module.exports = {
     addProductToDb: (data, files) => {
         return new Promise(async (resolve, reject) => {
             let imagesArray = (Object.values(files)).flat(1);
-            console.log("imagesArray",imagesArray,"imagesArray");
+            console.log("imagesArray", imagesArray, "imagesArray");
             // console.log(files);
             await productSchema.create({
                 product_name: data.product_name,
@@ -47,21 +48,22 @@ module.exports = {
         })
     },
 
-    getAllProductsByCategory:(categoryId)=>{
-        return new Promise(async(resolve,reject)=>{
+    getAllProductsByCategory: (categoryId) => {
+        return new Promise(async (resolve, reject) => {
             await productSchema.aggregate([
                 {
-                    $match:{
-                       product_category:new ObjectId(categoryId) 
+                    $match: {
+                        product_category: new ObjectId(categoryId)
                     }
                 }
-            ]).then((result)=>{
+            ]).then((result) => {
                 resolve(result)
             })
         })
     },
 
     getAProduct: (productId) => {
+        console.log("isoutOfStok", productId);
         return new Promise(async (resolve, reject) => {
             await productSchema.findById({ _id: productId })
                 .then((result) => {
@@ -83,7 +85,7 @@ module.exports = {
                     console.log(data.old_image);
                     console.log("-----------------------");
 
-                    fs.unlink("/product-images/" + data.old_image, (err)=>{
+                    fs.unlink("/product-images/" + data.old_image, (err) => {
                         if (err) console.log(err);
                     })
                 } catch (error) {
@@ -124,17 +126,18 @@ module.exports = {
             resolve(product);
         })
     },
-
-    decreaseStock:(cartItems)=>{
-        return new Promise(async (resolve,reject)=>{
+ 
+    //to decrease stock when place order
+    decreaseStock: (cartItems) => {
+        return new Promise(async (resolve, reject) => {
             console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
             // console.log("decreaseStock0",cartItems);
-            for(let i=0;i<cartItems.length;i++){
-                let product = await productSchema.findById({_id:cartItems[i].item});
+            for (let i = 0; i < cartItems.length; i++) {
+                let product = await productSchema.findById({ _id: cartItems[i].item });
                 // console.log("decreaseStock1",product);
-                const isProductAvailableInStock=(product.product_quantity-cartItems[i].quantity)>0 ? true : false;
-                if(isProductAvailableInStock){
-                    product.product_quantity=product.product_quantity-cartItems[i].quantity;
+                const isProductAvailableInStock = (product.product_quantity - cartItems[i].quantity) > 0 ? true : false;
+                if (isProductAvailableInStock) {
+                    product.product_quantity = product.product_quantity - cartItems[i].quantity;
                 }
                 // else{
 
@@ -144,6 +147,30 @@ module.exports = {
             }
             console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
             resolve(true)
+        })
+    },
+
+    isOutOfStock: function (productId, newQuantity=false) {  // newQuantity for cart product quantity increase
+        return new Promise(async (resolve, reject) => {
+            let product = await this.getAProduct(productId);
+            // console.log("hio",product);
+            let stock = product.product_quantity;
+
+            // console.log("newQuantity",newQuantity);
+            // console.log("let stock ",stock);
+            
+            if(newQuantity){  //in case cart product quantity increase or decrease
+                stock = stock - newQuantity;
+            }
+            
+            // console.log("let stockAfterIncOrDec ",stockAfterIncOrDec);
+            console.log("hi");
+            if (stock > 0) {
+                resolve(false)
+            } else {
+                resolve(true)
+            }
+
         })
     }
 

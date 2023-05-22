@@ -91,6 +91,7 @@ router.post('/apply-coupon',userChecking,userController.applyCoupon)
 
 router.post('/place-order',userChecking,userController.placeOrder);
 
+router.post('/verify-payment',userChecking,userController.verifyPayment)
 
 router.get('/order-success',userChecking,userController.orderSuccess)
 // ----------------------------------------------------------------------------------------------------
@@ -102,6 +103,7 @@ router.get('/order-details/:id',userChecking,userController.productOrderDetails)
 router.get('/contact',userController.contact)
 
 
+router.get('/error',userController.errorPage)
 
 router.get('/404',userController.notFound404)
 

@@ -85,14 +85,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/admin/add-productCategory" method="post">
+        <form id="addProductCategoryForm">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Category Name</label>
-            <input type="text" class="form-control" name="categoryName" id="recipient-name" />
+            <input type="text" class="form-control" name="categoryName" id="categoryName" />
+            <span class="text-danger d-none" id="categoryError">category already exist.....!</span>
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Category Description</label>
-            <textarea class="form-control" name="categoryDescription" id="message-text"></textarea>
+            <textarea class="form-control" name="categoryDescription" id="categoryDescription"></textarea>
           </div>
           <div>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -122,19 +123,20 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/admin/edit-productCategoryPost" id="edit-category-form" method="post">
+        <form  id="editProductCategoryForm">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Category Name</label>
-            <input type="text" class="form-control" id="categoryName" name="categoryName" />
+            <input type="text" class="form-control" id="editCategoryName" name="categoryName" />
+            <span class="text-danger d-none" id="editCategoryError">category already exist.....!</span>
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Category Description</label>
-            <textarea class="form-control" id="categoryDescription" name="categoryDescription"></textarea>
+            <textarea class="form-control" id="editCategoryDescription" name="categoryDescription"></textarea>
           </div>
 
           <div class="mb-3" style="display: none">
             <label for="" class="col-form-label"> id </label>
-            <input type="text" class="form-control" id="categoryId" name="categoryId" />
+            <input type="text" class="form-control" id="editCategoryId" name="categoryId" />
           </div>
 
           <div>
@@ -198,7 +200,7 @@
 
               const button = document.getElementById("delete-category" + categoryId);
               document.getElementById("delete-category" + categoryId).classList.add("btn-danger");
-              document.getElementById("delete-category" + categoryId ).classList.remove("btn-success");
+              document.getElementById("delete-category" + categoryId).classList.remove("btn-success");
               button.innerHTML = "UnListed";
             }
             console.log(res.listed);
@@ -217,9 +219,9 @@
     })
       .done((res) => {
         console.log(res);
-        $("#categoryName").val(res.category.name);
-        $("#categoryDescription").val(res.category.description);
-        $("#categoryId").val(res.category._id);
+        $("#editCategoryName").val(res.category.name);
+        $("#editCategoryDescription").val(res.category.description);
+        $("#editCategoryId").val(res.category._id);
         $("#myModal").modal("show");
       })
       .fail((err) => {
@@ -228,5 +230,106 @@
   }
 
 
+  //add category
+
+  document.getElementById('addProductCategoryForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    console.log("hello");
+
+    const categoryName = document.getElementById('editCategoryName').value
+    const categoryDescription = document.getElementById('editCategoryDescription').value
+
+    let data={
+      categoryName:categoryName,
+      categoryDescription:categoryDescription
+    }
+
+    fetch('/admin/add-productCategory', {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then((res)=>{
+      if(res.ok){
+        document.getElementById('categoryError').classList.add('d-none');
+        // document.getElementById("exampleModal").parentNode.removeChild(modal);
+        Toastify({
+              text: `category added successfully`,
+              duration: 3000,
+              gravity: "top", // `top` or `bottom`
+              position: "right", // `left`, `center` or `right`
+              stopOnFocus: true, // Prevents dismissing of toast on hover
+              style: {
+                background: "green",
+              },
+            }).showToast();
+
+        
+      }else{
+        document.getElementById('categoryError').classList.remove('d-none')
+        console.log("error");
+      }
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  })
+
+//Edit category
+
+  document.getElementById('editProductCategoryForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    console.log("hello");
+
+    const categoryName = document.getElementById('editCategoryName').value
+    const categoryDescription = document.getElementById('editCategoryDescription').value
+    const categoryId = document.getElementById('editCategoryId').value
+
+    let data={
+      categoryName:categoryName,
+      categoryDescription:categoryDescription,
+      categoryId:categoryId
+    }
+
+    fetch('/admin/edit-productCategoryPost', {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then((res)=>{
+      if(res.ok){
+        console.log("bahuuuuuuuuuuuuuuuuuubali");
+        document.getElementById('editCategoryError').classList.add('d-none');
+        // document.getElementById("exampleModal").parentNode.removeChild(modal);
+        Toastify({
+              text: `category Updated successfully`,
+              duration: 3000,
+              gravity: "top", // `top` or `bottom`
+              position: "right", // `left`, `center` or `right`
+              stopOnFocus: true, // Prevents dismissing of toast on hover
+              style: {
+                background: "green",
+              },
+            }).showToast();
+
+            setTimeout(()=>{
+              location.reload()
+            },3000)
+        
+      }else{
+        document.getElementById('editCategoryError').classList.remove('d-none')
+        console.log("error");
+      }
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  })
 
 </script>

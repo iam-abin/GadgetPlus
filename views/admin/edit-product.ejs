@@ -17,7 +17,7 @@
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Product description</label>
-                                <textarea placeholder="Type here" id="product_description" name="product_description" class="form-control"
+                                <textarea placeholder="Type here" value="<%= product.product_price %>" id="product_description" name="product_description" class="form-control"
                                     rows="4"></textarea>
                             </div>
 
@@ -59,26 +59,26 @@
                                 <div class="input-upload ">
                                     <label class="form-label">Image 1</label>
                                     <img src="/product-images/<%= product.image[0].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
-                                    <input class="form-control" type="file" name="img1" multiple>
+                                    <input class="form-control" value="/product-images/<%= product.image[0].filename %>" type="file" name="img1" multiple>
                                 </div>
     
                                 <div class=" input-upload">
                                     <label class="form-label">Image 2</label>
                                     <img src="/product-images/<%= product.image[1].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
-                                    <input class="form-control" type="file" name="img2">
+                                    <input class="form-control" value="/product-images/<%= product.image[1].filename %>" type="file" name="img2">
                                 </div>
                             </div>
                             <div class="d-flex flex-wrap flex-row">
                                 <div class=" input-upload">
                                     <label class="form-label">Image 3</label>
                                     <img src="/product-images/<%= product.image[2].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
-                                    <input class="form-control" type="file" name="img3">
+                                    <input class="form-control" value="/product-images/<%= product.image[2].filename %>" type="file" name="img3">
                                 </div>
     
                                 <div class=" input-upload">
                                     <label class="form-label">Image 4</label>
                                     <img src="/product-images/<%= product.image[3].filename %>" style="width: 100px; height: 72px;" alt="image not provided">
-                                    <input class="form-control" type="file" name="img4">
+                                    <input class="form-control" value="/product-images/<%= product.image[3].filename %>" type="file" name="img4">
                                 </div>
                             </div>
                             <br>
@@ -89,7 +89,7 @@
 
                                         <% for( let i = 0; i < categories.length; i++ ) { %>
                                             <% if (categories[i].status) { %>
-                                                <% if (categories[i]._id == product.product_category) { %>
+                                                <% if (categories[i]._id.toString() === product.product_category.toString()) { %>
                                                     <option value="<%= categories[i]._id %>" selected> <%= categories[i].name %> </option>
                                                 <% } else{ %>
                                                     <option value="<%= categories[i]._id %>"> <%= categories[i].name %> </option>
@@ -113,5 +113,5 @@
 
 
 <script>
-    document.getElementById("product_description").value = "<%= product.product_description || '' %>";
+    document.getElementById("product_description").value = "<%= product.product_description %>";
   </script>

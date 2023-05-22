@@ -91,6 +91,10 @@
 												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',-1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-minus"></i></button>
 												<span id="incDec<%= cartItems[i].product._id %>"><%= cartItems[i].quantity %></span>
 												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-plus"></i></button>
+												<% if (cartItems[i].product.isOutOfStock) { %>
+													<br><span class="text-danger" id="outOfStock<%= cartItems[i].product._id %>">out of stock</span>
+												<% } %>
+												<br><span class="text-danger d-none" id="outOfStock<%= cartItems[i].product._id %>">out of stock</span>
 											</div><!-- End .cart-product-quantity -->
 										</td>
 										<td id="productPrice<%= cartItems[i].product._id %>" class="total-col">₹<%= cartItems[i].product.product_price * cartItems[i].quantity %>
@@ -187,14 +191,22 @@
 		})
 		.done((res)=>{
 			if(res){
-				console.log(res.message);
-				// if(!res.error){
+				console.log("res",res);
+				if(!res.OutOfStock){
 					
 					document.getElementById('incDec'+productId).innerHTML=res.message.quantity
 					document.getElementById('totalAmount').innerHTML=res.message.totalAmount
+					document.getElementById('outOfStock'+productId).classList.add('d-none')
 					let total=res.message.quantity*price
 					document.getElementById('productPrice'+productId).innerHTML=total.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
-				// }
+				}else{
+
+					document.getElementById('incDec'+productId).innerHTML=res.message.quantity
+					document.getElementById('totalAmount').innerHTML=res.message.totalAmount
+					document.getElementById('outOfStock'+productId).classList.remove('d-none')
+					let total=res.message.quantity*price
+					document.getElementById('productPrice'+productId).innerHTML=total.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
+				}
 				// else{
 				// swal("Failed", `${err.responseJSON.message}`,"error").then(() => {
                 //     location.reload();
