@@ -8,13 +8,10 @@ const coupenHelper = require('../helpers/coupenHelper');
 // const PDFDocument = require('pdfkit');
 // const fs = require('fs');
 
-const { currencyFormat ,currencyFormatWithFractional } = require("../controllers/userController");
-
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
 const csvParser = require('json-2-csv');
 
-const cartHelper = require("../helpers/cartHelper");
 const orderHepler = require("../helpers/orderHepler");
 
 const email = "admin@gmail.com";
@@ -47,26 +44,76 @@ const adminLoginPost = async (req, res) => {
 
 const adminHome = async (req, res) => {
   try {
-    const orderStatus = await orderHelper.getAllOrderStatusesCount()
+    const orderStatus = await orderHelper.getAllOrderStatusesCount();
+    const chartData=await adminHelper.getChartDetails();
+    const dashboardDetails = await adminHelper.getDashboardDetails();
+    dashboardDetails.totalRevenue=currencyFormat(dashboardDetails.totalRevenue)
+    dashboardDetails.monthlyRevenue=currencyFormat(dashboardDetails.monthlyRevenue)
 
-    res.render("admin/admin-home", { orderStatus, layout: "layouts/adminLayout" });
+    console.log("dashboardDetails",dashboardDetails);
+    res.render("admin/admin-home", { orderStatus, chartData, dashboardDetails, layout: "layouts/adminLayout" });
   } catch {
     res.status(500);
   }
 };
 
+//--------------------------------------------------------------------------------------
+const salesReportPage=async (req,res)=>{
+  const sales = await orderHelper.getAllDeliveredOrders();
+  console.log("sales",sales);
+  sales.forEach((order)=>{
+    order.orderDate=dateFormat(order.orderDate)
+    // order.totalAmount=dateFormat(order.totalAmount)
+  })
+  res.render('admin/sales-report',{sales, layout: "layouts/adminLayout" })
+}
+
+
+
 const salesReport = async (req, res) => {
   try {
-    let salesData = [];
-    const sales = await orderHelper.getAllOrders();
+    let {startDate,endDate}=req.body;
 
+    startDate=new Date(startDate)
+    endDate=new Date(endDate)
+
+    const salesReport = await orderHelper.getAllDeliveredOrdersByDate(startDate,endDate);
+    for(let i=0;i<salesReport.length;i++){
+      salesReport[i].orderDate=dateFormat(salesReport[i].orderDate)
+      salesReport[i].totalAmount=currencyFormat(salesReport[i].totalAmount)
+    }
+    res.status(200).json({sales:salesReport})
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+const salesReportExcel = async (req, res) => {
+  try {
+    console.log("salesReportExcelsalesReportExcel",req.body,"salesReportExcelsalesReportExcel");
+    let salesData = [];
+    let {startDate,endDate}=req.body;
+
+    startDate=new Date(startDate)
+    endDate=new Date(endDate)
+
+    const salesReport = await orderHelper.getAllDeliveredOrdersByDate(startDate,endDate);
+
+    for(let i=0;i<salesReport.length;i++){
+      salesReport[i].orderDate=dateFormat(salesReport[i].orderDate)
+      salesReport[i].totalAmount=currencyFormat(salesReport[i].totalAmount)
+    }
+
+    console.log(salesReport);
     sales.forEach(sale => {
       const { _id, orderDate, totalAmount, paymentMethod, orderStatus } = sale
       const userName = sale.userDetails[0].name;
       salesData.push({ _id, userName, orderDate, totalAmount, paymentMethod, orderStatus })
     });
 
-    const csvFields = ["Id", "Name", "Order Date", "Amount", "Payment Method", "Order Status"];
+    const csvFields = ["No", "Order Id", "Customer Id", "Order Date", "Payment Method", "Order Status", "Total Amount"];
     const csvData = await csvParser.json2csv(salesData, { csvFields })
 
     res.setHeader("Content-Type", "text/csv");
@@ -77,6 +124,9 @@ const salesReport = async (req, res) => {
     console.log(error);
   }
 }
+
+//--------------------------------------------------------------------------------------
+
 
 // const salesReportPdf=async (req,res)=>{
 //   try {
@@ -442,7 +492,7 @@ const productOrderDetails = async (req, res) => {
     let coupensUsed = coupenHelper.getUserUsedCoupens(userId)
 
     // for (let i = 0; i < orderdetails.length; i++) {
-    //   orderdetails[i].discount = currencyFormat(orderdetails[i].discount)
+      orderdetails[i].discount = currencyFormat(orderdetails[i].discount)
     // }
 
     for (let i = 0; i < productDetails.length; i++) {
@@ -528,7 +578,7 @@ const deleteCoupon = async (req, res) => {
 const userProfile = async (req, res) => {
   const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(req.params.id);
   for(let i=0;i<userOrderDetails.length;i++){
-    userOrderDetails[i].totalAmount=currencyFormat(userOrderDetails[i].totalAmount);
+    userOrderDetails[i].totalAmount=currencyFormat(userOrderDetails[i].totalAmount)
     userOrderDetails[i].orderDate=dateFormat(userOrderDetails[i].orderDate)
   }
   adminHelper.findAUser(req.params.id).then((response) => {
@@ -553,11 +603,23 @@ function dateFormat(date){
   return date.toISOString().slice(0, 10)
 }
 
+
+// convert a number to a indian currency format
+function currencyFormat(amount){
+  return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
+}
+
+function currencyFormatWithFractional(amount){
+  return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR'})
+}
+
 module.exports = {
   adminLogin,
   adminLoginPost,
   adminHome,
+  salesReportPage,
   salesReport,
+  salesReportExcel,
   // salesReportPdf,
   adminLogout,
   usersList,

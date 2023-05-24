@@ -14,7 +14,11 @@ router.post('/adminLogin',adminController.adminLoginPost);
 
 router.get('/admin-home',adminChecking,adminController.adminHome)
 
-router.get('/sales-report',adminChecking,adminController.salesReport);
+router.get('/sales-report-page',adminChecking,adminController.salesReportPage);
+
+router.post('/sales-report',adminChecking,adminController.salesReport);
+
+router.post('/sales-report-excel',adminChecking,adminController.salesReportExcel);
 
 // router.get('/sales-report-pdf',adminChecking,adminController.salesReportPdf);
 

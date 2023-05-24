@@ -731,6 +731,6 @@ module.exports = {
     contact,
     errorPage,
     notFound404,
-    currencyFormat,
-    currencyFormatWithFractional,
+    // currencyFormat,
+    // currencyFormatWithFractional,
 }

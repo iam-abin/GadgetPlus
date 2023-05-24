@@ -1,0 +1,135 @@
+
+
+
+      <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Sales Report </h2>
+                </div>
+                <div>
+                    <a  id="xlsheet" class="btn btn-light rounded font-md">Download XLSheet</a>
+                    <a href="#" id="pdf" data-value="" class="btn btn-light rounded  font-md">Download PDF</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <form id="date-wise-report">
+                        <div class="row gx-3">
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" name="startDate" value="" class="form-control" required>
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" name="endDate" value="" class="form-control" required>
+                            </div>
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <button type="submit" class="btn btn-primary mt-4  btn-sm rounded">Get Report</button>
+                            </div>
+                        </div>
+                    </form>
+                </header> <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th scope="col">Order Id</th>
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Order Status</th>
+                                    <th scope="col">Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="defaultReport">
+                                <% for( let i = 0; i < sales.length; i++ ) { %>
+                                    <tr>
+                                        <td><%= i+1 %></td>
+                                        <td><b><%= sales[i]._id %></b></td>
+                                        <td><%= sales[i].userDetails[0].name %></td>
+                                        <td><%= sales[i].orderDate %></td>
+                                        <td><%= sales[i].paymentMethod %></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%= sales[i].orderStatus %></span></td>
+                                        <td><%= sales[i].totalAmount %></td>
+                                        
+                                    </tr>
+                                <% } %>
+                                
+                            </tbody>
+                        </table>
+                        <input type="hidden" id="salesReportStore" value="<%= sales %>">
+                    </div> <!-- table-responsive //end -->
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+           
+        </section> <!-- content-main end// -->
+
+
+<script>
+    $('#date-wise-report').on('submit',function(e){
+        e.preventDefault()
+            console.log("clicked");
+            swal('do you want to do this',{
+                buttots:["no","yes"]
+            })
+            .then((res)=>{
+                if(res){
+                    $.ajax({
+                        url:'/admin/sales-report',
+                        type:'post',
+                        data:$('#date-wise-report').serialize()
+                    })
+                    .done((res)=>{
+                        let sales=res.sales
+                        console.log("hi");
+                        console.log(sales);
+                        $('#defaultReport').remove();
+
+                        $('#sales-table').append('<tbody id="date-wise-report"></tbody>');
+
+                        for (let i = 0; i < sales.length; i++) {
+                            console.log(sales[i]._id);
+                            $('#sales-table').append(`
+                            <tr>
+                                <td class="text-center">`+ (i+1) +`</td>
+                                <td class="text-center"><b>`+ sales[i]._id +`</b></td>
+                                <td class="text-center">`+ sales[i].user +`</td>
+                                <td class="text-center">`+ sales[i].orderDate +`</td>
+                                <td class="text-center">`+ sales[i].paymentMethod +`</td>
+                                <td class="text-center"><span class="badge rounded-pill alert-warning">`+ sales[i].orderStatus +`</span></td>
+                                <td class="text-center">`+ sales[i].totalAmount +`</td>
+                                        
+                            </tr>
+                            `);
+                            
+                        }
+
+                        document.getElementById('salesReportStore').value=sales
+
+                    })
+                }
+            })
+
+    })
+
+
+    $(document).ready(function(){
+        $('#xlsheet').on('click',function(e){
+            console.log("clickedd");
+            console.log(document.getElementById('salesReportStore').value);
+            e.preventDefault();
+            $.ajax({
+                url:'/admin/sales-report-excel',
+                method:'post',
+                
+            })
+            .done((res)=>{
+                console.log(res);
+            })
+        })
+    })
+
+   
+</script>

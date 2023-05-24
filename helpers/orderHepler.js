@@ -6,35 +6,25 @@ const ObjectId = require('mongoose').Types.ObjectId;
 function orderDate() {
     const date = new Date();
     console.log(date);
-    // let orderDate = date.toLocaleDateString("en-IN", {
-    //     year: "numeric",
-    //     month: "2-digit",
-    //     day: "2-digit",
-    // });
-    // let orderDate=`${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
-    // console.log("HHHHHHHHi", orderDate);
-
-
-
     return date
 }
 
-function orderStatusCount(orderStatuses){
-    let counts={};
+function orderStatusCount(orderStatuses) {   //to display on doughnut chart
+    let counts = {};
 
     orderStatuses.forEach(oneStatus => {
-        let status=oneStatus.orderStatus
+        let status = oneStatus.orderStatus
         // console.log(typeof status);
-        if(counts[status]){
+        if (counts[status]) {
             counts[status]++;
-        }else{
-            counts[status]=1;
+        } else {
+            counts[status] = 1;
         }
 
-        counts.pending=1; //need to remove after adding razorpay
-        counts.processing=6;
-        counts.cancelPending=7;
-        counts.canceled=3
+        counts.pending = 1; //need to remove after adding razorpay
+        counts.processing = 6;
+        counts.cancelPending = 7;
+        counts.canceled = 3
 
     });
     console.log(counts);
@@ -49,7 +39,7 @@ module.exports = {
             let date = orderDate();
             let userId = order.userId;
             // let address= await addressSchema.findById({_id:order.addressSelected});
-            let paymentMethod=order.payment;
+            let paymentMethod = order.payment;
             let addressId = order.addressSelected;
             let orderedItems = cartItems
             console.log("orderedItems", orderedItems);
@@ -90,11 +80,44 @@ module.exports = {
         })
     },
 
-    getAllOrderStatusesCount: async()=>{
-        try {
-            const orderStatuses= await orderSchema.find().select({_id:0,orderStatus:1})
+    getAllDeliveredOrders: () => {
+        return new Promise(async (resolve, reject) => {
+            await orderSchema.aggregate([
+                {
+                    $match: { orderStatus: 'delivered' }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'userDetails'
+                    }
+                }
+            ])
+                .then((result) => {
+                    resolve(result)
+                })
+        })
+    },
 
-            const eachOrderStatusCount= orderStatusCount(orderStatuses);
+    getAllDeliveredOrdersByDate: (startDate, endDate) => {
+        return new Promise(async (resolve, reject) => {
+            await orderSchema.find({ orderDate: { $gte: startDate, $lte: endDate }, orderStatus: 'delivered' }).lean()
+                .then((result) => {
+                    console.log("orders in range", result);
+                    resolve(result)
+                })
+
+        })
+
+    },
+
+    getAllOrderStatusesCount: async () => {
+        try {
+            const orderStatuses = await orderSchema.find().select({ _id: 0, orderStatus: 1 })
+
+            const eachOrderStatusCount = orderStatusCount(orderStatuses);
 
             return eachOrderStatusCount
         } catch (error) {
@@ -109,14 +132,14 @@ module.exports = {
                     $match: { user: new ObjectId(userId) }
                 },
                 {
-                    $lookup:{
-                        from:'addresses',
-                        localField:'address',
-                        foreignField:'_id',
-                        as:'addressLookedup'
+                    $lookup: {
+                        from: 'addresses',
+                        localField: 'address',
+                        foreignField: '_id',
+                        as: 'addressLookedup'
                     }
                 },
-                
+
             ])
 
             console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -128,20 +151,20 @@ module.exports = {
         })
     },
 
-    changeOrderStatus:async (orderId,changeStatus)=>{
+    changeOrderStatus: async (orderId, changeStatus) => {
         try {
-            
-           const orderstatusChange=await orderSchema.findOneAndUpdate({_id:orderId},
-            {
-                $set:{
-                    orderStatus:changeStatus
-                }
-            })
 
-            if(orderstatusChange){
-                return {error:false,message:'order status updated'}
-            }else{
-                return {error:true,message:'something goes wrong updation failed'}
+            const orderstatusChange = await orderSchema.findOneAndUpdate({ _id: orderId },
+                {
+                    $set: {
+                        orderStatus: changeStatus
+                    }
+                })
+
+            if (orderstatusChange) {
+                return { error: false, message: 'order status updated' }
+            } else {
+                return { error: true, message: 'something goes wrong updation failed' }
             }
 
         } catch (error) {
@@ -152,31 +175,31 @@ module.exports = {
     //------------------=--------------------------------------------------
 
     getOrderedUserDetailsAndAddress: (orderId) => {
-        return new Promise(async(resolve,reject)=>{
+        return new Promise(async (resolve, reject) => {
             await orderSchema.aggregate([
                 {
                     $match: { _id: new ObjectId(orderId) }
                 },
-                
+
                 {
-                    $lookup:{
-                        from:'addresses',
-                        localField:'address',
-                        foreignField:'_id',
-                        as:'userAddress'
+                    $lookup: {
+                        from: 'addresses',
+                        localField: 'address',
+                        foreignField: '_id',
+                        as: 'userAddress'
                     }
                 },
                 {
-                    $project:{
-                        user:1,
-                        totalAmount:1,
-                        paymentMethod:1,
-                        address:{
-                            $arrayElemAt:['$userAddress',0]
+                    $project: {
+                        user: 1,
+                        totalAmount: 1,
+                        paymentMethod: 1,
+                        address: {
+                            $arrayElemAt: ['$userAddress', 0]
                         }
                     }
                 },
-            ]).then((result)=>{
+            ]).then((result) => {
                 console.log("----------------");
 
                 console.log(result);
@@ -204,30 +227,33 @@ module.exports = {
     // },
 
     getOrderedProductsDetails: (orderId) => {
-        return new Promise(async(resolve,reject)=>{
+        return new Promise(async (resolve, reject) => {
             await orderSchema.aggregate([
                 {
-                    $match:{_id: new ObjectId(orderId)}
+                    $match: { _id: new ObjectId(orderId) }
                 },
                 {
-                    $unwind:'$orderedItems'
+                    $unwind: '$orderedItems'
                 },
                 {
-                    $lookup:{
-                        from:'products',
-                        localField:'orderedItems.product',
-                        foreignField:'_id',
-                        as:'orderedProduct'
+                    $lookup: {
+                        from: 'products',
+                        localField: 'orderedItems.product',
+                        foreignField: '_id',
+                        as: 'orderedProduct'
                     }
                 },
                 {
-                    $unwind:'$orderedProduct'
+                    $unwind: '$orderedProduct'
                 }
-            ]).then((result)=>{
-                console.log("orders",result);
+            ]).then((result) => {
+                console.log("orders", result);
                 resolve(result)
             })
         })
-    }
+    },
+
+
+    
 
 }
