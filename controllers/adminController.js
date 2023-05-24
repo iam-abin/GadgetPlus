@@ -90,40 +90,40 @@ const salesReport = async (req, res) => {
 
 
 
-const salesReportExcel = async (req, res) => {
-  try {
-    console.log("salesReportExcelsalesReportExcel",req.body,"salesReportExcelsalesReportExcel");
-    let salesData = [];
-    let {startDate,endDate}=req.body;
+// const salesReportExcel = async (req, res) => {
+//   try {
+//     console.log("salesReportExcelsalesReportExcel",req.body,"salesReportExcelsalesReportExcel");
+//     let salesData = [];
+//     let {startDate,endDate}=req.body;
 
-    startDate=new Date(startDate)
-    endDate=new Date(endDate)
+//     startDate=new Date(startDate)
+//     endDate=new Date(endDate)
 
-    const salesReport = await orderHelper.getAllDeliveredOrdersByDate(startDate,endDate);
+//     const salesReport = await orderHelper.getAllDeliveredOrdersByDate(startDate,endDate);
 
-    for(let i=0;i<salesReport.length;i++){
-      salesReport[i].orderDate=dateFormat(salesReport[i].orderDate)
-      salesReport[i].totalAmount=currencyFormat(salesReport[i].totalAmount)
-    }
+//     for(let i=0;i<salesReport.length;i++){
+//       salesReport[i].orderDate=dateFormat(salesReport[i].orderDate)
+//       salesReport[i].totalAmount=currencyFormat(salesReport[i].totalAmount)
+//     }
 
-    console.log(salesReport);
-    sales.forEach(sale => {
-      const { _id, orderDate, totalAmount, paymentMethod, orderStatus } = sale
-      const userName = sale.userDetails[0].name;
-      salesData.push({ _id, userName, orderDate, totalAmount, paymentMethod, orderStatus })
-    });
+//     console.log(salesReport);
+//     sales.forEach(sale => {
+//       const { _id, orderDate, totalAmount, paymentMethod, orderStatus } = sale
+//       const userName = sale.userDetails[0].name;
+//       salesData.push({ _id, userName, orderDate, totalAmount, paymentMethod, orderStatus })
+//     });
 
-    const csvFields = ["No", "Order Id", "Customer Id", "Order Date", "Payment Method", "Order Status", "Total Amount"];
-    const csvData = await csvParser.json2csv(salesData, { csvFields })
+//     const csvFields = ["No", "Order Id", "Customer Id", "Order Date", "Payment Method", "Order Status", "Total Amount"];
+//     const csvData = await csvParser.json2csv(salesData, { csvFields })
 
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment: filename = Sales-Report.csv");
-    res.status(200).end(csvData);
+//     res.setHeader("Content-Type", "text/csv");
+//     res.setHeader("Content-Disposition", "attachment: filename = Sales-Report.csv");
+//     res.status(200).end(csvData);
 
-  } catch (error) {
-    console.log(error);
-  }
-}
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 //--------------------------------------------------------------------------------------
 
@@ -619,7 +619,7 @@ module.exports = {
   adminHome,
   salesReportPage,
   salesReport,
-  salesReportExcel,
+  // salesReportExcel,
   // salesReportPdf,
   adminLogout,
   usersList,
