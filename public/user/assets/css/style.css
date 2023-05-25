@@ -15907,7 +15907,7 @@ button:focus {
 .table.table-summary .summary-subtotal td {
     color: #333;
     font-weight: 400;
-    font-size: 1.6rem
+    font-size: 1.5rem
 }
 
 .table.table-summary thead th {
@@ -15917,7 +15917,7 @@ button:focus {
 
 .table.table-summary tbody td {
     padding: 0;
-    height: 70px;
+    height: 58px;
     border-bottom: .1rem solid #ebebeb
 }
 

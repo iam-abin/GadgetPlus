@@ -139,21 +139,21 @@
                         <th>Status</th>	
 						<th>Payment Method</th>
 						<th>View Details</th>
-						<th>Cancel</th>
+						<!-- <th>Cancel</th> -->
                     </tr>
                 </thead>
                 <tbody>
 					<%= console.log(userOrderDetails); %>
                     <% for( let i = 0; i < userOrderDetails.length; i++ ) { %>
                         <tr>
-                            <td><%= i+1 %></td>
-                            <td><%= userOrderDetails[i].orderDate %></td>
-                            <td><%= userOrderDetails[i].addressLookedup[0].address %></td>                        
-                            <td><%= userOrderDetails[i].totalAmount %></td>
-                            <td><%= userOrderDetails[i].orderStatus %></td>
-                            <td><%= userOrderDetails[i].paymentMethod %></td>                        
-                            <td><a href="/order-details/<%= userOrderDetails[i]._id %>" style="width: 20px;height: 30px;" class="btn btn-primary">View Details</a></td>
-                            <td><button>Cancel Order</button></td>
+                            <td width="5%"><%= i+1 %></td>
+                            <td width="10%"><%= userOrderDetails[i].orderDate %></td>
+                            <td width="10%"><%= userOrderDetails[i].addressLookedup[0].address %></td>                        
+                            <td width="10%"><%= userOrderDetails[i].totalAmount %></td>
+                            <td width="10%"><%= userOrderDetails[i].orderStatus %></td>
+                            <td width="10%"><%= userOrderDetails[i].paymentMethod %></td>                        
+                            <td width="12%" style="align-items: center;"><a href="/order-details/<%= userOrderDetails[i]._id %>"  class="btn btn-primary">View Details</a></td>
+                            <!-- <td width="10%"><button>Cancel Order</button></td> -->
                         </tr>
                     <% } %>
 					

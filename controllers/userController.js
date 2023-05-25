@@ -1,6 +1,6 @@
 
 const userSchema = require('../models/userModel');
-const couponSchema=require('../models/couponModel')
+const couponSchema = require('../models/couponModel')
 const userHelper = require('../helpers/userHelper');
 const productHelper = require('../helpers/productHelper')
 const categoryHelper = require('../helpers/categoryHelper')
@@ -9,19 +9,18 @@ const twilio = require('../api/twilio');
 const adminHelper = require('../helpers/adminHelper');
 const addressHelper = require('../helpers/addressHelper');
 const orderHepler = require('../helpers/orderHepler');
-const couponHelper=require('../helpers/coupenHelper');
+const couponHelper = require('../helpers/coupenHelper');
 
-const razorpay=require('../api/razorpay')
+const razorpay = require('../api/razorpay')
 
 var easyinvoice = require('easyinvoice');
 const slugify = require('slugify');
-const {dateFormat}=require('../controllers/adminController')
+const { dateFormat } = require('../controllers/adminController')
 const wishListHelper = require('../helpers/wishListHelper');
+const walletHelper = require('../helpers/walletHelper');
 
 let loginStatus;
 let cartCount;
-
-
 
 
 
@@ -243,7 +242,7 @@ const profile = async (req, res) => {
 
 
         console.log("////////", loginStatus);
-        res.render('user/profile', { loginStatus, addresses,cartCount })
+        res.render('user/profile', { loginStatus, addresses, cartCount })
     } catch (error) {
         console.log(error);
     }
@@ -331,7 +330,7 @@ const cart = async (req, res) => {
         cartCount = await cartHelper.getCartCount(user._id)
 
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
-        
+
         totalandSubTotal = currencyFormatWithFractional(totalandSubTotal)
         console.log("cartItems");
         console.log(cartItems);
@@ -390,7 +389,7 @@ const incDecQuantity = async (req, res) => {
 
         response = await cartHelper.incDecProductQuantity(user._id, productId, quantity)
 
-        obj.quantity=response.newQuantity;
+        obj.quantity = response.newQuantity;
 
         let cartItems = await cartHelper.getAllCartItems(user._id)
         obj.totalAmount = await cartHelper.totalSubtotal(user._id, cartItems)
@@ -398,11 +397,11 @@ const incDecQuantity = async (req, res) => {
         obj.totalAmount = obj.totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
         // console.log(obj);
 
-        
-        if(response.isOutOfStock){
-            res.status(202).json({ OutOfStock:true, message: obj })
-        }else{
-            res.status(202).json({ OutOfStock:false, message: obj })
+
+        if (response.isOutOfStock) {
+            res.status(202).json({ OutOfStock: true, message: obj })
+        } else {
+            res.status(202).json({ OutOfStock: false, message: obj })
         }
 
     } catch (error) {
@@ -457,26 +456,26 @@ const addAddress = async (req, res) => {
 
 const editAddress = async (req, res) => {
     try {
-        console.log("controller",req.params.id);
-        let address=await addressHelper.getAnAddress(req.params.id);
-        console.log("controller",address);
-        res.json({address:address})
+        console.log("controller", req.params.id);
+        let address = await addressHelper.getAnAddress(req.params.id);
+        console.log("controller", address);
+        res.json({ address: address })
     } catch (error) {
         console.log(error);
     }
 }
 
-const editAddressPost=async(req,res)=>{
-try {
-    
-    let addressUpdated=await addressHelper.editAnAddress(req.body);
-    console.log(addressUpdated);
-    res.json({message:"address updated"})
+const editAddressPost = async (req, res) => {
+    try {
 
-} catch (error) {
-    console.log(error);
-}    
-   
+        let addressUpdated = await addressHelper.editAnAddress(req.body);
+        console.log(addressUpdated);
+        res.json({ message: "address updated" })
+
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 const payment = async (req, res) => {
@@ -489,20 +488,23 @@ const checkout = async (req, res) => {     //to view details and price products 
         const user = req.session.user;
 
         let cartItems = await cartHelper.getAllCartItems(user._id);
+        let walletBalance = await walletHelper.walletBalance(user._id)
+        walletBalance = currencyFormat(walletBalance)
+        console.log("walletBalance controller", walletBalance);
 
         let totalAmount = await cartHelper.totalSubtotal(user._id, cartItems);
-        totalAmount=totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+        totalAmount = totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
         const userAddress = await addressHelper.findAddresses(user._id);
         console.log("[[[[[[[[[[[[[[[");
         console.log(cartItems);
         for (let i = 0; i < cartItems.length; i++) {
-            cartItems[i].product.product_price=cartItems[i].product.product_price.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
-            
+            cartItems[i].product.product_price = cartItems[i].product.product_price.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
+
         }
         // console.log(loginStatus);
         console.log("[[[[[[[[[[[[[[[");
 
-        res.render('user/checkout', { loginStatus,cartCount, user, totalAmount: totalAmount,cartItems, address: userAddress })         //loginstatus contain user login info
+        res.render('user/checkout', { loginStatus, cartCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
     } catch (error) {
         console.log(error);
     }
@@ -510,78 +512,98 @@ const checkout = async (req, res) => {     //to view details and price products 
 
 }
 
-const applyCoupon=async(req,res)=>{
+const applyCoupon = async (req, res) => {
     try {
-        const user=req.session.user
-        const {totalAmount,couponCode}=req.body;
-        console.log("hhhhhhhhhhhhh",couponCode);
-        console.log("hhhhhhhhhhhhh",totalAmount);
-        const response=await couponHelper.applyCoupon(user._id,couponCode);
+        const user = req.session.user
+        const { totalAmount, couponCode } = req.body;
+        console.log("hhhhhhhhhhhhh", couponCode);
+        console.log("hhhhhhhhhhhhh", totalAmount);
+        const response = await couponHelper.applyCoupon(user._id, couponCode);
 
-        console.log("responseddddddddddddddddd",response);
+        console.log("responseddddddddddddddddd", response);
         res.status(202).json(response);
 
 
     } catch (error) {
-        
+
     }
 }
 
 
 const placeOrder = async (req, res) => {
     try {
-        let userId=req.body.userId
+        let userId = req.body.userId
 
         let cartItems = await cartHelper.getAllCartItems(userId);
-        let coupon=await couponSchema.find({user:userId})
+        let coupon = await couponSchema.find({ user: userId })
 
-        if(!cartItems.length){
-           return res.json({error:true,message:"Please add items to cart before checkout"})
+        if (!cartItems.length) {
+            return res.json({ error: true, message: "Please add items to cart before checkout" })
         }
 
 
-        if(req.body.addressSelected==undefined ){
-            return res.json({ error:true, message: "Please Choose Address" })
+        if (req.body.addressSelected == undefined) {
+            return res.json({ error: true, message: "Please Choose Address" })
         }
 
-        if(req.body.payment==undefined ){
-            return res.json({ error:true, message: "Please Choose A Payment Method" })
+        if (req.body.payment == undefined) {
+            return res.json({ error: true, message: "Please Choose A Payment Method" })
         }
 
-        
+
         const totalAmount = await cartHelper.totalAmount(userId); // instead find cart using user id and take total amound from that 
-        console.log(totalAmount,"totalAmount");
-        
-        console.log(userId,"userId");
-        console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+        console.log(totalAmount, "totalAmount");
 
-        console.log(cartItems);
-        console.log(req.body);
-        console.log(userId);
-        console.log(req.body.payment);
-        console.log(req.body.addressSelected);
-        console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+        // console.log(userId, "userId");
+        // console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+
+        // console.log(cartItems);
+        // console.log(req.body);
+        // console.log(userId);
+        // console.log(req.body.payment);
+        // console.log(req.body.addressSelected);
+        // console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 
 
         if (req.body.payment == 'COD') {
-            const placeOrder = await orderHepler.orderPlacing(req.body, totalAmount,cartItems)
+            const placeOrder = await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
                 .then(async (orderDetails) => {
                     await productHelper.decreaseStock(cartItems);
                     await cartHelper.clearCart(userId);
-                    cartCount = await cartHelper.getCartCount(userId)
-                    res.status(202).json({ success:'COD', message: "Purchase Done" })
+                    // cartCount = await cartHelper.getCartCount(userId)
+                    res.status(202).json({ paymentMethod: 'COD', message: "Purchase Done" })
                 })
         }
-        else if(req.body.payment=='razorpay'){
-            await orderHepler.orderPlacing(req.body, totalAmount ,cartItems)
-            .then(async (orderDetails)=>{
-                // console.log("responseresponseresponseorderDetails",orderDetails);
-                await razorpay.razorpayOrderCreate(orderDetails._id,orderDetails.totalAmount)
-                .then((razorpayOrderDetails)=>{
-                    res.json({success: 'razorpay',orderDetails,razorpayOrderDetails ,razorpaykeyId:process.env.RAZORPAY_KEY_ID})
-                })
+        else if (req.body.payment == 'razorpay') {
+            await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
+                .then(async (orderDetails) => {
+                    // console.log("responseresponseresponseorderDetails",orderDetails);
+                    await razorpay.razorpayOrderCreate(orderDetails._id, orderDetails.totalAmount)
+                        .then(async (razorpayOrderDetails) => {
+                            await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
+                            await productHelper.decreaseStock(cartItems);
+                            await cartHelper.clearCart(userId);
+                            res.json({ paymentMethod: 'razorpay', orderDetails, razorpayOrderDetails, razorpaykeyId: process.env.RAZORPAY_KEY_ID })
+                        })
 
-            })
+                })
+        }
+        else if (req.body.payment == 'wallet') {
+            let isPaymentDone = await walletHelper.payUsingWallet(userId, totalAmount);
+            if (isPaymentDone) {
+                await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
+                    .then(async (orderDetails) => {
+                        console.log("wallet order placed");
+                        await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
+                        await productHelper.decreaseStock(cartItems);
+                        await cartHelper.clearCart(userId);
+                        res.status(202).json({ paymentMethod: 'wallet', error: false, message: "Purchase Done" })
+
+                    })
+            } else {
+                res.status(200).json({ paymentMethod: 'wallet', error: true, message: "Insufficient Balance in wallet" })
+            }
+
         }
 
     } catch (error) {
@@ -590,25 +612,25 @@ const placeOrder = async (req, res) => {
 }
 
 //razorpay payment verification
-const verifyPayment = async(req,res)=>{
-    const userId=req.session.user._id;
-    console.log("verifyPaymentverifyPaymentverifyPayment",req.body);
+const verifyPayment = async (req, res) => {
+    const userId = req.session.user._id;
+    console.log("verifyPaymentverifyPaymentverifyPayment", req.body);
     await razorpay.verifyPaymentSignature(req.body)
-    .then(async (response)=>{
-        console.log(response);
-        if(response.signatureIsValid){
-            console.log("order razorpay successfullllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
-            await orderHepler.changeOrderStatus(req.body['orderDetails[_id]'],"confirmed");
-            let cartItems = await cartHelper.getAllCartItems(userId);
-            await productHelper.decreaseStock(cartItems);
-            await cartHelper.clearCart(userId);
+        .then(async (response) => {
+            console.log(response);
+            if (response.signatureIsValid) {
+                console.log("order razorpay successfullllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+                await orderHepler.changeOrderStatus(req.body['orderDetails[_id]'], "confirmed");
+                let cartItems = await cartHelper.getAllCartItems(userId);
+                await productHelper.decreaseStock(cartItems);
+                await cartHelper.clearCart(userId);
 
 
-            res.status(200).json({status :true})
-        }else{
-            res.status(200).json({status :false})
-        }
-    })
+                res.status(200).json({ status: true })
+            } else {
+                res.status(200).json({ status: false })
+            }
+        })
 }
 
 const orderSuccess = (req, res) => {
@@ -624,40 +646,70 @@ const orderSuccess = (req, res) => {
 
 const orders = async (req, res) => {
     try {
-        const user=req.session.user;
-        const userOrderDetails=await orderHepler.getAllOrderDetailsOfAUser(user._id);
+        const user = req.session.user;
+        const userOrderDetails = await orderHepler.getAllOrderDetailsOfAUser(user._id);
         for (let i = 0; i < userOrderDetails.length; i++) {
-            userOrderDetails[i].orderDate=dateFormat(userOrderDetails[i].orderDate);
-            userOrderDetails[i].totalAmount=currencyFormat(userOrderDetails[i].totalAmount);
-            
-        }
-        console.log("orders",userOrderDetails);
+            userOrderDetails[i].orderDate = dateFormat(userOrderDetails[i].orderDate);
+            userOrderDetails[i].totalAmount = currencyFormat(userOrderDetails[i].totalAmount);
 
-        res.render('user/orders-user',{userOrderDetails,loginStatus,cartCount})
+        }
+        console.log("orders", userOrderDetails);
+
+        res.render('user/orders-user', { userOrderDetails, loginStatus, cartCount })
     } catch (error) {
-        
+
     }
 }
 
 const productOrderDetails = async (req, res) => {
     try {
-      console.log(req.params);
-      const orderId = req.params.id;
-      let orderdetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
-      // let orderDetails= await orderHelper.getOrderDetails(orderId)
-      let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
+        console.log(req.params);
+        const orderId = req.params.id;
+        let orderDetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
+        // let orderDetails= await orderHelper.getOrderDetails(orderId)
+        let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
 
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>");
-      console.log("orderdetails",orderdetails);
-      console.log("productDetails",productDetails);
-      console.log("loginStatus",loginStatus);
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>");
-      
-      res.render('user/order-details-user', { orderdetails, productDetails,loginStatus})
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>");
+        console.log("orderdetails", orderDetails);
+        console.log("productDetails", productDetails);
+        console.log("loginStatus", loginStatus);
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>");
+
+        res.render('user/order-details-user', { orderDetails, cartCount, productDetails, loginStatus })
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  }
+}
+
+const cancelOrder = async (req, res) => {
+    console.log("cancelOrder", req.body);
+    const userId = req.body.userId;
+    const orderId = req.body.orderId;
+    try {
+        const cancelled = await orderHepler.cancelOrder(userId, orderId)
+
+        res.status(200).json({isCancelled:true, message:"order canceled successfully"})
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const returnOrder=async(req,res)=>{
+    console.log("returnOrder", req.body);
+    const userId = req.body.userId;
+    const orderId = req.body.orderId;
+    try {
+        const returnedResponse = await orderHepler.returnOrder(userId, orderId)
+        console.log("returned returned returned",returnedResponse);
+
+        res.status(200).json({isreturned:'return pending', message:"order returned Process Started"})
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
 // ----------------------------------------------------------------------------------------------------
 
 
@@ -667,7 +719,7 @@ const contact = async (req, res) => {
     res.render('user/contact', { loginStatus, cartCount })
 }
 
-const errorPage=(req,res)=>{
+const errorPage = (req, res) => {
     res.render('error')
 }
 
@@ -676,12 +728,12 @@ const notFound404 = async (req, res) => {
 }
 
 // convert a number to a indian currency format
-function currencyFormat(amount){
+function currencyFormat(amount) {
     return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
 }
 
-function currencyFormatWithFractional(amount){
-    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR'})
+function currencyFormatWithFractional(amount) {
+    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
 }
 
 module.exports = {
@@ -727,7 +779,8 @@ module.exports = {
     orders,
     productOrderDetails,
 
-
+    cancelOrder,
+    returnOrder,
     contact,
     errorPage,
     notFound404,

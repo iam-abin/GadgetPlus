@@ -100,6 +100,10 @@ router.get('/orders',userChecking,userController.orders)
 
 router.get('/order-details/:id',userChecking,userController.productOrderDetails)
 
+router.post('/cancel-order',userChecking,userController.cancelOrder)
+
+router.post('/return-order',userChecking,userController.returnOrder)
+
 router.get('/contact',userController.contact)
 
 

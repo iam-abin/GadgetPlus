@@ -150,6 +150,31 @@ module.exports = {
         })
     },
 
+    increaseStock: (orderDetails) => {
+        return new Promise(async (resolve, reject) => {
+            console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+
+            console.log(orderDetails);
+
+            console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+            console.log("increaseStock0",orderDetails);
+            for (let i = 0; i < orderDetails.orderedItems.length; i++) {
+                let product = await productSchema.findById({ _id: orderDetails.orderedItems[i].product });
+                console.log("increaseStock1",product);
+                // const isProductAvailableInStock = (product.product_quantity - cartItems[i].quantity) > 0 ? true : false;
+                // if (isProductAvailableInStock) {
+                product.product_quantity = product.product_quantity + orderDetails.orderedItems[i].quantity;
+                // }
+                // else{
+
+                // }
+                await product.save();
+                console.log("increaseStock2",product);  
+            }
+            resolve(true)
+        })
+    },
+
     isOutOfStock: function (productId, newQuantity=false) {  // newQuantity for cart product quantity increase
         return new Promise(async (resolve, reject) => {
             let product = await this.getAProduct(productId);

@@ -91,7 +91,7 @@
                     <span class="ml-4">
                         <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2020, 4:34PM</b>
                     </span> <br>
-                    <small class="text-muted ml-4">Order ID: <%= orderdetails._id %></small>
+                    <small class="text-muted ml-4">Order ID: <%= orderDetails._id %></small>
                 </div>
                 <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
                     <button class="float-right mr-5" id="invoice">Download Invoice</button>
@@ -111,12 +111,12 @@
                             <h6 class="mb-1">Customer</h6>
                             <p class="mb-1">
 
-                                <%= orderdetails.address.first_name %>
-                                    <%= orderdetails.address.last_name %> <template class="__cf_email__"
+                                <%= orderDetails.address.first_name %>
+                                    <%= orderDetails.address.last_name %> <template class="__cf_email__"
                                             data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template>
-                                        <br> +91 <%= orderdetails.address.mobile %>
+                                        <br> +91 <%= orderDetails.address.mobile %>
                             </p>
-                            <a href="/admin/userProfile/<%= orderdetails.user %>">View profile</a>
+                            <a href="/admin/userProfile/<%= orderDetails.user %>">View profile</a>
                         </div>
                     </article>
                 </div> <!-- col// -->
@@ -128,10 +128,9 @@
                         <div class="text">
                             <h6 class="mb-1">Order info</h6>
                             <p class="mb-1">
-                                Shipping: Fargo express <br> Pay method: <%= orderdetails.paymentMethod %> <br> Status:
+                                Shipping: Fargo express <br> Pay method: <%= orderDetails.paymentMethod %> <br> Status:
                                     new
                             </p>
-                            <a href="#">Download info</a>
                         </div>
                     </article>
                 </div> <!-- col// -->
@@ -143,10 +142,10 @@
                         <div class="text">
                             <h6 class="mb-1">Deliver to</h6>
                             <p class="mb-1">
-                                City : <%= orderdetails.address.city %>
+                                City : <%= orderDetails.address.city %>
                             </p>
                             <p class="mb-1">
-                                Address : <%= orderdetails.address.address %>
+                                Address : <%= orderDetails.address.address %>
                             </p>
                         </div>
                     </article>
@@ -191,6 +190,8 @@
                                     </tr>
                                     <% } %>
                                         <tr>
+                                            <!-- <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
+                                            </div> -->
                                             <td colspan="4">
                                                 <article class="float-end">
                                                     <dl class="dlist">
@@ -204,24 +205,33 @@
                                                     <dl class="dlist">
                                                         <dt>Grand total:</dt>
                                                         <dd> <b class="h5">
-                                                                <%= orderdetails.totalAmount %>
+                                                                <%= orderDetails.totalAmount %>
                                                             </b> </dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt class="text-muted">Status:</dt>
                                                         <dd>
                                                             <span
-                                                                class="badge rounded-pill alert-success text-success">Payment
-                                                                done</span>
+                                                                class="badge rounded-pill alert-success text-success"><%= orderDetails.orderStatus %></span>
                                                         </dd>
                                                     </dl>
+                                                    <% if (orderDetails.orderStatus !== 'delivered' && orderDetails.orderStatus !== 'cancelled' && orderDetails.orderStatus !== 'return pending' && orderDetails.orderStatus !== 'returned') { %>
+                                                        <button class="float-left ml-5" style="background-color: rgb(205, 120, 120);" onclick="cancelOrder('<%= orderDetails.user %>','<%= orderDetails._id %>')">Cancel order</button>
+                                                      <% } %>
+                                                        
+
+
+                                                    <% if (orderDetails.orderStatus == 'delivered') { %>
+                                                        <button class="float-left ml-5 " style="background-color: rgb(60, 109, 182);" onclick="returnOrder('<%= orderDetails.user %>','<%= orderDetails._id %>')">Return order</button>
+                                                    <% } %>
+
                                                 </article>
                                             </td>
                                         </tr>
                             </tbody>
                         </table>
 
-                        <input type="hidden" id="orderdetails" value="<%= JSON.stringify(orderdetails) %>">
+                        <input type="hidden" id="orderDetails" value="<%= JSON.stringify(orderDetails) %>">
                         <input type="hidden" name="" id="productDetails" value="<%= JSON.stringify(productDetails) %>">
                     </div> <!-- table-responsive// -->
                 </div> <!-- col// -->
@@ -237,19 +247,19 @@
 
     //--------------------------------------------------
     // const orderDate = 'Wed, Aug 13, 2020, 4:34PM';
-    // const orderID = orderdetails._id;
-    // const customerName = `${orderdetails.address.first_name} ${orderdetails.address.last_name}`;
-    // const customerEmail = orderdetails.address.email_id;
-    // const customerPhone = `+91 ${orderdetails.address.mobile}`;
+    // const orderID = orderDetails._id;
+    // const customerName = `${orderDetails.address.first_name} ${orderDetails.address.last_name}`;
+    // const customerEmail = orderDetails.address.email_id;
+    // const customerPhone = `+91 ${orderDetails.address.mobile}`;
     // const shippingMethod = 'Fargo express';
-    // const paymentMethod = orderdetails.paymentMethod;
-    // const shippingCity = orderdetails.address.city;
-    // const country = orderdetails.address.country;
-    // const shippingAddress = orderdetails.address.address;
+    // const paymentMethod = orderDetails.paymentMethod;
+    // const shippingCity = orderDetails.address.city;
+    // const country = orderDetails.address.country;
+    // const shippingAddress = orderDetails.address.address;
     // const productDetails = productDetails.orderedProduct;
-    // const subtotal = orderdetails.totalAmount; // Calculate the subtotal dynamically based on the product details and prices
+    // const subtotal = orderDetails.totalAmount; // Calculate the subtotal dynamically based on the product details and prices
     // const shippingCost = 'Rs 10.00';
-    // const grandTotal = orderdetails.totalAmount;
+    // const grandTotal = orderDetails.totalAmount;
     // const status = 'Payment done';
     //--------------------------------------------------
 
@@ -257,7 +267,7 @@
 
     $(document).ready(function () {
         $('#invoice').click((e) => {
-            let orderdetails = JSON.parse(document.getElementById('orderdetails').value);
+            let orderDetails = JSON.parse(document.getElementById('orderDetails').value);
             let productDetails = JSON.parse(document.getElementById('productDetails').value);
 
             console.log("clicked");
@@ -287,11 +297,11 @@
                                 "country": "India"
                             },
                             "client": {
-                                "company": orderdetails.address.first_name,
-                                "address": orderdetails.address.address,
+                                "company": orderDetails.address.first_name,
+                                "address": orderDetails.address.address,
                                 "zip": "5678 CD",
-                                "city": orderdetails.address.city,
-                                "country": orderdetails.address.country
+                                "city": orderDetails.address.city,
+                                "country": orderDetails.address.country
                             },
                             "invoiceNumber": "2021.0001",
                             "invoiceDate": "15-05-2023",
@@ -317,4 +327,79 @@
                 })
         })
     })
+
+    function cancelOrder(userId,orderId){
+        console.log("clicked",userId);
+
+        swal("do you want to Cancel This Order", {
+            buttons: ['No', 'Yes']
+        })
+        .then((res)=>{
+            if(res){
+                $.ajax({
+                    url:'/cancel-order',
+                    method:'post',
+                    data:{
+                        userId:userId,
+                        orderId:orderId
+                    }
+                })
+                .done((res)=>{
+                    console.log(res);
+                    Toastify({
+							text: `${res.message}`,
+							duration: 3000,
+							newWindow: true,
+							close: true,
+							gravity: "top", // `top` or `bottom`
+							position: "center", // `left`, `center` or `right`
+							stopOnFocus: true, // Prevents dismissing of toast on hover
+							style: {
+								background: "linear-gradient(to right, #00b09b, #96c93d)",
+							},
+
+						}).showToast();
+                        location.reload()
+                })
+            }
+        })
+    }
+
+
+    function returnOrder(userId,orderId){
+        console.log("clicked",userId);
+
+        swal("do you want to Retrun This Order", {
+            buttons: ['No', 'Yes']
+        })
+        .then((res)=>{
+            if(res){
+                $.ajax({
+                    url:'/return-order',
+                    method:'post',
+                    data:{
+                        userId:userId,
+                        orderId:orderId
+                    }
+                })
+                .done((res)=>{
+                    console.log(res);
+                    Toastify({
+							text: `${res.message}`,
+							duration: 3000,
+							newWindow: true,
+							close: true,
+							gravity: "top", // `top` or `bottom`
+							position: "center", // `left`, `center` or `right`
+							stopOnFocus: true, // Prevents dismissing of toast on hover
+							style: {
+								background: "linear-gradient(to right, #00b09b, #96c93d)",
+							},
+
+						}).showToast();
+                        location.reload()
+                })
+            }
+        })
+    }
 </script>

@@ -13,6 +13,7 @@ const slugify = require('slugify');
 const csvParser = require('json-2-csv');
 
 const orderHepler = require("../helpers/orderHepler");
+const walletHelper = require("../helpers/walletHelper");
 
 const email = "admin@gmail.com";
 const password = "123";
@@ -241,6 +242,7 @@ const blockUnBlockUser = async (req, res) => {
           });
       } else {
         req.session.user = false;
+        
         res
           .status(200)
           .json({
@@ -460,7 +462,7 @@ const productOrders = async (req, res) => {
       orders[i].orderDate = dateFormat(orders[i].orderDate)
     }
 
-    console.log(orders, "hi");
+    // console.log(orders, "hi");
     res.render("admin/orders", { layout: "layouts/adminLayout", orders });
   } catch (error) {
     console.log(error);
@@ -472,8 +474,17 @@ const changeProductOrderStatus = async (req, res) => {
     console.log("Hello");
     // console.log(req.body.status);
     // console.log(req.body.orderId);
+    
     const response = await orderHepler.changeOrderStatus(req.body.orderId, req.body.status);
-    res.status(202).json(response)
+    console.log("orderstatus output",response);
+    
+    if(response.orderStatus== 'returned'){
+      console.log(typeof response.totalAmount);
+      await walletHelper.addMoneyToWallet(response.user,response.totalAmount);
+      await productHelper.increaseStock(response)
+    }
+    
+    res.status(202).json({ error: false, message: 'order status updated' ,status:response.orderStatus})
   } catch (error) {
     console.log(error);
   }
@@ -491,9 +502,9 @@ const productOrderDetails = async (req, res) => {
     const userId=productDetails[0].user
     let coupensUsed = coupenHelper.getUserUsedCoupens(userId)
 
-    // for (let i = 0; i < orderdetails.length; i++) {
+    for (let i = 0; i < orderdetails.length; i++) {
       orderdetails[i].discount = currencyFormat(orderdetails[i].discount)
-    // }
+    }
 
     for (let i = 0; i < productDetails.length; i++) {
       productDetails[i].orderedProduct.totalPriceOfOrderedProducts = currencyFormat(productDetails[i].orderedProduct.product_price*productDetails[i].orderedItems.quantity);

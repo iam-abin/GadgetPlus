@@ -25,7 +25,6 @@
                                     <th scope="col">STATUS</th>
                                     <th scope="col">CHANGE STATUS</th>
                                     <th>VIEW DETAILS</th>
-                                    <th>CANCEL</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,11 +70,10 @@
                                                 <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','outForDelivery','delivered')" class="btn  btn-warning-light rounded font-sm">out for delivery</a>
                                             <% } else if (orders[i].orderStatus == 'outForDelivery') {%>
                                                 <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','delivered','d-none')" class="btn btn-warning-light rounded font-sm">delivered</a>
+                                            <% } else if (orders[i].orderStatus == 'return pending') {%>
+                                                <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','returned','d-none')" class="btn btn-warning-light rounded font-sm">Approve Return</a>
                                             <% } %>
-
-
-                                            
-                                            
+                                 
 
 <!-- 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
 
@@ -83,10 +81,6 @@
 
                                         <td  width="10%" >
                                             <a href="/admin/order-details/<%= orders[i]._id %>" class="btn btn-md rounded font-sm">Details</a>
-                                        </td>
-
-                                        <td width="10%">
-                                            <a href="/admin/order-details/<%= orders[i]._id %>" class="btn btn-md rounded font-sm">cancel request</a>
                                         </td>
                                     </tr>
                                 <% } %>
@@ -130,9 +124,6 @@
                                     // document.getElementById(buttonId).innerHtml=nextButtonValue
 
                                 }
-
-
-                            
                             }
 
                         })

@@ -77,10 +77,11 @@
 
 						<aside class="col-lg-4">
 							<div class=" d-flex">
-								<input type="text" name="couponCode" id="couponCode" style="width: 15%x; height: 45px;" class="form-control"
-									placeholder="coupon code">
+								<input type="text" name="couponCode" id="couponCode" style="width: 15%x; height: 45px;"
+									class="form-control" placeholder="coupon code">
 
-								<a style="width: 50px; height: 45px;" onclick="applyCoupon('<%= totalAmount %>')" class="btn btn-outline-primary ">
+								<a style="width: 50px; height: 45px;" onclick="applyCoupon('<%= totalAmount %>')"
+									class="btn btn-outline-primary ">
 									<i class="icon-long-arrow-right text-dark"></i> </a>
 							</div>
 							<span id="couponApplySuccess" class="text-success"></span>
@@ -102,7 +103,8 @@
 										<% for( let i=0; i < cartItems.length; i++ ) { %>
 											<tr>
 												<td><a href="#">
-														<%= cartItems[i].product.product_name %> x <%= cartItems[i].quantity %>
+														<%= cartItems[i].product.product_name %> x <%=
+																cartItems[i].quantity %>
 													</a></td>
 												<td>
 													<%= cartItems[i].product.product_price %>
@@ -111,52 +113,70 @@
 											<% } %>
 
 
-											<tr class="summary-subtotal">
-												<td>Subtotal:</td>
-												<td><%= totalAmount %></td>
-											</tr> 
-											<!-- End .summary-subtotal -->
-											<tr class="summary-subtotal">
-												<td>Discount:</td>
-												<td id="discount" class="text-success">0.00</td>
-											</tr>
-											<tr class="summary-total">
-												<td>Total:</td>
-												<td id="totalAmount">
-													<%= totalAmount %>
-												</td>
-											</tr><!-- End .summary-total -->
+												<tr class="summary-subtotal">
+													<td>Subtotal:</td>
+													<td>
+														<%= totalAmount %>
+													</td>
+												</tr>
+												<!-- End .summary-subtotal -->
+												<tr class="summary-subtotal">
+													<td>Discount:</td>
+													<td id="discount" class="text-success">0.00</td>
+												</tr>
+												<tr class="summary-total">
+													<td>Total:</td>
+													<td id="totalAmount">
+														<%= totalAmount %>
+													</td>
+												</tr><!-- End .summary-total -->
 									</tbody>
 								</table><!-- End .table table-summary -->
 
-
-								<div class="accordion-summary" id="accordion-payment">
-									<div class="card">
-										<div class="card-header" id="heading-3">
-											<h2 class="card-title">
-												<input type="radio" id="COD" name="payment" value="COD"> <label
-													for="COD">Cash on delivery</label><br>
-											</h2>
-										</div><!-- End .card-header -->
-									</div><!-- End .card -->
-									<br>
-									<div class="card">
-										<div class="card-header" id="heading-4">
-											<h2 class="card-title">
+								<br>
+								<p>wallet balance: <%= walletBalance %>
+								</p>
+								<div style="background-color: #e4e4e4; padding: 15px; border-radius: 10px;">
+									<div class="accordion-summary" id="accordion-payment">
+										<div class="card">
+											<div class="card-header" id="heading-4">
 												<h2 class="card-title">
-													<input type="radio" id="razorpay" name="payment"
-														value="razorpay"> <label for="razorpay">Razorpay</label><br>
+													<h2 class="card-title">
+														<input type="radio" id="wallet" name="payment" value="wallet">
+														<label for="wallet">Wallet</label><br>
+													</h2>
 												</h2>
-											</h2>
-										</div><!-- End .card-header -->
-									</div><!-- End .card -->
+											</div><!-- End .card-header -->
+										</div><!-- End .card -->
+										<br>
+										<div class="card">
+											<div class="card-header" id="heading-3">
+												<h2 class="card-title">
+													<input type="radio" id="COD" name="payment" value="COD"> <label
+														for="COD">Cash on delivery</label><br>
+												</h2>
+											</div><!-- End .card-header -->
+										</div><!-- End .card -->
+										<br>
+										<div class="card">
+											<div class="card-header" id="heading-4">
+												<h2 class="card-title">
+													<h2 class="card-title">
+														<input type="radio" id="razorpay" name="payment"
+															value="razorpay"> <label for="razorpay">Razorpay</label><br>
+													</h2>
+												</h2>
+											</div><!-- End .card-header -->
+										</div><!-- End .card -->
 
-									<!-- <button type="submit">Place Order</button> -->
-									<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-										<span class="btn-text">Place Order</span>
-										<span class="btn-hover-text">Place Order</span>
-									</button>
-								</div><!-- End .summary -->
+
+										<!-- <button type="submit">Place Order</button> -->
+										<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+											<span class="btn-text">Place Order</span>
+											<span class="btn-hover-text">Place Order</span>
+										</button>
+									</div><!-- End .summary -->
+								</div>
 						</aside><!-- End .col-lg-3 -->
 					</div><!-- End .row -->
 				</form>
@@ -360,7 +380,7 @@
 
 						}).showToast();
 					} else {
-						switch (response.success){
+						switch (response.paymentMethod) {
 							case 'COD':
 								console.log("payment done");
 								location.href = "/order-success"
@@ -369,9 +389,15 @@
 							case 'razorpay':
 								console.log("razorpay");
 
-								razorpayPayment(response);
+								paymentMethodrazorpayPayment(response);
+								break;
+							case 'wallet':
+								console.log("wallet");
+								location.href = "/order-success"
+								break;
+								
 						}
-						
+
 					}
 				})
 				.fail((error) => {
@@ -382,10 +408,10 @@
 	})
 
 
-	function razorpayPayment(orderinfo){
+	function paymentMethodrazorpayPayment(orderinfo) {
 		console.log("inside ejs razorpayPayment function");
 		const options = {
-			
+
 			"key": `${orderinfo.razorpaykeyId}`, // Enter the Key ID generated from the Dashboard
 			"amount": orderinfo.razorpayOrderDetails.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
 			"currency": "INR",
@@ -393,13 +419,13 @@
 			"description": "Test Transaction",
 			"image": "/user/assets/images/logo.png",
 			"order_id": `${orderinfo.razorpayOrderDetails.id}`, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-			"handler": function (response){
+			"handler": function (response) {
 				// alert(response.razorpay_payment_id);
 				// alert(response.razorpay_order_id);
 				// alert(response.razorpay_signature);
 				console.log(response.razorpay_payment_id);
 				console.log(response.razorpay_order_id);
-				console.log("response.razorpay_signature",response.razorpay_signature);
+				console.log("response.razorpay_signature", response.razorpay_signature);
 
 				verifyPaymentSignature(response, orderinfo.orderDetails, orderinfo.razorpayOrderDetails);
 
@@ -420,41 +446,41 @@
 		console.log("new Razorpay(options)");
 		const rzp1 = new Razorpay(options);
 		rzp1.open();
-		
+
 	}
 
 
-	function verifyPaymentSignature(payment,orderDetails,razorpayOrderDetails){
+	function verifyPaymentSignature(payment, orderDetails, razorpayOrderDetails) {
 		console.log("function verifyPaymentSignature(payment,orderDetails,razorpayOrderDetails)");
 		$.ajax({
-			url:'/verify-payment',
-			method:'post',
-			data:{
+			url: '/verify-payment',
+			method: 'post',
+			data: {
 				payment,
 				orderDetails,
 				razorpayOrderDetails
 			},
-			success:(response)=>{
-				if(response.status){
+			success: (response) => {
+				if (response.status) {
 					swal({
 						title: "Good job!",
 						text: "Payment successfull!",
 						icon: "success",
 						button: "Ok!",
 					})
-					.then(()=>{
-						location.href='/order-success'
-					})
-				}else{
+						.then(() => {
+							location.href = '/order-success'
+						})
+				} else {
 					swal({
 						title: "sorry!",
 						text: "Payment failed",
 						icon: "error",
 						button: "Ok!",
 					})
-					.then(() => {
-						location.href = '/cart'
-					})
+						.then(() => {
+							location.href = '/cart'
+						})
 				}
 			}
 
@@ -466,7 +492,7 @@
 <script>
 
 	$(document).ready(function () {
-				
+
 		$('#add-address-form').submit((e) => {
 			e.preventDefault();
 			$.ajax({
@@ -558,35 +584,35 @@
 	})
 
 
-	function applyCoupon(totalAmount){
-		const couponCode=document.getElementById('couponCode').value;
+	function applyCoupon(totalAmount) {
+		const couponCode = document.getElementById('couponCode').value;
 		console.log(couponCode);
 
 		$.ajax({
-			url:'/apply-coupon',
-			type:'post',
-			data:{
-				couponCode:couponCode,
+			url: '/apply-coupon',
+			type: 'post',
+			data: {
+				couponCode: couponCode,
 			}
 		})
-		.done((res)=>{
-			if(res.status){
-				console.log("hello");
-				console.log(res);
-				document.getElementById('couponApplyFail').classList.add('d-none')
-				document.getElementById('couponApplySuccess').classList.remove('d-none')
-				document.getElementById('couponApplySuccess').innerHTML=res.message
-				document.getElementById('discount').innerHTML=-res.discount
-				document.getElementById('totalAmount').innerHTML=res.cart.totalAmount
-			}else{
-				console.log(res);
-				document.getElementById('couponApplySuccess').classList.add('d-none')
-				document.getElementById('couponApplyFail').classList.remove('d-none')
-				document.getElementById('couponApplyFail').innerHTML=res.message
+			.done((res) => {
+				if (res.status) {
+					console.log("hello");
+					console.log(res);
+					document.getElementById('couponApplyFail').classList.add('d-none')
+					document.getElementById('couponApplySuccess').classList.remove('d-none')
+					document.getElementById('couponApplySuccess').innerHTML = res.message
+					document.getElementById('discount').innerHTML = -res.discount
+					document.getElementById('totalAmount').innerHTML = res.cart.totalAmount
+				} else {
+					console.log(res);
+					document.getElementById('couponApplySuccess').classList.add('d-none')
+					document.getElementById('couponApplyFail').classList.remove('d-none')
+					document.getElementById('couponApplyFail').innerHTML = res.message
 
 
-			}
-		})
+				}
+			})
 	}
 
 </script>

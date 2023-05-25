@@ -1,5 +1,6 @@
 const orderSchema = require('../models/orderModel');
-const addressSchema = require('../models/addressModel');
+
+const walletHelper = require('./walletHelper');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 
@@ -38,10 +39,10 @@ module.exports = {
             let status = order.payment == 'COD' ? 'confirmed' : 'pending';
             let date = orderDate();
             let userId = order.userId;
-            // let address= await addressSchema.findById({_id:order.addressSelected});
             let paymentMethod = order.payment;
             let addressId = order.addressSelected;
             let orderedItems = cartItems
+
             console.log("orderedItems", orderedItems);
 
             console.log("orderedItems orderHelper ", orderedItems);
@@ -54,6 +55,7 @@ module.exports = {
                 orderStatus: status,
                 orderedItems: orderedItems
             })
+
             await ordered.save();
             console.log("upoladed to dbbbbbbbbbbbbbbb");
             resolve(ordered);
@@ -74,7 +76,7 @@ module.exports = {
                 }
             ])
                 .then((result) => {
-                    console.log(result);
+                    // console.log(result);
                     resolve(result)
                 })
         })
@@ -154,18 +156,19 @@ module.exports = {
     changeOrderStatus: async (orderId, changeStatus) => {
         try {
 
-            const orderstatusChange = await orderSchema.findOneAndUpdate({ _id: orderId },
+            const orderstatusChange = await orderSchema.findOneAndUpdate(
+                { _id: orderId },
                 {
                     $set: {
                         orderStatus: changeStatus
                     }
+                },
+                {
+                    new:true
                 })
-
-            if (orderstatusChange) {
-                return { error: false, message: 'order status updated' }
-            } else {
-                return { error: true, message: 'something goes wrong updation failed' }
-            }
+            console.log("----ee---",orderstatusChange,"----ee---");
+          
+            return orderstatusChange
 
         } catch (error) {
             throw new Error('failed to change status!something wrong');
@@ -194,6 +197,7 @@ module.exports = {
                         user: 1,
                         totalAmount: 1,
                         paymentMethod: 1,
+                        orderStatus:1,
                         address: {
                             $arrayElemAt: ['$userAddress', 0]
                         }
@@ -213,18 +217,6 @@ module.exports = {
             })
         })
     },
-
-    //------------------=--------------------------------------------------
-
-    // orderDetails:(orderId)=>{
-    //    return new Promise(async (resolve,reject)=>{
-    //     await orderSchema.find({_id:orderId}).
-    //     then((result)=>{
-    //         // console.log("totalAmount",result[0].totalAmount);
-    //         resolve(result[0])
-    //     })
-    //    })
-    // },
 
     getOrderedProductsDetails: (orderId) => {
         return new Promise(async (resolve, reject) => {
@@ -253,7 +245,41 @@ module.exports = {
         })
     },
 
+    cancelOrder: (userId, orderId) => {
+        return new Promise(async (resolve, reject) => {
 
-    
+            console.log(orderId);
+            const cancelledResponse = await orderSchema.findOneAndUpdate(
+                { _id: new ObjectId(orderId) },
+                { $set: { orderStatus: "cancelled" } },
+                {new:true}
+            )
+            console.log("cancelledResponse", cancelledResponse);
+            console.log("cancelledResponse.totalAmount", cancelledResponse.totalAmount);
+
+            if(cancelledResponse.paymentMethod!='COD'){
+                await walletHelper.addMoneyToWallet(userId,cancelledResponse.totalAmount);
+            }
+
+
+            resolve(cancelledResponse.orderStatus)
+        })
+    },
+
+    returnOrder:(userId, orderId)=>{
+        return new Promise(async (resolve,reject)=>{
+            const order = await orderSchema.findOne({_id: new ObjectId(orderId)});
+            console.log("order before",order);
+            if(order.orderStatus=='delivered'){
+                order.orderStatus='return pending'
+            }else if(order.orderStatus=='return pending'){
+                order.orderStatus='returned'
+            }
+
+            await order.save()
+            console.log("order after",order);
+            resolve(order);
+        })
+    }
 
 }
