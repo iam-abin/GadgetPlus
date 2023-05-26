@@ -35,13 +35,13 @@
                                 
                                 <td style="vertical-align: middle;" width="10%"><img class="img-thumbnail" width="80" src="/product-images/<%= products[i].image[0].filename %>" alt="no image avalable"></td>
                                
-                                <td style="vertical-align: middle;" width="10%"><a href="/admin/edit-product/<%= products[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
+                                <td style="vertical-align: middle;" width="10%"><a href="/admin/edit-product/<%= products[i].slug %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
     
                                 <% if (products[i].product_status) { %>
-                                <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i]._id %>')" class="btn btn-sm btn-danger rounded font-sm mt-15">Unlist</button> </td>
+                                <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i].slug %>')" class="btn btn-sm btn-danger rounded font-sm mt-15">Unlist</button> </td>
                                  
                                 <% } else {%>
-                                    <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i]._id %>')" class="btn btn-sm btn-success rounded font-sm mt-15">List</button> </td>
+                                    <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i].slug %>')" class="btn btn-sm btn-success rounded font-sm mt-15">List</button> </td>
                                 
                                 <% } %>
     

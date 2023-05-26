@@ -2,12 +2,15 @@ const { resolve } = require('path');
 const productSchema = require('../models/productModel');
 const ObjectId = require('mongoose').Types.ObjectId
 const fs = require('fs')
+const slugify=require('slugify');
+
 
 
 module.exports = {
     addProductToDb: (data, files) => {
         return new Promise(async (resolve, reject) => {
             let imagesArray = (Object.values(files)).flat(1);
+            const slug=slugify(data.product_name)
             console.log("imagesArray", imagesArray, "imagesArray");
             // console.log(files);
             await productSchema.create({
@@ -17,7 +20,8 @@ module.exports = {
                 product_price: data.price,
                 product_quantity: data.quantity,
                 product_discount: data.discount,
-                image: imagesArray
+                image: imagesArray,
+                slug:slug
             }).then((result) => {
                 resolve(result);
             }).catch((error) => {
@@ -62,11 +66,12 @@ module.exports = {
         })
     },
 
-    getAProduct: (productId) => {
-        console.log("isoutOfStok", productId);
+    getAProduct: (slug) => {
+        console.log("isoutOfStok", slug);
         return new Promise(async (resolve, reject) => {
-            await productSchema.findById({ _id: productId })
+            await productSchema.findOne({ slug:slug })
                 .then((result) => {
+                    console.log("getAProduct",result);
                     resolve(result);
                 })
                 .catch((error) => {
@@ -75,7 +80,7 @@ module.exports = {
         })
     },
 
-    postEditAProduct: (data, productId, file) => {
+    postEditAProduct: (data, productSlug, file) => {
         return new Promise(async (resolve, reject) => {
             // console.log("inside editAproduct promise", data);
             if (file) {
@@ -95,7 +100,8 @@ module.exports = {
                 new_image = data.image;
             }
 
-            await productSchema.findByIdAndUpdate({ _id: productId }, {
+            const slug=slugify(data.product_name)
+            await productSchema.findOneAndUpdate({ slug: productSlug }, {
                 $set: {
                     product_name: data.product_name,
                     product_description: data.product_description,
@@ -103,7 +109,8 @@ module.exports = {
                     product_price: data.price,
                     product_quantity: data.quantity,
                     product_discount: data.discount,
-                    image: new_image
+                    image: new_image,
+                    slug:slug
                 }
             })
                 .then((result) => {
@@ -117,10 +124,10 @@ module.exports = {
         })
     },
 
-    softDeleteProduct: (productId) => {
+    softDeleteProduct: (productSlug) => {
         return new Promise(async (resolve, reject) => {
             // console.log(productId);
-            let product = await productSchema.findById(productId);
+            let product = await productSchema.findOne({slug:productSlug});
             product.product_status = !product.product_status;
             product.save();
             resolve(product);
@@ -175,10 +182,10 @@ module.exports = {
         })
     },
 
-    isOutOfStock: function (productId, newQuantity=false) {  // newQuantity for cart product quantity increase
+    isOutOfStock: function (productSlug, newQuantity=false) {  // newQuantity for cart product quantity increase
         return new Promise(async (resolve, reject) => {
-            let product = await this.getAProduct(productId);
-            // console.log("hio",product);
+            let product = await this.getAProduct(productSlug);
+            console.log("hio",product);
             let stock = product.product_quantity;
 
             // console.log("newQuantity",newQuantity);

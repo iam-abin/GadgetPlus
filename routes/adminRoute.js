@@ -35,11 +35,11 @@ router.get('/add-product',adminChecking,adminController.addProduct);
 
 router.post('/add-product',adminChecking,multer.productUpload,adminController.postAddProduct);
 
-router.get('/edit-product/:id',adminChecking,adminController.editProduct);
+router.get('/edit-product/:slug',adminChecking,adminController.editProduct);
 
-router.post('/edit-product/:id',adminChecking,multer.productUpload,adminController.postEditProduct)
+router.post('/edit-product/:slug',adminChecking,multer.productUpload,adminController.postEditProduct)
 
-router.get('/delete-product/:id',adminChecking,adminController.deleteProduct);
+router.get('/delete-product/:slug',adminChecking,adminController.deleteProduct);
 
 
 

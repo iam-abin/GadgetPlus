@@ -24,6 +24,7 @@
                         borderColor: 'rgb(4, 209, 130)',
                         data: monthlyData
                     },
+                    
 
                 ]
             },

@@ -14,7 +14,7 @@ const couponHelper = require('../helpers/coupenHelper');
 const razorpay = require('../api/razorpay')
 
 var easyinvoice = require('easyinvoice');
-const slugify = require('slugify');
+// const slugify = require('slugify');
 const { dateFormat } = require('../controllers/adminController')
 const wishListHelper = require('../helpers/wishListHelper');
 const walletHelper = require('../helpers/walletHelper');
@@ -282,8 +282,8 @@ const viewProducts = async (req, res) => {
 
 const viewAProduct = async (req, res) => {
     try {
-        let productId = req.params.id;
-        let product = await productHelper.getAProduct(productId);
+        let productSlug = req.params.slug;
+        let product = await productHelper.getAProduct(productSlug);
         product.product_price = Number(product.product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
         console.log("_________");
         console.log(product);

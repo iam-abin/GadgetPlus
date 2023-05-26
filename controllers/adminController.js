@@ -9,7 +9,7 @@ const coupenHelper = require('../helpers/coupenHelper');
 // const fs = require('fs');
 
 var easyinvoice = require('easyinvoice');
-const slugify = require('slugify');
+// const slugify = require('slugify');
 const csvParser = require('json-2-csv');
 
 const orderHepler = require("../helpers/orderHepler");
@@ -317,7 +317,7 @@ const postAddProduct = (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-    let product = await productHelper.getAProduct(req.params.id);
+    let product = await productHelper.getAProduct(req.params.slug);
     // let category=await categoryHelper.getAcategory()
     let categories = await categoryHelper.getAllcategory();
 
@@ -347,15 +347,15 @@ const postEditProduct = (req, res) => {
   console.log("new image");
   console.log(req.file);
   productHelper
-    .postEditAProduct(req.body, req.params.id, req.file)
+    .postEditAProduct(req.body, req.params.slug, req.file)
     .then((response) => {
       res.status(200).redirect("/admin/product");
     });
 };
 
 const deleteProduct = (req, res) => {
-  console.log(req.params.id);
-  productHelper.softDeleteProduct(req.params.id).then((result) => {
+  console.log(req.params.slug);
+  productHelper.softDeleteProduct(req.params.slug).then((result) => {
     if (result) {
       console.log(result);
       if (result.product_status) {

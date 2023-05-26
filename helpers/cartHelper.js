@@ -67,6 +67,8 @@ module.exports = {
 
     getAllCartItems: (userId) => {
         return new Promise(async (resolve, reject) => {
+            console.log("getAllCartItemsgetAllCartItems userId",userId);
+
             let obj = {}
             let userCartItems = await cartSchema.aggregate([
                 {
@@ -78,7 +80,8 @@ module.exports = {
                 {
                     $project: {
                         item: "$products.productItemId",
-                        quantity: "$products.quantity"
+                        quantity: "$products.quantity",
+                        
                     }
                 },
                 {
@@ -93,6 +96,7 @@ module.exports = {
                     $project: {
                         item: 1,
                         quantity: 1,
+                        slug:1,
                         coupon:1,
                         product: {
                             $arrayElemAt: ['$product', 0]
@@ -101,8 +105,10 @@ module.exports = {
                 }
             ]);
 
+            console.log("userCartItems123",userCartItems);
+
              for(let i=0;i<userCartItems.length;i++){
-                let outOfStock=  await productHelper.isOutOfStock(userCartItems[i].item)
+                let outOfStock=  await productHelper.isOutOfStock(userCartItems[i].product.slug)
                 userCartItems[i].product.isOutOfStock=outOfStock;
                 console.log(outOfStock);
             }

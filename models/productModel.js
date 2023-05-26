@@ -36,11 +36,11 @@ const productSchema=new mongoose.Schema({
         type:Boolean,
         default:true
     },
-    // slug:{
-    //     type:String,
-    //     required:true,
-    //     unique:true
-    // }
+    slug:{
+        type:String,
+        required:true,
+        unique:true
+    }
 },
 {
     timestamps:true,

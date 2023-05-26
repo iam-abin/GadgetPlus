@@ -53,9 +53,9 @@ router.get('/profile',userChecking,userController.profile)
 
 router.get('/about',userController.about);
 
-router.get('/viewProduct/:id',userController.viewProducts);
+router.get('/viewProducts/:id',userController.viewProducts);
 
-router.get('/quick-view/:id',userController.viewAProduct);  //display 4 images with image zoom
+router.get('/quick-view/:slug',userController.viewAProduct);  //display 4 images with image zoom
 
 // router.get('/wishlist',userChecking,userController.wishlist);
 
