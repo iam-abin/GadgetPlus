@@ -101,10 +101,34 @@
                                             <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
-
-                                    <%= console.log(product,"productproduct123"); %>
                                     <div class="product-details-action">
+
                                         <a href="" class="btn-product btn-cart"><span>add to cart</span></a>
+
+
+                                        <% if (product.isInCart) { %>
+                                            <% if (loginStatus) { %>
+                                                <div class="product-action">
+                                                <a href="#" data-value="<%= product._id %>"
+                                                    class="add-product btn-product btn-cart"><span>add to cart</span></a>
+                                                </div><!-- End .product-action -->
+                                            <% } else {%>
+                                                    <div class="product-action">
+                                                        <a href="/user-login"
+                                                            class=" btn-product btn-cart"><span>add tocart</span></a>
+                                                    </div><!-- End .product-action -->
+                                            <% } %>
+
+                                        <% } else { %>
+                                            <div class="product-action">
+                                                <a href="/cart"
+                                                    class="view-cart-products btn-product btn"><span>View
+                                                        in cart</span></a>
+                                            </div><!-- End .product-action -->
+                                                            
+                                        <% } %>
+
+
 
                                         <div class="details-action-wrapper">
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -123,3 +147,27 @@
         </main><!-- End .main -->
 
        
+        <script>
+            $(document).ready(function () {
+		$('.add-product').click(function (e) {
+			e.preventDefault()
+			const prodId = $(this).data('value')
+			console.log('clicked', prodId)
+			$.ajax({
+				url: '/add-to-cart/' + prodId,
+				type: 'get'
+			})
+				.done((res) => {
+					console.log(res);
+					console.log("abi");
+					swal("successfull", `${res.message}`, "success")
+						.then(() => {
+							location.reload()
+						})
+				})
+				.fail((err) => {
+					console.log(err);
+				})
+		})
+	})
+        </script>

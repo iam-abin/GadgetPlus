@@ -45,28 +45,32 @@ module.exports={
 
     getAllWishListItems:(userId)=>{
         return new Promise(async(resolve,reject)=>{
-            let wishListItems=await wishListSchema.aggregate({
-                $match:{userId:userId}
-            },
-            {
-                $unwind:$products   
-            },
-            {
-                $lookup:{
-                    from:'products',
-                    localField:'$products.produtItemId',
-                    foreignField:'_id',
-                    as:'wishList'
-                }
-            },
-            {
-                $project:{
-                    item:1,
-                    product: {
-                        $arrayElemAt: ['$product', 0]
+            let wishListItems=await wishListSchema.aggregate([
+                {
+                    $match:{userId:userId}
+                },
+                {
+                    $unwind:'$products'   
+                },
+                {
+                    $lookup:{
+                        from:'products',
+                        localField:'$products.produtItemId',
+                        foreignField:'_id',
+                        as:'wishList'
+                    }
+                },
+                {
+                    $project:{
+                        item:1,
+                        product: {
+                            $arrayElemAt: ['$product', 0]
+                        }
                     }
                 }
-            })
+            ])
+
+            resolve(wishListItems)
         })
         
     }

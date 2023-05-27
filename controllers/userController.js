@@ -283,13 +283,26 @@ const viewProducts = async (req, res) => {
 const viewAProduct = async (req, res) => {
     try {
         let productSlug = req.params.slug;
+        console.log(req.params,"paramsssssssssssssss");
         let product = await productHelper.getAProduct(productSlug);
-        product.product_price = Number(product.product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
-        console.log("_________");
-        console.log(product);
-        console.log("_________");
+        // console.log("bbbbbbbbbbbbb");
+        // console.log(product);
+        // console.log("bbbbbbbbbbbbb");
+        if (req.session.user) {
+            const isInCart = await cartHelper.isAProductInCart(req.session.user._id, product._id);
+            // console.log("bbbbbbbbbbbbb");
+            // // console.log(response[i].product_name);
+            // console.log(isInCart);
+            // console.log("bbbbbbbbbbbbb");
 
-        res.render('user/quick-view', { product });
+            product.isInCart = isInCart;
+        }
+        product.product_price = currencyFormat(product.product_price)
+        // console.log("_________");
+        // console.log(product);
+        // console.log("_________");
+
+        res.render('user/quick-view', { product,cartCount,loginStatus });
 
 
     } catch (error) {
@@ -300,9 +313,9 @@ const viewAProduct = async (req, res) => {
 
 const wishlist = async (req, res) => {
     try {
-        let userId = req.sesion.user._id;
+        let userId = req.session.user._id;
         let wishList = await wishListHelper.getAllWishListItems(userId)
-        res.render('user/wishlist', { loginStatus })
+        res.render('user/wishlist', { loginStatus ,wishList})
 
     } catch (error) {
         console.log(error);
@@ -375,6 +388,8 @@ const addToCart = async (req, res) => {
         console.log(error);
     }
 }
+
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 const incDecQuantity = async (req, res) => {
     try {
@@ -478,9 +493,7 @@ const editAddressPost = async (req, res) => {
 
 }
 
-const payment = async (req, res) => {
-    res.render('user/mobile')
-}
+
 
 // ----------------------------------------------------------------------------------------------------
 const checkout = async (req, res) => {     //to view details and price products that are going to order and manage address
@@ -770,7 +783,6 @@ module.exports = {
     addAddress,
     editAddress,
     editAddressPost,
-    payment,
     applyCoupon,
     placeOrder,
     verifyPayment,

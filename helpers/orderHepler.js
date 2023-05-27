@@ -22,10 +22,11 @@ function orderStatusCount(orderStatuses) {   //to display on doughnut chart
             counts[status] = 1;
         }
 
-        counts.pending = 1; //need to remove after adding razorpay
-        counts.processing = 6;
-        counts.cancelPending = 7;
-        counts.canceled = 3
+        console.log(status);
+        //need to remove after adding razorpay
+       
+        // counts.cancelPending = 3;
+        // counts.canceled = 3
 
     });
     console.log(counts);

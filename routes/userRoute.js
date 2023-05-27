@@ -57,7 +57,7 @@ router.get('/viewProducts/:id',userController.viewProducts);
 
 router.get('/quick-view/:slug',userController.viewAProduct);  //display 4 images with image zoom
 
-// router.get('/wishlist',userChecking,userController.wishlist);
+router.get('/wishlist',userChecking,userController.wishlist);
 
 router.get('/add-to-wishList/:id',userChecking,userController.addToWishList);
 
@@ -81,7 +81,6 @@ router.get('/edit-address/:id',userChecking,userController.editAddress)
 router.post('/edit-address',userChecking,userController.editAddressPost)
 
 
-router.get('/payment',userChecking,userController.payment,)
 
 // ----------------------------------------------------------------------------------------------------
 

@@ -53,7 +53,7 @@
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['pending', 'confirmed', 'shipped', 'out for delivery', 'delivered', 'canceled'],
+                labels: ['pending', 'confirmed', 'shipped', 'delivered', 'canceled','returned'],
                 datasets: [
                     {
                         label: "US",
@@ -70,7 +70,7 @@
                         borderWidth: 1,
 
                         barThickness: 10,
-                        data: [orderStatus.pending, orderStatus.confirmed, orderStatus.shipped, orderStatus.outForDelivery, orderStatus.delivered, orderStatus.canceled]
+                        data: [orderStatus.pending, orderStatus.confirmed, orderStatus.shipped, orderStatus.delivered, orderStatus.cancelled, orderStatus.returned]
                     },
 
                 ]

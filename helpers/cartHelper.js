@@ -1,7 +1,7 @@
 const { cart } = require('../controllers/userController');
 const cartSchema = require('../models/cartModel');
 const productSchema = require('../models/productModel');
-const productHelper=require('../helpers/productHelper')
+const productHelper = require('../helpers/productHelper')
 const ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = {
@@ -67,7 +67,7 @@ module.exports = {
 
     getAllCartItems: (userId) => {
         return new Promise(async (resolve, reject) => {
-            console.log("getAllCartItemsgetAllCartItems userId",userId);
+            console.log("getAllCartItemsgetAllCartItems userId", userId);
 
             let obj = {}
             let userCartItems = await cartSchema.aggregate([
@@ -81,7 +81,7 @@ module.exports = {
                     $project: {
                         item: "$products.productItemId",
                         quantity: "$products.quantity",
-                        
+
                     }
                 },
                 {
@@ -96,8 +96,8 @@ module.exports = {
                     $project: {
                         item: 1,
                         quantity: 1,
-                        slug:1,
-                        coupon:1,
+                        slug: 1,
+                        coupon: 1,
                         product: {
                             $arrayElemAt: ['$product', 0]
                         }
@@ -105,11 +105,11 @@ module.exports = {
                 }
             ]);
 
-            console.log("userCartItems123",userCartItems);
+            console.log("userCartItems123", userCartItems);
 
-             for(let i=0;i<userCartItems.length;i++){
-                let outOfStock=  await productHelper.isOutOfStock(userCartItems[i].product.slug)
-                userCartItems[i].product.isOutOfStock=outOfStock;
+            for (let i = 0; i < userCartItems.length; i++) {
+                let outOfStock = await productHelper.isOutOfStock(userCartItems[i].product.slug)
+                userCartItems[i].product.isOutOfStock = outOfStock;
                 console.log(outOfStock);
             }
 
@@ -131,15 +131,36 @@ module.exports = {
 
     incDecProductQuantity: (userId, productId, quantity) => {
         return new Promise(async (resolve, reject) => {
+
             const cart = await cartSchema.findOne({ user: userId });
+            console.log(",,,,,,,,,,,,,,,,,,,,,");
             console.log(cart);   //got a big output and solved
+            console.log(",,,,,,,,,,,,,,,,,,,,,");
+            console.log(cart.products);   //got a big output and solved
+
             console.log(",,,,,,,,,,,,,,,,,,,,,");
             console.log(productId);
             console.log(",,,,,,,,,,,,,,,,,,,,,");
-            const cartProduct = cart.products.find((items) => {
-                return items.productItemId.toString() == productId
-            }
-            );
+            //destiny
+
+
+
+            let cartProduct;
+            cart.products.forEach((product) => {
+                console.log(product.productItemId.toString() == productId);
+                if (product.productItemId.toString() == productId) {
+                    cartProduct = product;
+                    return
+                }
+            });
+
+            console.log("cart");
+            console.log(cart);
+            console.log("cart");
+            console.log("cartProduct");
+            console.log(cartProduct);
+            console.log("cartProduct");
+
 
             let newQuantity = cartProduct.quantity + parseInt(quantity);
 
@@ -147,16 +168,64 @@ module.exports = {
                 newQuantity = 1;
             }
 
-            const isOutOfStock = await productHelper.isOutOfStock(productId,newQuantity)
+
+            let aProduct=await productHelper.getAProductById(productId);
+            console.log("aProduct",aProduct);
+            let productSlug=aProduct.slug;
+            const isOutOfStock = await productHelper.isOutOfStock(productSlug, newQuantity)
 
             console.log("isoutofstock cartHelper");
             cartProduct.quantity = newQuantity;
             await cart.save();
 
-            resolve({newQuantity,isOutOfStock})
+            resolve({ newQuantity, isOutOfStock })
 
         })
     },
+
+    //-----------------------------------------------------------------------unwanted start---------------------
+
+    // incDecProductQuantity2: (userId, productId, quantity) => {
+    //     return new Promise(async (resolve, reject) => {
+    //         const cart = await cartSchema.findOne({ user: userId });
+    //         console.log(cart);   //got a big output and solved
+    //         console.log(",,,,,,,,,,,,,,,,,,,,,");
+    //         console.log(productId);
+    //         console.log(",,,,,,,,,,,,,,,,,,,,,");
+
+
+    //         const cartProductsWithFullDetails=await module.exports.getAllCartItems(userId);
+
+
+    //         console.log("cart Products",cartProductsWithFullDetails);
+
+    //         const cartProduct = cartProductsWithFullDetails.find((item) => {
+    //             return item.product._id.toString() == productId
+    //         }
+    //         );
+
+    //         console.log("cart product122223",cartProduct);
+
+    //         let newQuantity = cartProduct.quantity + parseInt(quantity);
+
+    //         if (newQuantity < 1 || newQuantity > 10) {
+    //             newQuantity = 1;
+    //         }
+
+    //         // const isOutOfStock = await productHelper.isOutOfStock(productId, newQuantity)
+    //         const isOutOfStock=cartProduct.product.isOutOfStock;
+    //         console.log("isoutofstock cartHelper");
+    //         cartProduct.quantity = newQuantity;
+    //         await cart.save();
+
+    //         resolve({ newQuantity, isOutOfStock })
+
+    //     })
+    // },
+
+    //-----------------------------------------------------------------------unwanted end---------------------
+
+
 
     removeAnItemFromCart: (cartId, productId) => {
         return new Promise(async (resolve, reject) => {
@@ -229,10 +298,10 @@ module.exports = {
 
     },
 
-    totalAmount:(userId)=>{
-        
-        return new Promise(async(resolve,reject)=>{
-            const cart=await cartSchema.findOne({user:userId})
+    totalAmount: (userId) => {
+
+        return new Promise(async (resolve, reject) => {
+            const cart = await cartSchema.findOne({ user: userId })
             console.log(cart);
             console.log(cart.totalAmount);
             resolve(cart.totalAmount)
@@ -243,10 +312,10 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             await cartSchema.findOneAndUpdate(
                 { user: userId },
-                { $set: { products: [] } }, 
+                { $set: { products: [] } },
                 { new: true })
 
-                .then((result)=>{
+                .then((result) => {
                     resolve(result)
                 })
         })

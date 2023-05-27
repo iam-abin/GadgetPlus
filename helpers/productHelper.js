@@ -69,7 +69,7 @@ module.exports = {
     getAProduct: (slug) => {
         console.log("isoutOfStok", slug);
         return new Promise(async (resolve, reject) => {
-            await productSchema.findOne({ slug:slug })
+            await productSchema.findOne({ slug:slug }).lean()
                 .then((result) => {
                     console.log("getAProduct",result);
                     resolve(result);
@@ -79,6 +79,20 @@ module.exports = {
                 })
         })
     },
+
+    getAProductById: (productId) => {
+        return new Promise(async (resolve, reject) => {
+            await productSchema.findOne({ _id:productId }).lean()
+                .then((result) => {
+                    console.log("getAProductById",result);
+                    resolve(result);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        })
+    },
+    
 
     postEditAProduct: (data, productSlug, file) => {
         return new Promise(async (resolve, reject) => {
