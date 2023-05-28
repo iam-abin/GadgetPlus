@@ -1,12 +1,31 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<style>
+  .backgroundimg {
+    background-image: url("/admin/assets/imgs/backgroundImages/workplace-business-modern-male-accessories-laptop-black-background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    overflow-y: hidden;
+  }
 
+  label.form-label {
+        color: #333333;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      input.form-control {
+        border-radius: 1rem;
+        padding: 1rem
+      }
+</style>
 <div class="text-center bg-white" >
   <span class="text-danger d-none" style="font-size: 17px; margin-left: 10px;" id="loginError"></span>
 </div>
 
-    <section class="vh-100" style="background-color: #fffdfd;">
-      <div class="container py-4 h-100">
+    <section class="vh-100 backgroundimg" style="background-color: #fffdfd;">
+      <div class="container py-4 h-100 ">
         <div class="row d-flex justify-content-center align-items-center h-90">
           <div class="col col-xl-10">
             <div class="card shadow border" style="border-radius: 1rem; margin-top: 20px; height: 54rem;">
@@ -60,18 +79,7 @@
       </div>
     </section>
 
-    <style>
-      label.form-label {
-        color: #333333;
-        font-size: 1rem;
-        font-weight: 600;
-      }
-
-      input.form-control {
-        border-radius: 1rem;
-        padding: 1rem
-      }
-    </style>
+  
 
 
     <script>

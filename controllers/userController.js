@@ -50,7 +50,7 @@ const error = (req, res) => {
 
 //---------------------------------------------------------
 const userSignup = async (req, res) => {
-    res.render('user/user-signup', { user: true })
+    res.render('user/user-signup', { headerFooter: true })
 }
 
 
@@ -69,7 +69,7 @@ const userSignupPost = async (req, res) => {
 //---------------------------------------------------------
 
 const userLogin = async (req, res) => {
-    res.render('user/login', { user: true, loggedInError: req.session.loggedInError })
+    res.render('user/login', { headerFooter: true, loggedInError: req.session.loggedInError })
     // req.session.loggedInError = false;
 }
 
@@ -310,24 +310,31 @@ const viewAProduct = async (req, res) => {
     }
 }
 
+//---------------------------------------------------------
+
 
 const wishlist = async (req, res) => {
     try {
         let userId = req.session.user._id;
-        let wishList = await wishListHelper.getAllWishListItems(userId)
-        res.render('user/wishlist', { loginStatus ,wishList})
+        // let wishList = await wishListHelper.getAllWishListItems(userId)
+        res.render('user/wishlist', { loginStatus })
 
     } catch (error) {
         console.log(error);
     }
 }
 
+
 const addToWishList = async (req, res) => {
     try {
         let productId = req.params.id;
         let user = req.session.user._id;
 
-        wishListHelper.addItemToWishList(productId, user)
+        console.log("productId ",productId);
+        console.log("user ",user);
+
+        let result = wishListHelper.addItemToWishList(productId, user)
+        res.json({message:`item added to wishList ${productId}`})
     } catch (error) {
         console.log(error);
     }
@@ -354,24 +361,6 @@ const cart = async (req, res) => {
     }
 }
 
-// const addToCart = async (req, res) => {
-//     try {
-//         let productId = req.params.id;
-//         let user = req.session.user;
-//         let userId = user._id;
-//         if (user) {
-//             await cartHelper.addToUserCart(userId, productId)
-//                 .then((response) => {
-//                     res.status(202).json({ error: false, message: "item added to cart" })
-//                 })
-//         }else{
-//             res.redirect('/user/user-login')
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).redirect('/404')
-//     }
-// }
 
 const addToCart = async (req, res) => {
     try {
@@ -426,17 +415,25 @@ const incDecQuantity = async (req, res) => {
 
 const removeFromCart = (req, res) => {
     try {
+        let userId=req.session.user._id;
         let cartId = req.body.cartId;
         let productId = req.params.id
+
         // console.log("hello");
         // console.log(productId);
         // console.log(cartId);
         // console.log("hello");
 
         cartHelper.removeAnItemFromCart(cartId, productId)
-            .then((response) => {
+            .then(async(response) => {
                 console.log("sucessfully deleted");
-                res.status(202).json({ message: "sucessfully item removed" })
+                let cartItems = await cartHelper.getAllCartItems(userId)
+                let totalAmount = await cartHelper.totalSubtotal(userId,cartItems);
+                totalAmount = totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+                
+                let cartCount = await cartHelper.getCartCount(userId)
+                console.log(totalAmount,".....///");
+                res.status(202).json({ message: "sucessfully item removed",totalAmount,cartCount })
             })
     } catch (error) {
         console.log(error);
@@ -493,7 +490,17 @@ const editAddressPost = async (req, res) => {
 
 }
 
+const deleteAddressPost =async(req,res)=>{
+    try {
+        console.log("Address id",req.params.id);
+        await addressHelper.deleteAnAddress(req.params.id);
+        res.json({message:"address Deleted Successfully.."})
+        
+    } catch (error) {
+        
+    }
 
+}
 
 // ----------------------------------------------------------------------------------------------------
 const checkout = async (req, res) => {     //to view details and price products that are going to order and manage address
@@ -783,6 +790,7 @@ module.exports = {
     addAddress,
     editAddress,
     editAddressPost,
+    deleteAddressPost,
     applyCoupon,
     placeOrder,
     verifyPayment,

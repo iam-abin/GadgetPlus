@@ -483,9 +483,9 @@ hr {
 }
 
 .trending .banner-content {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%)
+    left: 27%;
+    top: 29%;
+    transform: translate(-50%, -50%);
 }
 
 .new-arrivals .banner-content {
@@ -698,7 +698,7 @@ hr {
     }
 
     .intro-content.text-left {
-        padding-left: 18rem
+        padding-left: 2rem
     }
 
     .intro-content.text-right {
@@ -744,7 +744,7 @@ hr {
     }
 
     .intro-content.text-right {
-        padding-right: 11rem
+        padding-right: 0rem
     }
 
     .intro-content .btn {
@@ -816,7 +816,7 @@ hr {
 
 @media screen and (max-width: 1199px) {
     .intro-content.text-right {
-        padding-right: 3rem
+        padding-right: 1rem
     }
 }
 

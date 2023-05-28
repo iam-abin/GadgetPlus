@@ -1,3 +1,28 @@
+<style>
+	.card-body {
+		position: relative;
+	}
+
+	.address-label {
+		display: flex;
+		align-items: flex-start;
+	}
+
+	.radio-icon {
+		margin-top: 4px;
+		margin-right: 10px;
+	}
+
+	.delete-icon {
+		position: absolute;
+		top: 10px;
+		right: 30px;
+	}
+</style>
+
+
+
+
 <main class="main">
 	<div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
 		<div class="container">
@@ -35,38 +60,47 @@
 									</div><!-- End .card-body -->
 								</div><!-- End .card-dashboard -->
 							</div><!-- End .col-lg-6 -->
-							<h3 class="card-title">Billing Details</h3><!-- End .card-title -->
-							<h2 class="checkout-title">Select An Address</h2><!-- End .checkout-title -->
+							<h3 class="card-title mt-2 mb-2 ">Select an address</h3><!-- End .card-title -->
 
 							<div class="row">
 								<div class="col-lg-9">
 									<input type="text" name="userId" value="<%= user._id %>" hidden>
 
 									<% for( let i=0; i < address.length; i++ ) { %>
-										<div class="card card-dashboard">
+										<div class="card card-dashboard" id="card-<%= address[i]._id %>">
 											<div class="card-body">
-
-												<input type="radio" id="address<%= address[i]._id %>"
-													name="addressSelected" value="<%= address[i]._id %>">
-												<label for="address<%= address[i]._id %>">
-													<p>
-														<%= address[i].first_name %>
-															<%= address[i].last_name %><br>
-																<%= address[i].address %><br>
-																	<%= address[i].mobile %><br>
-																		pin:<%= address[i].pincode %><br>
-																			<%= address[i]._id %><br>
-
-																				<a type="button" class="btn btn-primary"
-																					data-toggle="modal"
-																					data-target="#EditAddress"
-																					onclick="getAddress('<%= address[i]._id %>')"
-																					data-whatever="@mdo">Edit Address
-																				</a>
-													</p>
-												</label><br>
+												<label class="address-label" for="address<%= address[i]._id %>">
+													<div class="radio-icon">
+														<input type="radio" id="address<%= address[i]._id %>"
+															name="addressSelected" value="<%= address[i]._id %>">
+													</div>
+													<div class="address-info">
+														<p>
+															<%= address[i].first_name %>
+																<%= address[i].last_name %><br>
+																	<%= address[i].address %><br>
+																		<%= address[i].mobile %><br>
+																			pin: <%= address[i].pincode %><br>
+																				<%= address[i]._id %><br>
+																					<a type="button"
+																						class="btn btn-primary"
+																						data-toggle="modal"
+																						data-target="#EditAddress"
+																						onclick="getAddress('<%= address[i]._id %>')"
+																						data-whatever="@mdo">Edit
+																						Address</a>
+														</p>
+													</div>
+												</label>
+												<a class="delete-icon" style="color: rgb(10, 8, 8);"
+													onclick="deleteAddress('<%= address[i]._id %>')">
+													<i class="fas fa-trash"></i>
+												</a>
 											</div><!-- End .card-body -->
 										</div><!-- End .card-dashboard -->
+
+
+
 										<% } %>
 								</div><!-- End .col-lg-6 -->
 
@@ -394,7 +428,7 @@
 								console.log("wallet");
 								location.href = "/order-success"
 								break;
-								
+
 						}
 
 					}
@@ -566,6 +600,11 @@
 				data: $('#edit-address-form').serialize()
 			})
 				.done((res) => {
+					iziToast.success({
+						title: 'OK',
+						message: 'Successfully inserted record!',
+						position: 'topRight',
+					});
 					swal({
 						title: "Success",
 						text: "Address Updated.",
@@ -582,6 +621,39 @@
 		})
 	})
 
+	function deleteAddress(addressId) {
+
+		swal("are You sure", {
+			buttons: ["No", "yes"]
+		})
+			.then((res) => {
+				if (res) {
+					$.ajax({
+						url: '/delete-address/' + addressId,
+						method: "post",
+					})
+						.then((response) => {
+							if (response) {
+								iziToast.success({
+									title: 'OK',
+									message: `${response.message}`,
+									position: 'topRight',
+									onOpening: function (instance, toast) {
+										// Modify the top property to adjust the message position
+										toast.style.top = '80px'; // Adjust the value as needed to move the message down
+									}
+								});
+							}
+
+							$(`#card-${addressId}`).remove()
+						})
+						.fail((error) => {
+							console.log(error);
+
+						})
+				}
+			})
+	}
 
 	function applyCoupon(totalAmount) {
 		const couponCode = document.getElementById('couponCode').value;

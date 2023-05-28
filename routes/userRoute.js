@@ -80,6 +80,8 @@ router.get('/edit-address/:id',userChecking,userController.editAddress)
 
 router.post('/edit-address',userChecking,userController.editAddressPost)
 
+router.post('/delete-address/:id',userChecking,userController.deleteAddressPost)
+
 
 
 // ----------------------------------------------------------------------------------------------------

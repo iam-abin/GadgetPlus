@@ -1,10 +1,10 @@
-<main class="main">
+<main class="main " style="background-color: #ffffff;">
 	<div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
 		<div class="container">
 			<h1 class="page-title">Your Cart</h1>
 		</div><!-- End .container -->
 	</div><!-- End .page-header -->
-	<nav aria-label="breadcrumb" class="breadcrumb-nav">
+	<nav aria-label="breadcrumb" class=" breadcrumb-nav" >
 		<div class="container">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -14,12 +14,12 @@
 		</div><!-- End .container -->
 	</nav><!-- End .breadcrumb-nav -->
 
-	<div class="page-content">
+	<div class="page-content ">
 		<div class="cart">
 			<div class="container">
 
                 <% if (!cartItems.length) { %>
-					<div class="container-fluid  mt-3">
+					<div class="container-fluid  mt-3" id="cartEmpty-div">
 						<div class="row">
 						
 							<div class="col-md-12">
@@ -27,7 +27,7 @@
 								<div class="card">
 								<div class="card-body cart">
 										<div class="col-sm-12 empty-cart-cls text-center">
-											<img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+											<img src="/user/assets/images/cart/happy.jpg"  width="30%" height="30%" class="img-fluid mx-auto mr-3">
 											<h3><strong>Your Cart is Empty</strong></h3>
 											<h4>Add something to make me happy :)</h4>
 											<a href="/" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
@@ -46,7 +46,7 @@
 				<% } else { %>
 
 				<div class="row">
-					<div class="col-lg-9">
+					<div class="col-lg-9" id="tables-div">
 						<table class="table table-cart table-mobile">
 							<thead>
 								<tr>
@@ -68,7 +68,7 @@
 								<% for( let i=0; i < cartItems.length; i++ ) { %>
 
 									
-									<tr>
+									<tr id="item-<%= cartItems[i].product._id %>">
 										<td class="product-col">
 											<div class="product">
 												<figure class="product-media">
@@ -158,9 +158,34 @@
 					type: 'post',
 				})
 				.done((res) => {
-					swal("Successful",`${res.message}`,"success").then(()=>{
-						location.reload()
-					})
+					if(res){
+						$(`#item-${productId}`).remove()
+						iziToast.success({
+							title: 'OK',
+							message: `${res.message}`,
+							position: 'topRight',
+							onOpening: function (instance, toast) {
+								// Modify the top property to adjust the message position
+							toast.style.top = '80px'; // Adjust the value as needed to move the message down
+							}
+						});									
+						console.log(res.cartCount);
+						document.getElementById('totalAmount').innerHTML=res.totalAmount
+						document.getElementById('cart-count').innerHTML=res.cartCount;
+
+						if (res.cartCount==0) {
+							location.reload()
+						}
+						// if (res.cartCount==0) {
+						// 	let cartEmptyDiv = document.getElementById('cartEmpty-div');
+						// 	if (cartEmptyDiv) {
+						// 		let cartEmptyContent = cartEmptyDiv.innerHTML;
+						// 		console.log(cartEmptyContent);
+						// 		document.getElementById('tables-div').innerHTML = cartEmptyContent;
+						// 	}
+						// }
+
+					}
 					
 					console.log(`${res.message}`);
 					

@@ -61,6 +61,16 @@ module.exports={
             await address.save();
             resolve(address);
         })
+    },
+
+    deleteAnAddress:(addressId)=>{
+        return new Promise(async (resolve,reject)=>{
+            await addressSchema.findByIdAndDelete(addressId)
+            .then((response)=>{
+                console.log(response)
+                resolve()
+            })
+        })
     }
 
 }

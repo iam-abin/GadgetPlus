@@ -1,4 +1,4 @@
-<% if (!locals.others) { %>
+<% if (!locals.headerFooter) { %>
 
 
 
@@ -106,12 +106,12 @@
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li class="active">
-                        <a href="index.html">Home</a>
+                        <a href="/">Home</a>
                     <li>
 
                     </li>
                     <li>
-                        <a href="product.html" class="sf-with-ul">Product</a>
+                        <a  class="sf-with-ul">Products</a>
                         <ul>
                             <li><a href="product.html">phones</a></li>
                             <li><a href="product-centered.html">laptops</a></li>
@@ -119,36 +119,12 @@
 
                         </ul>
                     </li>
-                    <li>
-                        <a href="#">Pages</a>
-                        <ul>
-                            <li>
-                                <a href="about.html">About</a>
-
-                                <ul>
-                                    <li><a href="about.html">About 01</a></li>
-                                    <li><a href="about-2.html">About 02</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="contact.html">Contact</a>
-
-                                <ul>
-                                    <li><a href="contact.html">Contact 01</a></li>
-                                    <li><a href="contact-2.html">Contact 02</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="login.html">Login</a></li>
-                            <li><a href="faq.html">FAQs</a></li>
-                            <li><a href="404.html">Error 404</a></li>
-                            <li><a href="coming-soon.html">Coming Soon</a></li>
-                        </ul>
-                    </li>
+                    
                     <li class="active">
-                        <a href="index.html">About</a>
+                        <a href="/about">About</a>
                     <li>
                     <li class="active">
-                        <a href="index.html">Contact</a>
+                        <a href="/contact">Contact</a>
                     <li>
                 </ul>
             </nav><!-- End .mobile-nav -->
@@ -327,6 +303,8 @@
         <!-- sweetalert -->
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+        <!-- izitoast message -->
+        <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 
 
 

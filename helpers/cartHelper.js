@@ -234,6 +234,7 @@ module.exports = {
                     $pull: { products: { productItemId: productId } }
                 }
             ).then((result) => {
+                console.log(result);
                 resolve(result)
             })
         })

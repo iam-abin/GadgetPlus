@@ -6067,7 +6067,7 @@ p {
 }
 
 .page-header {
-    padding: 4.6rem 0 5rem;
+    padding:3.6rem 0 4rem;
     background-color: #ebebeb;
     background-size: cover;
     background-position: center center;
@@ -6131,13 +6131,13 @@ p {
 }
 
 .breadcrumb-nav {
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
     border-bottom: 0.1rem solid rgba(235, 235, 235, 0.55)
 }
 
 .breadcrumb-nav .container,
 .breadcrumb-nav .container-fluid {
-    padding-top: 1.4rem;
+    padding-top: 1.1rem;
     padding-bottom: 1.4rem
 }
 

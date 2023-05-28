@@ -90,7 +90,7 @@
 												</a>
 
 												<div class="product-action-vertical">
-													<a href="#" data-value="<%= product[i].product_name %>"
+													<a href="#" data-value="<%= product[i]._id%>"
 														class="add-produtToWishlist btn-product-icon btn-wishlist btn-expandable"><span>add
 															to wishlist</span></a>
 
@@ -498,10 +498,11 @@
 		$('.add-produtToWishlist').click(function (e) {
 			e.preventDefault();
 			const productId = $(this).data('value');
-			// console.log("hjjjjjjjjjj",productId);
+			console.log("clicked");
+			console.log("hjjjjjjjjjj",productId);
 			$.ajax({
 				url: '/add-to-wishList/' + productId,
-				type: 'get'
+				type: 'get',
 			})
 				.done((res) => {
 					swal("successfull", `${res.message}`, "success")
