@@ -272,11 +272,11 @@ const about = async (req, res) => {
 
 const viewProducts = async (req, res) => {
     try {
-        let userId = req.session.user._id;
+        
         const response = await productHelper.getAllProductsByCategory(req.params.id)
         for (let i = 0; i < response.length; i++) {
-
             if (req.session.user) {
+                let userId = req.session.user._id;
                 const isInCart = await cartHelper.isAProductInCart(userId, response[i]._id);
                 // console.log("bbbbbbbbbbbbb");
                 // // console.log(response[i].product_name);
@@ -290,8 +290,13 @@ const viewProducts = async (req, res) => {
         console.log("1111111111111111");
         console.log(response);
         console.log("1111111111111111");
-        cartCount = await cartHelper.getCartCount(userId)
-        wishListCount = await wishListHelper.getWishListCount(userId)
+        if(req.session.user){
+            let userId = req.session.user._id;
+
+            cartCount = await cartHelper.getCartCount(userId)
+            wishListCount = await wishListHelper.getWishListCount(userId)
+        }
+
         res.render('user/view-products', { product: response, loginStatus, cartCount, wishListCount })
     } catch (error) {
         console.log(error);
