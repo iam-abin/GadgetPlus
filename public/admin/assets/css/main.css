@@ -620,6 +620,10 @@ b {
     color: #159aa2
 }
 
+nav a:is(:link , :active ,:visited).active{
+    background-color: #159aa2;
+}
+
 .menu-aside .menu-item.active .menu-link {
     background-color: rgba(8, 129, 120, 0.2)
 }

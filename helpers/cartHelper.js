@@ -229,7 +229,8 @@ module.exports = {
 
     removeAnItemFromCart: (cartId, productId) => {
         return new Promise(async (resolve, reject) => {
-            cartSchema.updateOne({ _id: cartId },
+            cartSchema.updateOne(
+                { _id: cartId },
                 {
                     $pull: { products: { productItemId: productId } }
                 }

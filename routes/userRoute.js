@@ -42,6 +42,7 @@ router.post('/otp-user',userController.otpSending);
 
 router.post('/otp-fill',userController.otpVerifying);
 
+router.get('/wallet',userChecking,userController.getWallet)
 
 router.get('/user-logout',userChecking,userController.userLogout);
 
@@ -57,9 +58,12 @@ router.get('/viewProducts/:id',userController.viewProducts);
 
 router.get('/quick-view/:slug',userController.viewAProduct);  //display 4 images with image zoom
 
+
 router.get('/wishlist',userChecking,userController.wishlist);
 
-router.get('/add-to-wishList/:id',userChecking,userController.addToWishList);
+router.post('/add-to-wishList',userChecking,userController.addToWishList);
+
+router.post('/remove-from-wishList',userChecking,userController.removeFromWishList)
 
 
 
@@ -81,7 +85,6 @@ router.get('/edit-address/:id',userChecking,userController.editAddress)
 router.post('/edit-address',userChecking,userController.editAddressPost)
 
 router.post('/delete-address/:id',userChecking,userController.deleteAddressPost)
-
 
 
 // ----------------------------------------------------------------------------------------------------
@@ -106,6 +109,9 @@ router.post('/cancel-order',userChecking,userController.cancelOrder)
 router.post('/return-order',userChecking,userController.returnOrder)
 
 router.get('/contact',userController.contact)
+
+
+router.post('/search-prpduct',userController.searchProduct)
 
 
 router.get('/error',userController.errorPage)

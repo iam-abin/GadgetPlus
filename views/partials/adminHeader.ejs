@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>gadgetPlus Dashboard</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,8 +27,10 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
+
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 </head>
 
@@ -46,14 +48,14 @@
         </div>
         <nav class="navBar">
             <ul class="menu-aside nav-bar-ul">
-                <li class="menu-item nav-bar-ul-li active" onclick="colo(1)" id="li1">
+                <li class="menu-item ">
                     <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/users-List"> <i class="icon material-icons md-person"></i>
+                    <a class="menu-link " href="/admin/users-List"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users </span>
                     </a>
                 </li>
@@ -161,10 +163,27 @@
         </header>
 
         <script>
-            $(document).ready(function(){
-                $('.nav-bar-ul').on('click','li',function(){
-                    $('.nav-bar-ul .active').removeClass('active');
-                    $(this).addClass('active')
-                })
+            // $(document).ready(function(){
+            //     $('.nav-bar-ul').on('click','li',function(){
+            //         $('.nav-bar-ul .active').removeClass('active');
+            //         $(this).addClass('active')
+            //     })
+            // })
+
+            const activePage=window.location.pathname;
+            console.log(activePage);
+
+            const navLinks=document.querySelectorAll('nav a').forEach((link)=>{
+                console.log(link.href);
+                const linkPath = new URL(link.href).pathname; // Extract path from link.href
+                let linkpathDashBoard = new URL(link.href).pathname
+                linkpathDashBoard='/admin'+linkpathDashBoard+"-home"
+                
+                if (linkPath === activePage) {
+                    console.log(linkPath);
+                    link.classList.add('active');
+                }else if(linkpathDashBoard === activePage){
+                    link.classList.add('active');
+                }
             })
         </script>

@@ -1,6 +1,7 @@
 
 const userSchema = require('../models/userModel');
-const couponSchema = require('../models/couponModel')
+const couponSchema = require('../models/couponModel');
+const productSchema = require('../models/productModel');
 const userHelper = require('../helpers/userHelper');
 const productHelper = require('../helpers/productHelper')
 const categoryHelper = require('../helpers/categoryHelper')
@@ -21,6 +22,7 @@ const walletHelper = require('../helpers/walletHelper');
 
 let loginStatus;
 let cartCount;
+let wishListCount;
 
 
 
@@ -38,9 +40,11 @@ const userHome = async (req, res) => {
     try {
         let user = req.session.user;
         cartCount = await cartHelper.getCartCount(user._id)
-        res.status(200).render('user/index', { loginStatus, cartCount })
+        wishListCount = await wishListHelper.getWishListCount(user._id)
+        res.status(200).render('user/index', { loginStatus, cartCount, wishListCount })
     } catch (error) {
         console.log(error);
+        res.redirect('/404')
     }
 }
 
@@ -218,6 +222,19 @@ const otpVerifying = async (req, res) => {
 
 // -------------------------------------------------
 
+const getWallet = async (req, res) => {
+    try {
+        let userId = req.session.user._id
+        let walletBalance = await walletHelper.walletBalance(userId);
+        // let walletBalance = await walletHelper.walletBalance(user._id)
+        walletDetails = currencyFormat(walletBalance)
+        res.json({ walletDetails });
+    } catch (error) {
+        res.redirect('/error')
+    }
+
+}
+
 const userLogout = async (req, res) => {
     try {
         req.session.user = false;
@@ -242,7 +259,7 @@ const profile = async (req, res) => {
 
 
         console.log("////////", loginStatus);
-        res.render('user/profile', { loginStatus, addresses, cartCount })
+        res.render('user/profile', { loginStatus, addresses, cartCount, wishListCount })
     } catch (error) {
         console.log(error);
     }
@@ -250,16 +267,17 @@ const profile = async (req, res) => {
 
 
 const about = async (req, res) => {
-    res.render('user/about', { loginStatus, cartCount })
+    res.render('user/about', { loginStatus, cartCount, wishListCount })
 }
 
 const viewProducts = async (req, res) => {
     try {
+        let userId = req.session.user._id;
         const response = await productHelper.getAllProductsByCategory(req.params.id)
         for (let i = 0; i < response.length; i++) {
 
             if (req.session.user) {
-                const isInCart = await cartHelper.isAProductInCart(req.session.user._id, response[i]._id);
+                const isInCart = await cartHelper.isAProductInCart(userId, response[i]._id);
                 // console.log("bbbbbbbbbbbbb");
                 // // console.log(response[i].product_name);
                 // console.log(isInCart);
@@ -272,7 +290,9 @@ const viewProducts = async (req, res) => {
         console.log("1111111111111111");
         console.log(response);
         console.log("1111111111111111");
-        res.render('user/view-products', { product: response, loginStatus, cartCount })
+        cartCount = await cartHelper.getCartCount(userId)
+        wishListCount = await wishListHelper.getWishListCount(userId)
+        res.render('user/view-products', { product: response, loginStatus, cartCount, wishListCount })
     } catch (error) {
         console.log(error);
     }
@@ -283,7 +303,7 @@ const viewProducts = async (req, res) => {
 const viewAProduct = async (req, res) => {
     try {
         let productSlug = req.params.slug;
-        console.log(req.params,"paramsssssssssssssss");
+        console.log(req.params, "paramsssssssssssssss");
         let product = await productHelper.getAProduct(productSlug);
         // console.log("bbbbbbbbbbbbb");
         // console.log(product);
@@ -302,7 +322,7 @@ const viewAProduct = async (req, res) => {
         // console.log(product);
         // console.log("_________");
 
-        res.render('user/quick-view', { product,cartCount,loginStatus });
+        res.render('user/quick-view', { product, cartCount, loginStatus, wishListCount });
 
 
     } catch (error) {
@@ -316,30 +336,49 @@ const viewAProduct = async (req, res) => {
 const wishlist = async (req, res) => {
     try {
         let userId = req.session.user._id;
-        // let wishList = await wishListHelper.getAllWishListItems(userId)
-        res.render('user/wishlist', { loginStatus })
+        console.log(userId);
+        let wishList = await wishListHelper.getAllWishListItems(userId);
+        console.log("wiaashlist items");
+        console.log(wishList);
+        console.log("wiaashlist items");
+        res.render('user/wishlist', { loginStatus, wishList ,cartCount ,wishListCount })
 
     } catch (error) {
-        console.log(error);
+        res.redirect('404')
     }
 }
 
 
 const addToWishList = async (req, res) => {
     try {
-        let productId = req.params.id;
+        console.log("ppppppppppppppppppppppppppppppppppppppppppppppppppppgggggggggggggggggggggggggggggggggggggggggggg");
+        let productId = req.body.productId;
         let user = req.session.user._id;
 
-        console.log("productId ",productId);
-        console.log("user ",user);
+        console.log("productId ", productId);
+        console.log("user ", user);
 
         let result = wishListHelper.addItemToWishList(productId, user)
-        res.json({message:`item added to wishList ${productId}`})
+
+        res.json({ message: `item added to wishList ${productId}` })
     } catch (error) {
         console.log(error);
     }
 }
 
+const removeFromWishList = async (req,res)=>{
+    // console.log();
+    try {
+        let userId = req.session.user._id;
+        let productId=req.body.productId;
+
+        await wishListHelper.removeAnItemFromWishList(userId,productId);
+        wishListCount=await wishListHelper.getWishListCount(userId)
+        res.status(200).json({message:"product removed from wishList",wishListCount})
+    } catch (error) {
+        res.redirect('/error')
+    }
+}
 //---------------------------------------------------------
 
 const cart = async (req, res) => {
@@ -348,14 +387,14 @@ const cart = async (req, res) => {
         let user = req.session.user;
         let cartItems = await cartHelper.getAllCartItems(user._id)
         cartCount = await cartHelper.getCartCount(user._id)
-
+        wishListCount = await wishListHelper.getWishListCount(user._id)
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
 
         totalandSubTotal = currencyFormatWithFractional(totalandSubTotal)
         console.log("cartItems");
         console.log(cartItems);
         console.log("cartItems");
-        res.render('user/cart', { loginStatus, cartItems, cartCount, totalAmount: totalandSubTotal })
+        res.render('user/cart', { loginStatus, cartItems, cartCount, totalAmount: totalandSubTotal, wishListCount })
     } catch (error) {
         console.log(error);
     }
@@ -371,6 +410,7 @@ const addToCart = async (req, res) => {
         if (response) {
             console.log(response);
             cartCount = await cartHelper.getCartCount(user._id)
+            wishListCount = await wishListHelper.getWishListCount(user._id)
             res.status(202).json({ status: "success", message: "product added to cart" })
         }
     } catch (error) {
@@ -415,7 +455,7 @@ const incDecQuantity = async (req, res) => {
 
 const removeFromCart = (req, res) => {
     try {
-        let userId=req.session.user._id;
+        let userId = req.session.user._id;
         let cartId = req.body.cartId;
         let productId = req.params.id
 
@@ -425,15 +465,16 @@ const removeFromCart = (req, res) => {
         // console.log("hello");
 
         cartHelper.removeAnItemFromCart(cartId, productId)
-            .then(async(response) => {
+            .then(async (response) => {
                 console.log("sucessfully deleted");
                 let cartItems = await cartHelper.getAllCartItems(userId)
-                let totalAmount = await cartHelper.totalSubtotal(userId,cartItems);
+                let totalAmount = await cartHelper.totalSubtotal(userId, cartItems);
                 totalAmount = totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
-                
+
                 let cartCount = await cartHelper.getCartCount(userId)
-                console.log(totalAmount,".....///");
-                res.status(202).json({ message: "sucessfully item removed",totalAmount,cartCount })
+                wishListCount = await wishListHelper.getWishListCount(user._id)
+                console.log(totalAmount, ".....///");
+                res.status(202).json({ message: "sucessfully item removed", totalAmount, cartCount, wishListCount })
             })
     } catch (error) {
         console.log(error);
@@ -490,14 +531,14 @@ const editAddressPost = async (req, res) => {
 
 }
 
-const deleteAddressPost =async(req,res)=>{
+const deleteAddressPost = async (req, res) => {
     try {
-        console.log("Address id",req.params.id);
+        console.log("Address id", req.params.id);
         await addressHelper.deleteAnAddress(req.params.id);
-        res.json({message:"address Deleted Successfully.."})
-        
+        res.json({ message: "address Deleted Successfully.." })
+
     } catch (error) {
-        
+
     }
 
 }
@@ -524,9 +565,10 @@ const checkout = async (req, res) => {     //to view details and price products 
         // console.log(loginStatus);
         console.log("[[[[[[[[[[[[[[[");
 
-        res.render('user/checkout', { loginStatus, cartCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
+        res.render('user/checkout', { loginStatus, cartCount, wishListCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
     } catch (error) {
         console.log(error);
+        res.redirect('/404')
     }
 
 
@@ -675,7 +717,7 @@ const orders = async (req, res) => {
         }
         console.log("orders", userOrderDetails);
 
-        res.render('user/orders-user', { userOrderDetails, loginStatus, cartCount })
+        res.render('user/orders-user', { userOrderDetails, loginStatus, cartCount, wishListCount })
     } catch (error) {
 
     }
@@ -695,9 +737,10 @@ const productOrderDetails = async (req, res) => {
         console.log("loginStatus", loginStatus);
         console.log(">>>>>>>>>>>>>>>>>>>>>>>");
 
-        res.render('user/order-details-user', { orderDetails, cartCount, productDetails, loginStatus })
+        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus })
     } catch (error) {
         console.log(error);
+        res.redirect('/error')
     }
 }
 
@@ -708,24 +751,24 @@ const cancelOrder = async (req, res) => {
     try {
         const cancelled = await orderHepler.cancelOrder(userId, orderId)
 
-        res.status(200).json({isCancelled:true, message:"order canceled successfully"})
-        
+        res.status(200).json({ isCancelled: true, message: "order canceled successfully" })
+
     } catch (error) {
         console.log(error);
     }
 }
 
-const returnOrder=async(req,res)=>{
+const returnOrder = async (req, res) => {
     console.log("returnOrder", req.body);
     const userId = req.body.userId;
     const orderId = req.body.orderId;
     try {
         const returnedResponse = await orderHepler.returnOrder(userId, orderId)
-        console.log("returned returned returned",returnedResponse);
+        console.log("returned returned returned", returnedResponse);
 
-        res.status(200).json({isreturned:'return pending', message:"order returned Process Started"})
-        
-        
+        res.status(200).json({ isreturned: 'return pending', message: "order returned Process Started" })
+
+
     } catch (error) {
         console.log(error);
     }
@@ -736,7 +779,20 @@ const returnOrder=async(req,res)=>{
 
 
 const contact = async (req, res) => {
-    res.render('user/contact', { loginStatus, cartCount })
+    res.render('user/contact', { loginStatus, cartCount, wishListCount })
+}
+
+const searchProduct = async (req, res) => {
+    let payload = req.body.payload.trim();
+    try {
+        let searchResult = await productSchema.find({ product_name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
+        console.log(searchResult);
+        searchResult = searchResult.slice(0, 5);
+        res.send({ searchResult })
+
+    } catch (error) {
+        res.status(500).redirect('/error')
+    }
 }
 
 const errorPage = (req, res) => {
@@ -744,7 +800,7 @@ const errorPage = (req, res) => {
 }
 
 const notFound404 = async (req, res) => {
-    res.render('user/404')
+    res.render('404')
 }
 
 // convert a number to a indian currency format
@@ -772,6 +828,7 @@ module.exports = {
     otpUser,
     otpSending,
     otpVerifying,
+    getWallet,
     userLogout,
     about,
     viewProducts,
@@ -779,6 +836,7 @@ module.exports = {
 
     wishlist,
     addToWishList,
+    removeFromWishList,
 
     cart,
     addToCart,
@@ -802,6 +860,9 @@ module.exports = {
     cancelOrder,
     returnOrder,
     contact,
+
+    searchProduct,
+
     errorPage,
     notFound404,
     // currencyFormat,

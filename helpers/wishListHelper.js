@@ -1,61 +1,80 @@
+
 const wishListSchema = require('../models/wishlistModel')
+const productSchema = require('../models/productModel');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 
+
 module.exports = {
-    addItemToWishList: (productId, user) => {
+    addItemToWishList: (productId, userId) => {
         return new Promise(async (resolve, reject) => {
 
-            let wishList = await wishListSchema.findOne({ userId: user });
-            console.log("1", wishList);
-
-            if (wishList) {
-                wishList.updateOne({
-                    userId: new ObjectId(user) 
-                },
-                { 
-                    $push: { 
-                        products: { productItemId: productId } 
-                    } 
-                })
-
-                .then((response) => {
-                    console.log("response", response);
-                    resolve(response)
-                })
-                   
-            } else {
-                let wishList = new wishListSchema({
-                    userId: user,
-                    products: new ObjectId(productId) 
-                })
-
-                await wishList.save();
-
-                console.log("2", wishList);
-
-                // await wishList.save();
-                resolve(wishList)
+            const product = await productSchema.findOne({ _id: productId });
+            if (!product.product_status) {
+                reject(Error("Product Not Found"))
             }
 
+            const wishList = await wishListSchema.updateOne(
+                {
+                    user: userId
+                },
+                {
+                    $push: {
+                        products: { productItemId: productId }
+                    }
+                },
+                {
+                    upsert: true
+                }
+            )
+
+            console.log("1", wishList);
+            resolve(wishList)
+
         })
+    },
+
+    removeAnItemFromWishList: async (userId, productId) => {
+        return new Promise(async (resolve, reject) => {
+            console.log(userId);
+            console.log(productId);
+            await wishListSchema.updateOne(
+                {
+                    user: userId
+                },
+                {
+                    $pull: { products: { productItemId: productId } }
+                }
+            )
+                .then((result) => {
+                    console.log(result);
+                    resolve(result)
+                })
+        })
+
+
     },
 
     getAllWishListItems: (userId) => {
         return new Promise(async (resolve, reject) => {
             let wishListItems = await wishListSchema.aggregate([
                 {
-                    $match: { userId: userId }
+                    $match: { user: new ObjectId(userId) }
                 },
                 {
                     $unwind: '$products'
                 },
                 {
+                    $project: {
+                        item: "$products.productItemId",
+                    }
+                },
+                {
                     $lookup: {
                         from: 'products',
-                        localField: '$products.produtItemId',
+                        localField: 'item',
                         foreignField: '_id',
-                        as: 'wishList'
+                        as: 'product'
                     }
                 },
                 {
@@ -70,6 +89,15 @@ module.exports = {
 
             resolve(wishListItems)
         })
+    },
 
+    getWishListCount: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let wishlist = await wishListSchema.findOne({ user: userId });
+            let wishlistCount = wishlist.products.length;
+            resolve(wishlistCount)
+        })
     }
+
+
 }

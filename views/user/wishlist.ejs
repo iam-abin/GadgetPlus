@@ -8,60 +8,96 @@
 
 <section style="background-color: #eee;">
 	<div class="container py-5 ">
+
 		<div class="row justify-content-center mb-3 ">
 			<div class="col-md-12 col-xl-10">
-				<div class="card shadow-0 border " style="border-radius: 10px;">
-					<div class="card-body">
-						<div class="row mt-3">
-							<div class="col-md-12 col-lg-3 col-xl-3 mb-1  mb-lg-0">
-								<div class="bg-image hover-zoom ripple rounded ripple-surface">
-									<img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/img%20(4).webp"
-										class="w-100" />
-									<a href="#!">
-										<div class="hover-overlay">
-											<div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
-											</div>
-										</div>
-									</a>
+
+				<% for( let i = 0; i < wishList.length; i++ ) { %>
+					<div class="card shadow-0 border " id="wishlist-card-<%= wishList[i].product._id %>" style="border-radius: 10px;">
+						<div class="card-body">
+							<div class="row mt-3">
+								<div class="col-md-12 col-lg-3 col-xl-3 mb-1  mb-lg-0">
+									<%= console.log(wishList[i].product.image[0]); %>
+									<img style="width: 120px; height: 130px;" src="/product-images/<%= wishList[i].product.image[0].filename %>" alt="image is not available">
 								</div>
-							</div>
-							<div class="col-md-6 col-lg-6 col-xl-6">
-								<h5>Quant trident shirts</h5>
-							
-								<div class="mt-1 mb-0 text-muted small">
-									<span>100% cotton</span>
-									<span class="text-primary"> • </span>
-									<span>Light weight</span>
-									<span class="text-primary"> • </span>
-									<span>Best finish<br /></span>
+								<div class="col-md-6 col-lg-6 col-xl-6">
+									<h5><%= wishList[i].product.product_name %></h5>
+									<p class="text-truncate mb-4 mb-md-0">
+										<h6><%= wishList[i].product.product_price %></h6>
+									</p>
 								</div>
-								<div class="mb-2 text-muted small">
-									<span>Unique design</span>
-									<span class="text-primary"> • </span>
-									<span>For men</span>
-									<span class="text-primary"> • </span>
-									<span>Casual<br /></span>
-								</div>
-								<p class="text-truncate mb-4 mb-md-0">
-									There are many variations of passages of Lorem Ipsum available, but the
-									majority have suffered alteration in some form, by injected humour, or
-									randomised words which don't look even slightly believable.
-								</p>
-							</div>
-							<div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
-								<div class="d-flex flex-column mt-4">
-									<button class="btn btn-primary btn-sm" type="button">Add to Cart</button>
-									<button class="btn btn-outline-primary btn-sm mt-2" type="button">
-										Remove From Wishlist
-									</button>
+								<div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+									<div class="d-flex flex-column mt-4">
+										<button class="btn btn-primary btn-sm add-product" type="button" data-value="<%= wishList[i].product._id %>">Add to Cart</button>
+										<button onclick="removeFromWishList('<%= wishList[i].product._id %>')" class="btn btn-outline-primary btn-sm mt-2" type="button">
+											Remove From Wishlist
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				<% } %>
 			</div>
 		</div>
-		
-		
 	</div>
 </section>
+
+
+
+<script>
+	function removeFromWishList(productId){
+		console.log("clicked",productId);
+		$.ajax({
+			url:'/remove-from-wishList',
+			type:'post',
+			data:{
+				productId:productId
+			}
+		})
+		.then((res)=>{
+			iziToast.success({
+				title: 'OK',
+				message: `${res.message}`,
+				position: 'topRight',
+				onOpening: function (instance, toast) {
+					// Modify the top property to adjust the message position
+					toast.style.top = '80px'; // Adjust the value as needed to move the message down
+				}
+			})
+			$('#wishlist-card-'+productId).remove()
+			document.getElementById('wishListCount').innerHTML=`${res.wishListCount}` ;			
+			console.log(res);
+		})
+		.fail((error)=>{
+			console.log(error);
+		})
+	}
+
+
+
+
+	$(document).ready(function () {
+		$('.add-product').click(function (e) {
+			e.preventDefault()
+			const prodId = $(this).data('value')
+			console.log('clicked', prodId)
+			$.ajax({
+				url: '/add-to-cart/' + prodId,
+				type: 'get'
+			})
+				.done((res) => {
+					console.log(res);
+					console.log("abi");
+					swal("successfull", `${res.message}`, "success")
+						.then(() => {
+							location.reload()
+						})
+				})
+				.fail((err) => {
+					console.log(err);
+				})
+		})
+	})
+
+</script>

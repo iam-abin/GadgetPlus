@@ -9,9 +9,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>User</title>
+    <title>gadgetPlus</title>
     <meta name="keywords" content="HTML5 Template">
-    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="description" content="gadgetPlus - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/user/assets/images/icons/apple-touch-icon.png">
@@ -20,8 +20,8 @@
     <link rel="manifest" href="/user/assets/images/icons/site.html">
     <link rel="mask-icon" href="/user/assets/images/icons/safari-pinned-tab.svg" color="#666666">
     <link rel="shortcut icon" href="/user/assets/images/icons/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Molla">
-    <meta name="application-name" content="Molla">
+    <meta name="apple-mobile-web-app-title" content="gadgetPlus">
+    <meta name="application-name" content="gadgetPlus">
     <meta name="msapplication-TileColor" content="#cc9966">
     <meta name="msapplication-config" content="/user/assets/images/icons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
@@ -73,6 +73,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
+    <style>
+       nav a:is(:link ,:active, :visited).active {
+            background-color: #ebebeb;
+        }
+    </style>
+
+   
 
 </head>
 
@@ -97,7 +104,7 @@
                             <nav class="main-nav" style="margin-right: 175px;">
                                 <ul class="menu sf-arrows">
                                     <li class="megamenu-container ">
-                                        <a href="/">Home</a>
+                                        <a home-a href="/">Home</a>
                                     </li>
 
                                     <li>
@@ -133,91 +140,37 @@
                                 <form action="#" method="get">
                                     <div class="header-search-wrapper">
                                         <label for="q" class="sr-only">Search</label>
-                                        <input type="search" class="form-control" name="q" id="q"
-                                            placeholder="Search in..." required>
+                                        <input type="search" class="form-control" id="searchInput" placeholder="Search in..." required>
+                                        <span style="z-index: 1; position: absolute;" id="searchResult"></span>
                                     </div><!-- End .header-search-wrapper -->
                                 </form>
                             </div><!-- End .header-search -->
 
-                            <% if (locals.loginStatus) { %>
-                                <a href="/wishlist" class="wishlist-link">
+                            <a href="/wishlist" class="wishlist-link">
+                                <% if (locals.loginStatus) { %>
                                     <i class="icon-heart-o"></i>
-                                    <span class="wishlist-count">0</span>
+                                    <% if (locals.wishListCount) { %>
+                                        <span class="wishlist-count" id="wishListCount">
+                                            <%= wishListCount %>
+                                        </span>
+                                        
+                                    <% } %>
                                 </a>
 
+                                
+
                                 <div class="dropdown cart-dropdown">
-                                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false" data-display="static">
+                                    <a href="/cart" class="dropdown-toggle" >
                                         <i class="icon-shopping-cart"></i>
                                         <% if (locals.cartCount) { %>
 
                                             <span id="cart-count" class="cart-count">
                                                 <%= cartCount %>
                                             </span>
-                                            <% } %>
+
+                                        <% } %>
                                     </a>
-
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <div class="dropdown-cart-products">
-                                            <div class="product">
-                                                <div class="product-cart-details">
-                                                    <h4 class="product-title">
-                                                        <a href="product.html">Beige knitted elastic runner shoes</a>
-                                                    </h4>
-
-                                                    <span class="cart-product-info">
-                                                        <span class="cart-product-qty">1</span>
-                                                        x $84.00
-                                                    </span>
-                                                </div><!-- End .product-cart-details -->
-
-                                                <figure class="product-image-container">
-                                                    <a href="product.html" class="product-image">
-                                                        <img src="assets/images/products/cart/product-1.jpg"
-                                                            alt="product">
-                                                    </a>
-                                                </figure>
-                                                <a href="#" class="btn-remove" title="Remove Product"><i
-                                                        class="icon-close"></i></a>
-                                            </div><!-- End .product -->
-
-                                            <div class="product">
-                                                <div class="product-cart-details">
-                                                    <h4 class="product-title">
-                                                        <a href="product.html">Blue utility pinafore denim dress</a>
-                                                    </h4>
-
-                                                    <span class="cart-product-info">
-                                                        <span class="cart-product-qty">1</span>
-                                                        x $76.00
-                                                    </span>
-                                                </div><!-- End .product-cart-details -->
-
-                                                <figure class="product-image-container">
-                                                    <a href="product.html" class="product-image">
-                                                        <img src="assets/images/products/cart/product-2.jpg"
-                                                            alt="product">
-                                                    </a>
-                                                </figure>
-                                                <a href="#" class="btn-remove" title="Remove Product"><i
-                                                        class="icon-close"></i></a>
-                                            </div><!-- End .product -->
-                                        </div><!-- End .cart-product -->
-
-                                        <div class="dropdown-cart-total">
-                                            <span>Total</span>
-
-                                            <span class="cart-total-price">$160.00</span>
-                                        </div><!-- End .dropdown-cart-total -->
-
-                                        <div class="dropdown-cart-action">
-                                            <a href="/cart" class="btn btn-primary">View Cart</a>
-                                            <a href="/checkout"
-                                                class="btn btn-outline-primary-2"><span>Checkout</span><i
-                                                    class="icon-long-arrow-right"></i></a>
-                                        </div><!-- End .dropdown-cart-total -->
-                                    </div><!-- End .dropdown-menu -->
-                                </div><!-- End .cart-dropdown -->
+                                </div>
 
                                 <div>
                                     <ul class="menu sf-arrows">
@@ -227,11 +180,30 @@
                                             </span>
                                             <ul>
                                                 <li><a href="/profile">Profile</a></li>
+                                                <li><a href="" id="wallet-details" data-toggle="modal" data-target="#walletModal" >Wallet</a></li>
                                                 <li><a href="/user-logout">Logout</a></li>
                                             </ul>
                                         </li>
                                     </ul><!-- End .menu -->
                                 </div><!-- End .header-left -->
+
+                                <!-- wallet Modal start -->
+                              
+                                <div class="modal fade" id="walletModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    
+                                        <div class=" text-center mt-5 mb-5">
+                                            <h2 style="text-decoration: underline; ;" class="modal-title" id="exampleModalLabel">Wallet</h2>
+                                            <span style="font-size: 17px;" class="modal-title" id="walletAmount">Your Wallet Balance is: </span>
+                                        </div>
+                                        <div >
+                                        <button type="button" class=" btn btn-secondary d-block ml-auto mr-3 mb-3" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- wallet Modal end -->
 
                                 <% } else { %>
                                     <a href="/user-login"><i class="fa-solid fa-user-tie"
@@ -244,3 +216,94 @@
             </header><!-- End .header -->
 
 <% } %>
+
+
+
+<script>
+
+    let searchElement = document.getElementById('searchInput');
+    searchElement.onkeyup = function(){
+        let searchWord= searchElement.value;
+        loadData(searchWord);
+    }
+
+    function loadData(query = ''){
+        fetch('/search-prpduct',{
+            method:'post',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({payload:query})
+        })
+        .then(res=> res.json())
+        .then((data)=>{
+            console.log("res block start");
+            let searchResult=data.searchResult;
+            console.log(searchResult);
+
+            let html='<ul class="list-group">';
+            
+            if(searchResult.length>0){
+                for (let i = 0; i < searchResult.length; i++) {
+                    
+                    let regularExpression = new RegExp('(' + query + ')', 'gi');
+                    html += `<a href="/search/result/?name=` + query + `" 
+                                class="list-group-itemlist-group-item-action">`+`<img style="width: 2rem" 
+                                src="`+searchResult[i].image[0].path+`" >`+ searchResult[i].product_name.replace(regularExpression, `<span class="text-primary fw-bold">$1</span>`) + `</a>`;
+                    
+                }
+            }
+
+            html+='</ul>'
+            document.getElementById('searchResult').innerHTML = html
+                
+            console.log("end");
+
+        })
+    }
+    
+
+
+    $('#wallet-details').on('click',function(e){
+        e.preventDefault()
+        // let userId=$('#wallet-details').data('wallet')
+        // console.log("userId",userId);
+        $.ajax({
+            url:"/wallet",
+            method:'get',
+            // data:userId
+
+        })
+        .then((res)=>{
+            console.log(res);
+            document.getElementById('walletAmount').innerHTML="Your wallet balance is : "+res.walletDetails
+
+            $("#walletModal").modal("show");
+
+        })
+    })
+
+ 
+    // const activePage=window.location.pathname;
+    //  // console.log(activePage);
+    //  const navLinks= document.querySelectorAll('nav a').forEach(link=>{
+    //     // console.log(link.href);
+
+    //     // console.log(".................");
+    //     const linkPath = link.href.substring(link.href.indexOf('/', 8));
+    //     // console.log(linkPath ==activePage);
+    //     // console.log(linkPath);
+    //     // console.log(".................");
+
+    //     // if(linkPath ==activePage){
+    //     //     link.classList.add('active')
+    //     // }
+    //     // else 
+    //     if(link.href.includes(`${activePage}`)){
+    //         console.log(`${activePage}`);
+    //         link.classList.add('active')
+    //     } 
+       
+    // })   
+
+</script>

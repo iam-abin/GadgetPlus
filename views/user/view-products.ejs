@@ -446,52 +446,12 @@
 						.then(() => {
 							location.reload()
 						})
-
-					// var newElement=$('')
-
-					// Toastify({
-					// 	text: `${res.message}`,
-					// 	duration: 3000,
-						
-					// 	newWindow: true,
-					// 	close: true,
-					// 	gravity: "top", // `top` or `bottom`
-					// 	position: "center", // `left`, `center` or `right`
-					// 	stopOnFocus: true, // Prevents dismissing of toast on hover
-					// 	style: {
-					// 		background: "linear-gradient(to right, #00b09b, #96c93d)",
-					// 	},
-						
-					// }).showToast();
 				})
 				.fail((err) => {
 					console.log(err);
 				})
 		})
 	})
-
-	// or
-
-	// $('.add-product').on('click',function(e) {
-	// 	e.preventDefault()
-	// 	const prodId = $(this).data('value')
-	// 	console.log('clicked', prodId)
-	// 	$.ajax({
-	// 		url: '/add-to-cart/' + prodId,
-	// 		type: 'get'
-	// 	})
-	// 		.done((res) => {
-	// 			console.log(res);
-	// 			console.log("abi");
-	// 			// swal("successfull", `${res.message}`, "success")
-	// 			// 	.then(() => {
-	// 			// 		location.reload()
-	// 			// 	})
-	// 		})
-	// 		.fail((err) => {
-	// 			console.log(err);
-	// 		})
-	// })
 
 
 	$(document).ready(function () {
@@ -501,10 +461,12 @@
 			console.log("clicked");
 			console.log("hjjjjjjjjjj",productId);
 			$.ajax({
-				url: '/add-to-wishList/' + productId,
-				type: 'get',
+				url: '/add-to-wishList',
+				type: 'post',
+				data:{productId:productId}
 			})
 				.done((res) => {
+					console.log(res.message);
 					swal("successfull", `${res.message}`, "success")
 						.then(() => {
 							location.reload()
