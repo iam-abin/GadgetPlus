@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, "uploads")));
 // // db connection
 connectDb();
 
+
 app.use(cookieParser());
 app.use(nocache());
 

@@ -124,9 +124,29 @@
                                     <% } %>
                                 </div><!-- End .product-action -->
 
-                                <div class="product-action ">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
+                                <% if (!featuredProducts[i].isInCart) { %>
+                                    <% if (loginStatus) { %>
+                                        <div class="product-action">
+                                            <a href="#" data-value="<%= featuredProducts[i]._id %>"
+                                                class="add-product btn-product btn-cart"><span>add to
+                                                    cart</span></a>
+                                        </div><!-- End .product-action -->
+                                        <% } else {%>
+                                            <div class="product-action">
+                                                <a href="/user-login"
+                                                    class=" btn-product btn-cart"><span>add
+                                                        tocart</span></a>
+                                            </div><!-- End .product-action -->
+                                            <% } %>
+
+                                                <% } else { %>
+                                                    <div class="product-action">
+                                                        <a href="/cart"
+                                                            class="view-cart-products btn-product btn"><span>View
+                                                                in cart</span></a>
+                                                    </div><!-- End .product-action -->
+
+                                                    <% } %>
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
@@ -239,9 +259,30 @@
                                     <% } %>
                                 </div><!-- End .product-action -->
 
-                                <div class="product-action ">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
+                                <% if (!latestProducts[i].isInCart) { %>
+                                    <% if (loginStatus) { %>
+                                        <div class="product-action">
+                                            <a href="#" data-value="<%= latestProducts[i]._id %>"
+                                                class="add-product btn-product btn-cart"><span>add to
+                                                    cart</span></a>
+                                        </div><!-- End .product-action -->
+                                        <% } else {%>
+                                            <div class="product-action">
+                                                <a href="/user-login"
+                                                    class=" btn-product btn-cart"><span>add
+                                                        tocart</span></a>
+                                            </div><!-- End .product-action -->
+                                            <% } %>
+
+                                                <% } else { %>
+                                                    <div class="product-action">
+                                                        <a href="/cart"
+                                                            class="view-cart-products btn-product btn"><span>View
+                                                                in cart</span></a>
+                                                    </div><!-- End .product-action -->
+
+                                                    <% } %>
+
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">

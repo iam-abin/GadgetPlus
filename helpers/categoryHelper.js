@@ -9,6 +9,7 @@ module.exports={
                 name: productData.categoryName,
                 description: productData.categoryDescription,
               });
+              console.log(category);
               console.log("hello1");
               await category.save()
               .then(()=>{

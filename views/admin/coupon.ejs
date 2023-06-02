@@ -12,45 +12,49 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover" id="couponTable">
-                    <thead>
-                        <tr class="text-left">
-                            <th>No</th>
-                            <th>Coupon Name</th>
-                            <th>Coupon Code</th>
-                            <th>Discount Amount</th>
-                            <th>Expiry Date</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for( let i=0; i < coupons.length; i++ ) { %>
-                            <tr class="text-left">
-                                <td width="15%">
-                                    <%= i+1 %>
-                                </td>
-                                <td width="20%">
-                                    <%= coupons[i].couponName %>
-                                </td>
-                                <td width="20%">
-                                    <%= coupons[i].code %>
-                                </td>
-                                <td width="10%">
-                                    <%= coupons[i].discount %>
-                                </td>
-                                <td width="15%">
-                                    <%= coupons[i].expiryDate %>
-                                </td>
-                                <td width="10%"><a onclick="getCouponData('<%= coupons[i]._id %>')"
-                                        class="btn btn-sm btn-success rounded font-sm mt-15">Edit</a></td>
-                                <td width="10%"><a onclick="deleteCoupon('<%= coupons[i]._id %>')"
-                                        class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a> </td>
-                            </tr>
-                            <% } %>
+                <% if (!coupons.length) { %>
+                    <h1>No Coupons Are Added Yet</h1>
+                    <% } else { %>
+                        <table class="table table-hover" id="couponTable">
+                            <thead>
+                                <tr class="text-left">
+                                    <th>No</th>
+                                    <th>Coupon Name</th>
+                                    <th>Coupon Code</th>
+                                    <th>Discount Amount</th>
+                                    <th>Expiry Date</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( let i=0; i < coupons.length; i++ ) { %>
+                                    <tr class="text-left">
+                                        <td width="15%">
+                                            <%= i+1 %>
+                                        </td>
+                                        <td width="20%">
+                                            <%= coupons[i].couponName %>
+                                        </td>
+                                        <td width="20%">
+                                            <%= coupons[i].code %>
+                                        </td>
+                                        <td width="10%">
+                                            <%= coupons[i].discount %>
+                                        </td>
+                                        <td width="15%">
+                                            <%= coupons[i].expiryDate %>
+                                        </td>
+                                        <td width="10%"><a onclick="getCouponData('<%= coupons[i]._id %>')"
+                                                class="btn btn-sm btn-success rounded font-sm mt-15">Edit</a></td>
+                                        <td width="10%"><a onclick="deleteCoupon('<%= coupons[i]._id %>')"
+                                                class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a> </td>
+                                    </tr>
+                                    <% } %>
 
-                    </tbody>
-                </table> <!-- table-responsive.// -->
+                            </tbody>
+                        </table> <!-- table-responsive.// -->
+                        <% } %>
             </div>
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
@@ -160,7 +164,7 @@
                         if (res) {
                             swal("Successful", `${res.message}`, "success").then(() => {
                                 location.reload()
-                            }).then(()=>{
+                            }).then(() => {
 
                                 location.href = '/admin/coupon'
                             })

@@ -1,14 +1,11 @@
 const mongoose=require('mongoose');
 
-const categoryModel=mongoose.Schema({
+const categoryModel=new mongoose.Schema({
     name:{
         type: String, 
-        required: true, 
-        unique: true,
     },
     description:{
         type:String,
-        required:true
     },
     status:{
         type:Boolean,
@@ -19,4 +16,4 @@ const categoryModel=mongoose.Schema({
     timestamps:true,
 })
 
-module.exports=new mongoose.model("Category",categoryModel)
+module.exports= mongoose.model("Category",categoryModel)

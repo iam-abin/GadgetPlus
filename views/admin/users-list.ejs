@@ -13,6 +13,9 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
+                <% if (!users.length) { %>
+                    <h1>No Users</h1>
+                    <% } else { %>
                 <table class="display table table-hover" id="userTable">
                     <thead >
                         <tr>
@@ -72,6 +75,7 @@
 
                     </tbody>
                 </table> <!-- table-responsive.// -->
+                <% } %>
             </div>
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->

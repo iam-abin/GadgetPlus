@@ -14,8 +14,6 @@ router.use(categorySupply);
 
 router.get('/',userAuthenticationCheck,userController.landingPage);
 
-// router.get('/landing-page',userController.landingPage);
-
 router.get('/user-home',userChecking,userController.userHome);
 
 router.get('/user-signup',userAuthenticationCheck,userController.userSignup);

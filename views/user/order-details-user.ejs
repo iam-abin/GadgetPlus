@@ -81,6 +81,9 @@
     <div class="content-header">
         <div>
             <h1 class="content-title card-title">Order details</h1>
+<!-- lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll -->
+            <%= console.log("orderDetails",orderDetails,"orderDetailsorderDetails"); %>
+<!-- lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll -->
 
         </div>
     </div>
@@ -111,10 +114,10 @@
                             <h6 class="mb-1">Customer</h6>
                             <p class="mb-1">
 
-                                <%= orderDetails.address.first_name %>
-                                    <%= orderDetails.address.last_name %> <template class="__cf_email__"
+                                <%= orderDetails.address?.first_name %>
+                                    <%= orderDetails.address?.last_name %> <template class="__cf_email__"
                                             data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template>
-                                        <br> +91 <%= orderDetails.address.mobile %>
+                                        <br> +91 <%= orderDetails.address?.mobile %>
                             </p>
                             <a href="/admin/userProfile/<%= orderDetails.user %>">View profile</a>
                         </div>
@@ -142,10 +145,10 @@
                         <div class="text">
                             <h6 class="mb-1">Deliver to</h6>
                             <p class="mb-1">
-                                City : <%= orderDetails.address.city %>
+                                City : <%= orderDetails.address?.city %>
                             </p>
                             <p class="mb-1">
-                                Address : <%= orderDetails.address.address %>
+                                Address : <%= orderDetails.address?.address %>
                             </p>
                         </div>
                     </article>

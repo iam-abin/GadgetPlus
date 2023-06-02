@@ -7,7 +7,7 @@ const orderSchema = require('../models/orderModel')
 module.exports = {
     addCouponToDb: (couponData) => {
         return new Promise(async (resolve, reject) => {
-
+            
             const dateString = couponData.couponExpiry;
             const [day, month, year] = dateString.split(/[-/]/);
             const date = new Date(`${year}-${month}-${day}`);

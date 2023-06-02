@@ -16,6 +16,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="table-responsive">
+            <% if (!categories.length) { %>
+              <h1>No Coupons Are Added Yet</h1>
+              <% } else { %>
             <table class="table table-hover" id="categoryTable">
               <thead>
                 <tr>
@@ -63,6 +66,7 @@
                   <% } %>
               </tbody>
             </table>
+            <% } %>
           </div>
         </div>
         <!-- .col// -->
@@ -88,12 +92,12 @@
         <form id="addProductCategoryForm">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Category Name</label>
-            <input type="text" class="form-control" name="categoryName" id="categoryName" />
+            <input type="text" class="form-control" name="addCategoryName" id="addcategoryName" />
             <span class="text-danger d-none" id="categoryError">category already exist.....!</span>
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Category Description</label>
-            <textarea class="form-control" name="categoryDescription" id="categoryDescription"></textarea>
+            <textarea class="form-control" name="addCategoryDescription" id="addcategoryDescription"></textarea>
           </div>
           <div>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -235,25 +239,26 @@
   document.getElementById('addProductCategoryForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    console.log("hello");
+    const categoryName = document.getElementById('addcategoryName').value
+    const categoryDescription = document.getElementById('addcategoryDescription').value
 
-    const categoryName = document.getElementById('editCategoryName').value
-    const categoryDescription = document.getElementById('editCategoryDescription').value
+    console.log("helloGetelem");
+    console.log(categoryName);
+    console.log(categoryDescription);
+    console.log("helloGetelem");
 
     let data={
       categoryName:categoryName,
       categoryDescription:categoryDescription
     }
 
-    fetch('/admin/add-productCategory', {
+    $.ajax({
+      url:'/admin/add-productCategory',
       method: 'post',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+      data: data
     })
     .then((res)=>{
-      if(res.ok){
+      if(res){
         document.getElementById('categoryError').classList.add('d-none');
         // document.getElementById("exampleModal").parentNode.removeChild(modal);
         Toastify({
@@ -277,6 +282,39 @@
       console.log(err);
     })
   })
+
+  //   fetch('/admin/add-productCategory', {
+  //     method: 'post',
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   .then((res)=>{
+  //     if(res.ok){
+  //       document.getElementById('categoryError').classList.add('d-none');
+  //       // document.getElementById("exampleModal").parentNode.removeChild(modal);
+  //       Toastify({
+  //             text: `category added successfully`,
+  //             duration: 3000,
+  //             gravity: "top", // `top` or `bottom`
+  //             position: "right", // `left`, `center` or `right`
+  //             stopOnFocus: true, // Prevents dismissing of toast on hover
+  //             style: {
+  //               background: "green",
+  //             },
+  //           }).showToast();
+
+        
+  //     }else{
+  //       document.getElementById('categoryError').classList.remove('d-none')
+  //       console.log("error");
+  //     }
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err);
+  //   })
+  // })
 
 //Edit category
 

@@ -111,7 +111,7 @@ module.exports = {
     getWishListCount: (userId) => {
         return new Promise(async (resolve, reject) => {
             let wishlist = await wishListSchema.findOne({ user: userId });
-            let wishlistCount = wishlist.products.length;
+            let wishlistCount = wishlist?.products.length;
             resolve(wishlistCount)
         })
     },

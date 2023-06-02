@@ -1,4 +1,5 @@
 const orderSchema = require('../models/orderModel');
+const addressHelper = require('./addressHelper');
 
 const walletHelper = require('./walletHelper');
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -41,7 +42,7 @@ module.exports = {
             let date = orderDate();
             let userId = order.userId;
             let paymentMethod = order.payment;
-            let addressId = order.addressSelected;
+            let address = await addressHelper.getAnAddress(order.addressSelected);
             let orderedItems = cartItems
 
             console.log("orderedItems", orderedItems);
@@ -49,7 +50,7 @@ module.exports = {
             console.log("orderedItems orderHelper ", orderedItems);
             let ordered = new orderSchema({
                 user: userId,
-                address: addressId,
+                address: address,
                 orderDate: date,
                 totalAmount: totalAmount,
                 paymentMethod: paymentMethod,

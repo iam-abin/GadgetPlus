@@ -390,13 +390,17 @@ const productCategory = (req, res) => {
 };
 
 const postAddProductCategory = (req, res) => {
+  console.log(req.body);
+  console.log("----------------");
+  console.log("----------------");
+
   categoryHelper.addCategoryTooDb(req.body)
     .then((category) => {
       res.status(200).redirect("/admin/product-categories");
     })
     .catch((error) => {
       if (error.code === 11000) {
-        res.status(500).json({ error: true, message: "Category already Exist!!!" })
+        res.status(200).json({ error: true, message: "Category already Exist!!!" })
       } else {
         res.status(500).redirect('/error')
       }
@@ -404,6 +408,8 @@ const postAddProductCategory = (req, res) => {
     })
 
 };
+
+
 
 const editProductCategory = (req, res) => {
   console.log("----------------------------");
@@ -545,7 +551,9 @@ const coupons = async (req, res) => {
 };
 
 const postAddCoupon = async (req, res) => {
-  console.log("hello");
+  console.log("hello postAddCoupon");
+  console.log(req.body);
+  console.log("hello postAddCoupon");
   coupenHelper.addCouponToDb(req.body)
     .then((coupon) => {
       res.status(202).redirect('/admin/coupon')

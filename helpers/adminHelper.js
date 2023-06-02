@@ -2,7 +2,7 @@ const { response } = require('express');
 const userSchema = require('../models/userModel');
 const productSchema = require('../models/productModel');
 const orderSchema = require('../models/orderModel')
-const categorySchema = require('../models/cartModel')
+const categorySchema = require('../models/category')
 
 
 
@@ -63,7 +63,14 @@ module.exports = {
                     }
                 }
             ])
-            response.totalRevenue = totalRevenue[0].revenue;
+
+            // if(totalRevenue){
+                response.totalRevenue = totalRevenue[0]?.revenue;
+            // }else{
+            //     response.totalRevenue=0
+            // }
+
+
 
             monthlyRevenue = await orderSchema.aggregate([
                 {

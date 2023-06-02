@@ -31,7 +31,7 @@ const landingPage = async (req, res) => {
     try {
         let latestProducts = await productHelper.getRecentProducts()
         let featuredProducts = await productHelper.getFeaturedProducts()
-        res.render('user/index', { latestProducts, featuredProducts })
+        res.render('user/index', { loginStatus, latestProducts, featuredProducts })
     } catch (error) {
         console.log(error);
     }

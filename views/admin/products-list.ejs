@@ -7,6 +7,9 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
+                <% if (!products.length) { %>
+                    <h1>No Products Are Added Yet</h1>
+                    <% } else { %>
                 <table class="table table-hover" id="productTable">
                     <thead>
                         <tr class="text-left">
@@ -27,7 +30,7 @@
                     
                             <tr>
                                 <td style="vertical-align: middle;" width="17%"><%= products[i].product_name %></td>
-                                <td style="vertical-align: middle;" width="12%"><%= products[i].category[0].name  %></td>
+                                <td style="vertical-align: middle;" width="12%"><%= products[i].category[0]?.name  %></td>
                                 
                                 <td style="vertical-align: middle;" width="12%"><%= products[i].product_price %></td>
                                 <td style="vertical-align: middle;" width="12%"><%= products[i].product_quantity %></td>
@@ -52,6 +55,7 @@
                         
                     </tbody>
                 </table> <!-- table-responsive.// -->
+                <% } %>
             </div>
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
