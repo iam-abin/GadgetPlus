@@ -91,13 +91,32 @@ module.exports = {
         })
     },
 
+
+    isProductInWishList:async (userId,productId)=>{
+        try {
+            console.log("userId",userId);
+            console.log("productId",productId);
+            const wishList=await wishListSchema.findOne({user:userId , 'products.productItemId':productId});
+            console.log(wishList);
+            if(wishList){
+                return true
+            }else{
+                return false
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     getWishListCount: (userId) => {
         return new Promise(async (resolve, reject) => {
             let wishlist = await wishListSchema.findOne({ user: userId });
             let wishlistCount = wishlist.products.length;
             resolve(wishlistCount)
         })
-    }
+    },
+
+   
 
 
 }

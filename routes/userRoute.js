@@ -54,7 +54,13 @@ router.get('/profile',userChecking,userController.profile)
 
 router.get('/about',userController.about);
 
-router.get('/viewProducts/:id',userController.viewProducts);
+// router.get('/viewProducts/:id',userController.viewProducts);
+
+
+
+router.get('/viewProducts',userController.viewProducts);
+
+
 
 router.get('/quick-view/:slug',userController.viewAProduct);  //display 4 images with image zoom
 
@@ -111,7 +117,7 @@ router.post('/return-order',userChecking,userController.returnOrder)
 router.get('/contact',userController.contact)
 
 
-router.post('/search-prpduct',userController.searchProduct)
+router.post('/search-product',userController.searchProduct)
 
 
 router.get('/error',userController.errorPage)

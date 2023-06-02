@@ -1234,7 +1234,6 @@ blockquote.text-white cite span {
     right: -1.4rem;
     top: 50%;
     margin-top: -20px;
-    display: none;
     align-items: stretch;
     overflow: visible;
     border-radius: 20px;
@@ -19886,5 +19885,8 @@ button:focus {
 .icon-yarn:before {
     content: '\f7e3'
 }
+
+
+  
 
 /*# sourceMappingURL=style.css.map */

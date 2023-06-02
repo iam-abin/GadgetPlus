@@ -30,6 +30,12 @@ module.exports = {
         })
     },
 
+    // getAllProducts:()=>{
+    //     return new Promise(async (resolve,reject)=>{
+    //         await productSchema.
+    //     })
+    // },
+
     getAllProductsWithLookup: () => {
         return new Promise(async (resolve, reject) => {
             const a = await productSchema.aggregate([{
@@ -63,6 +69,38 @@ module.exports = {
             ]).then((result) => {
                 resolve(result)
             })
+        })
+    },
+
+    filterProduct:(filterData)=>{
+        return new Promise(async (resolve,reject)=>{
+            console.log("categoryArray",filterData);
+            let filteredProducts = await productSchema.find({
+                product_category:{$in:filterData.selectedCategories},
+                product_price:{$gte: Number(filterData.min),$lte: Number(filterData.max)}
+            }).lean()
+            console.log("filtered Products",filteredProducts);
+
+            resolve(filteredProducts)
+
+        })
+    },
+
+    getRecentProducts:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let products = await productSchema.find({}).sort({createdAt:-1}).limit(8).lean()
+            resolve(products);
+        })
+    },
+
+    getFeaturedProducts:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let featuredProducts = await productSchema.aggregate([
+                {
+                    $sample:{size:4}, //to get 8 random products
+                }
+            ])
+            resolve(featuredProducts);
         })
     },
 
@@ -218,6 +256,40 @@ module.exports = {
             }
 
         })
-    }
+    },
+
+    // getMaximumPrice:()=>{
+    //     return new Promise(async (resolve,reject)=>{
+    //         let maxAmount = await productSchema.aggregate([
+    //            { 
+    //             $group:{
+    //                 _id:null,
+    //                 maxAmount:{$max:'$product_price'}
+
+    //             }
+    //            }
+    //         ])
+
+    //         console.log(maxAmount);
+    //         resolve(maxAmount)
+    //     })
+    // },
+
+    // getMinimumPrice:()=>{
+    //     return new Promise(async (resolve,reject)=>{
+    //         let minAmount = await productSchema.aggregate([
+    //            { 
+    //             $group:{
+    //                 _id:null,
+    //                 minAmount:{$min:'$product_price'}
+
+    //             }
+    //            }
+    //         ])
+
+    //         console.log(minAmount);
+    //         resolve(minAmount)
+    //     })
+    // }
 
 }

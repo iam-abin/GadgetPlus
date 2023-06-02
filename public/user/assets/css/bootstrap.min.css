@@ -178,13 +178,13 @@ a:hover {
 }
 
 a:not([href]):not([tabindex]) {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none
 }
 
 a:not([href]):not([tabindex]):focus,
 a:not([href]):not([tabindex]):hover {
-    color: white;
+    color: rgb(201, 146, 7);
     text-decoration: none
 }
 

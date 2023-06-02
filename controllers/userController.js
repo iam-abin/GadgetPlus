@@ -29,8 +29,9 @@ let wishListCount;
 
 const landingPage = async (req, res) => {
     try {
-
-        res.render('user/index')
+        let latestProducts = await productHelper.getRecentProducts()
+        let featuredProducts = await productHelper.getFeaturedProducts()
+        res.render('user/index', { latestProducts, featuredProducts })
     } catch (error) {
         console.log(error);
     }
@@ -38,10 +39,38 @@ const landingPage = async (req, res) => {
 
 const userHome = async (req, res) => {
     try {
-        let user = req.session.user;
-        cartCount = await cartHelper.getCartCount(user._id)
-        wishListCount = await wishListHelper.getWishListCount(user._id)
-        res.status(200).render('user/index', { loginStatus, cartCount, wishListCount })
+
+        let userId = req.session.user._id;
+        cartCount = await cartHelper.getCartCount(userId)
+        wishListCount = await wishListHelper.getWishListCount(userId)
+        let latestProducts = await productHelper.getRecentProducts();
+        let featuredProducts = await productHelper.getFeaturedProducts();
+
+
+
+        for (let i = 0; i < latestProducts.length; i++) {
+            const isInWishList = await wishListHelper.isProductInWishList(userId, latestProducts[i]._id);
+            const isInCart = await cartHelper.isAProductInCart(userId, latestProducts[i]._id);
+
+            latestProducts[i].isInWishList = isInWishList;
+            latestProducts[i].isInCart = isInCart;
+
+            latestProducts[i].product_price = currencyFormat(latestProducts[i].product_price)
+        }
+
+        for (let i = 0; i < featuredProducts.length; i++) {
+            const isInWishList = await wishListHelper.isProductInWishList(userId, featuredProducts[i]._id);
+            const isInCart = await cartHelper.isAProductInCart(userId, featuredProducts[i]._id);
+
+            featuredProducts[i].isInWishList = isInWishList;
+            featuredProducts[i].isInCart = isInCart;
+
+            featuredProducts[i].product_price = currencyFormat(featuredProducts[i].product_price)
+        }
+
+        console.log(featuredProducts, "featuredProducts");
+        console.log(latestProducts, "latestProducts");
+        res.status(200).render('user/index', { loginStatus, cartCount, wishListCount, latestProducts, featuredProducts })
     } catch (error) {
         console.log(error);
         res.redirect('/404')
@@ -270,39 +299,130 @@ const about = async (req, res) => {
     res.render('user/about', { loginStatus, cartCount, wishListCount })
 }
 
-const viewProducts = async (req, res) => {
+// const viewProducts = async (req, res) => {
+//     try {
+
+//         const response = await productHelper.getAllProductsByCategory(req.params.id)
+//         for (let i = 0; i < response.length; i++) {
+//             if (req.session.user) {
+//                 let userId = req.session.user._id;
+//                 const isInCart = await cartHelper.isAProductInCart(userId, response[i]._id);
+//                 // console.log("bbbbbbbbbbbbb");
+//                 // // console.log(response[i].product_name);
+//                 // console.log(isInCart);
+//                 // console.log("bbbbbbbbbbbbb");
+
+//                 response[i].isInCart = isInCart;
+//             }
+//             response[i].product_price = Number(response[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+//         }
+//         console.log("1111111111111111");
+//         console.log(response);
+//         console.log("1111111111111111");
+//         if(req.session.user){
+//             let userId = req.session.user._id;
+
+//             cartCount = await cartHelper.getCartCount(userId)
+//             wishListCount = await wishListHelper.getWishListCount(userId)
+//         }
+
+//         res.render('user/view-products', { product: response, loginStatus, cartCount, wishListCount })
+//     } catch (error) {
+//         console.log(error);
+//     }
+
+// }
+
+const viewProducts = async (req, res) => {  //use array destructuring 
     try {
-        
-        const response = await productHelper.getAllProductsByCategory(req.params.id)
-        for (let i = 0; i < response.length; i++) {
-            if (req.session.user) {
-                let userId = req.session.user._id;
-                const isInCart = await cartHelper.isAProductInCart(userId, response[i]._id);
-                // console.log("bbbbbbbbbbbbb");
-                // // console.log(response[i].product_name);
-                // console.log(isInCart);
-                // console.log("bbbbbbbbbbbbb");
+        let products;
+        // let minAmount= await productHelper.getMinimumPrice();
+        // let maxAmount= await productHelper.getMaximumPrice();
+        // const page = req.params.page;
+        // const perPage = 2;
+        if (req.session.user) {
 
-                response[i].isInCart = isInCart;
-            }
-            response[i].product_price = Number(response[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
-        }
-        console.log("1111111111111111");
-        console.log(response);
-        console.log("1111111111111111");
-        if(req.session.user){
             let userId = req.session.user._id;
-
             cartCount = await cartHelper.getCartCount(userId)
             wishListCount = await wishListHelper.getWishListCount(userId)
         }
 
-        res.render('user/view-products', { product: response, loginStatus, cartCount, wishListCount })
+        console.log(req.query.filterData, "hi");
+
+        if (!req.query.filterData) {
+            console.log("if not req.params");
+
+            products = await productHelper.getAllProductsWithLookup()
+            for (let i = 0; i < products.length; i++) {
+                if (req.session.user) {
+                    let userId = req.session.user._id;
+                    const isInCart = await cartHelper.isAProductInCart(userId, products[i]._id);
+                    const isInWishList = await wishListHelper.isProductInWishList(userId, products[i]._id);
+
+                    // console.log("bbbbbbbbbbbbb");
+                    // // console.log(products[i].product_name);
+                    // console.log(isInCart);
+                    // console.log("bbbbbbbbbbbbb");
+
+                    products[i].isInCart = isInCart;
+                    products[i].isInWishList = isInWishList;
+
+                }
+                products[i].product_price = Number(products[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+            }
+
+            console.log(products, "productssssssssssss");
+            res.render('user/view-products', { product: products, loginStatus, cartCount, wishListCount })
+
+
+        } else {
+            
+            console.log("if req.params");
+
+            let filterData = JSON.parse(req.query.filterData)
+            console.log("kkkkkkk");
+            console.log(filterData);
+            console.log(typeof filterData.min);
+            console.log(filterData.selectedCategories[0]);
+            console.log("kkkkkkk");
+            products = await productHelper.filterProduct(filterData)
+            for (let i = 0; i < products.length; i++) {
+                if (req.session.user) {
+                    let userId = req.session.user._id;
+                    const isInCart = await cartHelper.isAProductInCart(userId, products[i]._id);
+                    const isInWishList = await wishListHelper.isProductInWishList(userId, products[i]._id);
+
+                    // console.log("bbbbbbbbbbbbb");
+                    // // console.log(products[i].product_name);
+                    // console.log(isInCart);
+                    // console.log("bbbbbbbbbbbbb");
+
+                    products[i].isInCart = isInCart;
+                    products[i].isInWishList = isInWishList;
+
+                }
+                products[i].product_price = Number(products[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+            }
+            res.json({ product: products, loginStatus, cartCount, wishListCount })
+        }
+
+
+        // console.log("1111111111111111");
+        // console.log(products);
+        // console.log("1111111111111111");
+        // if(req.session.user){
+        //     let userId = req.session.user._id;
+
+        //     cartCount = await cartHelper.getCartCount(userId)
+        //     wishListCount = await wishListHelper.getWishListCount(userId)
+        // }
+
     } catch (error) {
         console.log(error);
     }
 
 }
+
 
 
 const viewAProduct = async (req, res) => {
@@ -346,7 +466,7 @@ const wishlist = async (req, res) => {
         console.log("wiaashlist items");
         console.log(wishList);
         console.log("wiaashlist items");
-        res.render('user/wishlist', { loginStatus, wishList ,cartCount ,wishListCount })
+        res.render('user/wishlist', { loginStatus, wishList, cartCount, wishListCount })
 
     } catch (error) {
         res.redirect('404')
@@ -371,15 +491,15 @@ const addToWishList = async (req, res) => {
     }
 }
 
-const removeFromWishList = async (req,res)=>{
+const removeFromWishList = async (req, res) => {
     // console.log();
     try {
         let userId = req.session.user._id;
-        let productId=req.body.productId;
+        let productId = req.body.productId;
 
-        await wishListHelper.removeAnItemFromWishList(userId,productId);
-        wishListCount=await wishListHelper.getWishListCount(userId)
-        res.status(200).json({message:"product removed from wishList",wishListCount})
+        await wishListHelper.removeAnItemFromWishList(userId, productId);
+        wishListCount = await wishListHelper.getWishListCount(userId)
+        res.status(200).json({ message: "product removed from wishList", wishListCount })
     } catch (error) {
         res.redirect('/error')
     }
@@ -477,7 +597,7 @@ const removeFromCart = (req, res) => {
                 totalAmount = totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
 
                 let cartCount = await cartHelper.getCartCount(userId)
-                wishListCount = await wishListHelper.getWishListCount(user._id)
+                wishListCount = await wishListHelper.getWishListCount(userId)
                 console.log(totalAmount, ".....///");
                 res.status(202).json({ message: "sucessfully item removed", totalAmount, cartCount, wishListCount })
             })
@@ -789,10 +909,12 @@ const contact = async (req, res) => {
 
 const searchProduct = async (req, res) => {
     let payload = req.body.payload.trim();
+    console.log("searchResult", payload);
     try {
         let searchResult = await productSchema.find({ product_name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
         console.log(searchResult);
         searchResult = searchResult.slice(0, 5);
+
         res.send({ searchResult })
 
     } catch (error) {

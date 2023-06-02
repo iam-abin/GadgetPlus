@@ -5,7 +5,7 @@
 <!-- molla/index-8.html  22 Nov 2019 09:56:59 GMT -->
 
 <head>
-    
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,18 +30,18 @@
     <link rel="stylesheet" href="/user/assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="/user/assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="/user/assets/css/plugins/jquery.countdown.css">
-    
+
     <!-- Template CSS copied From admin main.css-->
     <link href="/user/assets/css/admin-main-copy.css" rel="stylesheet" type="text/css" />
-    
-    
+
+
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/user/assets/css/style.css">
     <link rel="stylesheet" href="/user/assets/css/skins/skin-demo-8.css">
     <link rel="stylesheet" href="/user/assets/css/demos/demo-8.css">
 
     <!-- datatable -->
-    
+
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
@@ -74,16 +74,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <style>
-       nav a:is(:link ,:active, :visited).active {
+        nav a:is(:link, :active, :visited).active {
             background-color: #ebebeb;
         }
     </style>
 
-   
+
 
 </head>
 
 <% if (!locals.headerFooter) { %>
+
     <body>
         <div class="page-wrapper">
             <header class="header">
@@ -101,31 +102,19 @@
                             </a>
                         </div>
                         <div class="header-center">
-                            <nav class="main-nav" style="margin-right: 175px;">
+                            <nav class="main-nav" style="margin: auto;">
                                 <ul class="menu sf-arrows">
                                     <li class="megamenu-container ">
                                         <a home-a href="/">Home</a>
                                     </li>
 
-                                    <li>
-
-                                        <a class="sf-with-ul">Product</a>
-                                        <ul>
-
-                                            <% allCategories.forEach(category=> { %>
-                                                <% if (category.status) { %>
-                                                    <li><a href="/viewProducts/<%= category._id %>">
-                                                            <%= category.name %>
-                                                        </a></li>
-                                                <% } %>
-                                            <% }) %>
-
-                                        </ul>
+                                    <li class="megamenu-container ">
+                                        <a href="/viewProducts">Products</a>
                                     </li>
-
+<!-- 
                                     <li class="megamenu-container ">
                                         <a href="/about">About</a>
-                                    </li>
+                                    </li> -->
                                     <li class="megamenu-container ">
                                         <a href="/contact">Contact</a>
                                     </li>
@@ -135,17 +124,31 @@
                         </div><!-- End .header-left -->
 
                         <div class="header-right">
-                            <div class="header-search">
-                                <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                                <form action="#" method="get">
-                                    <div class="header-search-wrapper">
-                                        <label for="q" class="sr-only">Search</label>
-                                        <input type="search" class="form-control" id="searchInput" placeholder="Search in..." required>
-                                        <span style="z-index: 1; position: absolute;" id="searchResult"></span>
-                                    </div><!-- End .header-search-wrapper -->
-                                </form>
-                            </div><!-- End .header-search -->
 
+                            <div>
+
+                                <form action="#" method="post">
+                                    <div class="header-search-wrapper" style="position: relative; margin-top: 12px;">
+                                        <label for="q" class="sr-only">Search</label>
+                                        <div style="position: relative;">
+                                            <input type="search" class="form-control"
+                                                style="border-radius: 20px; padding-left: 35px;" id="searchInput"
+                                                placeholder="Search in..." required autocomplete="off">
+                                            <a href="#" class="search-toggle" role="button"
+                                                style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
+                                                <i class="icon-search"></i>
+                                            </a>
+                                        </div>
+                                    </div><!-- End .header-search-wrapper -->
+
+                                </form>
+                                <ul style="position: absolute; border-radius: 10px; z-index: 2; display: block; background-color: #dee2e6; margin-top: -15px;"
+                                    id="suggestionList">
+                                </ul>
+
+
+
+                            </div>
                             <a href="/wishlist" class="wishlist-link">
                                 <% if (locals.loginStatus) { %>
                                     <i class="icon-heart-o"></i>
@@ -153,157 +156,148 @@
                                         <span class="wishlist-count" id="wishListCount">
                                             <%= wishListCount %>
                                         </span>
-                                        
-                                    <% } %>
-                                </a>
-
-                                
-
-                                <div class="dropdown cart-dropdown">
-                                    <a href="/cart" class="dropdown-toggle" >
-                                        <i class="icon-shopping-cart"></i>
-                                        <% if (locals.cartCount) { %>
-
-                                            <span id="cart-count" class="cart-count">
-                                                <%= cartCount %>
-                                            </span>
 
                                         <% } %>
-                                    </a>
-                                </div>
+                            </a>
 
-                                <div>
-                                    <ul class="menu sf-arrows">
-                                        <li>
-                                            <span class="sf-with-ul">
-                                                <%= loginStatus.name %>
-                                            </span>
-                                            <ul>
-                                                <li><a href="/profile">Profile</a></li>
-                                                <li><a href="" id="wallet-details" data-toggle="modal" data-target="#walletModal" >Wallet</a></li>
-                                                <li><a href="/user-logout">Logout</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul><!-- End .menu -->
-                                </div><!-- End .header-left -->
 
-                                <!-- wallet Modal start -->
-                              
-                                <div class="modal fade" id="walletModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
+
+                            <div class="dropdown cart-dropdown">
+                                <a href="/cart" class="dropdown-toggle">
+                                    <i class="icon-shopping-cart"></i>
+                                    <% if (locals.cartCount) { %>
+
+                                        <span id="cart-count" class="cart-count">
+                                            <%= cartCount %>
+                                        </span>
+
+                                        <% } %>
+                                </a>
+                            </div>
+
+                            <div>
+                                <ul class="menu sf-arrows">
+                                    <li>
+                                        <span class="sf-with-ul">
+                                            <%= loginStatus.name %>
+                                        </span>
+                                        <ul>
+                                            <li><a href="/profile">Profile</a></li>
+                                            <li><a href="" id="wallet-details" data-toggle="modal"
+                                                    data-target="#walletModal">Wallet</a></li>
+                                            <li><a href="/user-logout">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul><!-- End .menu -->
+                            </div><!-- End .header-left -->
+
+                            <!-- wallet Modal start -->
+
+                            <div class="modal fade" id="walletModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                    
+
                                         <div class=" text-center mt-5 mb-5">
-                                            <h2 style="text-decoration: underline; ;" class="modal-title" id="exampleModalLabel">Wallet</h2>
-                                            <span style="font-size: 17px;" class="modal-title" id="walletAmount">Your Wallet Balance is: </span>
+                                            <h2 style="text-decoration: underline; ;" class="modal-title"
+                                                id="exampleModalLabel">Wallet</h2>
+                                            <span style="font-size: 17px;" class="modal-title" id="walletAmount">Your
+                                                Wallet Balance is: </span>
                                         </div>
-                                        <div >
-                                        <button type="button" class=" btn btn-secondary d-block ml-auto mr-3 mb-3" data-dismiss="modal">Close</button>
+                                        <div>
+                                            <button type="button" class=" btn btn-secondary d-block ml-auto mr-3 mb-3"
+                                                data-dismiss="modal">Close</button>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
-                                <!-- wallet Modal end -->
+                            </div>
+                            <!-- wallet Modal end -->
 
-                                <% } else { %>
-                                    <a href="/user-login"><i class="fa-solid fa-user-tie"
-                                            style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;"></i></a>
-                                    <% } %>
+                            <% } else { %>
+                                <a href="/user-login"><i class="fa-solid fa-user-tie"
+                                        style="font-size: 25px; color: black; margin-left: 21px; margin-right: 15px; margin-bottom: 10px;"></i></a>
+                                <% } %>
 
                         </div><!-- End .header-right -->
                     </div><!-- End .container -->
                 </div><!-- End .header-bottom -->
             </header><!-- End .header -->
 
-<% } %>
+            <% } %>
 
 
-
-<script>
-
-    let searchElement = document.getElementById('searchInput');
-    searchElement.onkeyup = function(){
-        let searchWord= searchElement.value;
-        loadData(searchWord);
-    }
-
-    function loadData(query = ''){
-        fetch('/search-prpduct',{
-            method:'post',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({payload:query})
-        })
-        .then(res=> res.json())
-        .then((data)=>{
-            console.log("res block start");
-            let searchResult=data.searchResult;
-            console.log(searchResult);
-
-            let html='<ul class="list-group">';
             
-            if(searchResult.length>0){
-                for (let i = 0; i < searchResult.length; i++) {
-                    
-                    let regularExpression = new RegExp('(' + query + ')', 'gi');
-                    html += `<a href="/search/result/?name=` + query + `" 
-                                class="list-group-itemlist-group-item-action">`+`<img style="width: 2rem" 
-                                src="`+searchResult[i].image[0].path+`" >`+ searchResult[i].product_name.replace(regularExpression, `<span class="text-primary fw-bold">$1</span>`) + `</a>`;
-                    
+
+            <script>
+
+                document.addEventListener('click', function (event) {
+                    const suggestionList = document.getElementById('suggestionList');
+                    const isClickInside = suggestionList.contains(event.target);
+
+                    if (!isClickInside) {
+                        suggestionList.innerHTML = ''; // Hide the suggestions by clearing the innerHTML
+                    }
+                });
+
+                let searchElement = document.getElementById('searchInput');
+                searchElement.onkeyup = function () {
+                    let searchWord = searchElement.value;
+                    console.log("searchWord", searchWord);
+                    if (searchWord != '') {
+                        loadData(searchWord);
+                    }else{
+                        document.getElementById('suggestionList').innerHTML = ''
+                    }
+
                 }
-            }
 
-            html+='</ul>'
-            document.getElementById('searchResult').innerHTML = html
-                
-            console.log("end");
+                function loadData(query = '') {
+                    fetch('/search-product', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ payload: query })
+                    })
+                        .then(res => res.json())
+                        .then((data) => {
+                            console.log("res block start");
+                            let searchResult = data.searchResult;
+                            console.log("Hiii", searchResult);
 
-        })
-    }
-    
+                            let html = ''
+                            console.log(data.searchResult.length);
+                            if (data.searchResult.length > 0) {
+                                for (let i = 0; i < data.searchResult.length; i++) {
+                                    console.log("in loop");
+                                    html += `<a href="/quick-view/${data.searchResult[i].slug}"><li style="  border-bottom: 1px solid #acb1b5; width:330px ;padding:10px"> ${data.searchResult[i].product_name} <img class="img-thumbnail" width="50" src="/product-images/${data.searchResult[i].image[0].filename}" alt="no image avalable"></li></a>`;
+                                    document.getElementById('suggestionList').innerHTML = html
+
+                                }
+                            }
+                            console.log("end");
+                        })
+                }
 
 
-    $('#wallet-details').on('click',function(e){
-        e.preventDefault()
-        // let userId=$('#wallet-details').data('wallet')
-        // console.log("userId",userId);
-        $.ajax({
-            url:"/wallet",
-            method:'get',
-            // data:userId
 
-        })
-        .then((res)=>{
-            console.log(res);
-            document.getElementById('walletAmount').innerHTML="Your wallet balance is : "+res.walletDetails
+                $('#wallet-details').on('click', function (e) {
+                    e.preventDefault()
+                    // let userId=$('#wallet-details').data('wallet')
+                    // console.log("userId",userId);
+                    $.ajax({
+                        url: "/wallet",
+                        method: 'get',
+                        // data:userId
 
-            $("#walletModal").modal("show");
+                    })
+                        .then((res) => {
+                            console.log(res);
+                            document.getElementById('walletAmount').innerHTML = "Your wallet balance is : " + res.walletDetails
 
-        })
-    })
+                            $("#walletModal").modal("show");
 
- 
-    // const activePage=window.location.pathname;
-    //  // console.log(activePage);
-    //  const navLinks= document.querySelectorAll('nav a').forEach(link=>{
-    //     // console.log(link.href);
+                        })
+                })
 
-    //     // console.log(".................");
-    //     const linkPath = link.href.substring(link.href.indexOf('/', 8));
-    //     // console.log(linkPath ==activePage);
-    //     // console.log(linkPath);
-    //     // console.log(".................");
-
-    //     // if(linkPath ==activePage){
-    //     //     link.classList.add('active')
-    //     // }
-    //     // else 
-    //     if(link.href.includes(`${activePage}`)){
-    //         console.log(`${activePage}`);
-    //         link.classList.add('active')
-    //     } 
-       
-    // })   
-
-</script>
+            </script>

@@ -103,14 +103,15 @@
                                     </div><!-- End .details-filter-row -->
                                     <div class="product-details-action">
 
-                                        <a href="" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <a href="" data-value="<%= product._id %>" class="btn-product add-product1 btn-cart"><span>add to cart</span></a>
 
+                                        <%= console.log("/////sd",product); %>
 
                                         <% if (product.isInCart) { %>
                                             <% if (loginStatus) { %>
                                                 <div class="product-action">
-                                                <a href="#" data-value="<%= product._id %>"
-                                                    class="add-product btn-product btn-cart"><span>add to cart</span></a>
+                                                <a data-value="<%= product._id %>"
+                                                    class="add-product1 btn-product btn-cart"><span>add to cart</span></a>
                                                 </div><!-- End .product-action -->
                                             <% } else {%>
                                                     <div class="product-action">
@@ -149,7 +150,7 @@
        
         <script>
             $(document).ready(function () {
-		$('.add-product').click(function (e) {
+		$('.add-product1').click(function (e) {
 			e.preventDefault()
 			const prodId = $(this).data('value')
 			console.log('clicked', prodId)

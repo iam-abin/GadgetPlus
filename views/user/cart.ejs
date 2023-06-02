@@ -88,9 +88,11 @@
 										<td class="price-col" >₹<%= cartItems[i].product.product_price %></td>
 										<td class="quantity-col">
 											<div class="cart-product-quantity">
+
 												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',-1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-minus"></i></button>
 												<span id="incDec<%= cartItems[i].product._id %>"><%= cartItems[i].quantity %></span>
 												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-plus"></i></button>
+
 												<% if (cartItems[i].product.isOutOfStock) { %>
 													<br><span class="text-danger" id="outOfStock<%= cartItems[i].product._id %>">out of stock</span>
 												<% } %>

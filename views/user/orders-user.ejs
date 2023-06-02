@@ -148,7 +148,7 @@
                         <tr>
                             <td width="5%"><%= i+1 %></td>
                             <td width="10%"><%= userOrderDetails[i].orderDate %></td>
-                            <td width="10%"><%= userOrderDetails[i].addressLookedup[0].address %></td>                        
+                            <td width="10%"><%= userOrderDetails[i].addressLookedup[0]?.address %></td>                        
                             <td width="10%"><%= userOrderDetails[i].totalAmount %></td>
                             <td width="10%"><%= userOrderDetails[i].orderStatus %></td>
                             <td width="10%"><%= userOrderDetails[i].paymentMethod %></td>                        
