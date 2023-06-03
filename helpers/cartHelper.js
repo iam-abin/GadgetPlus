@@ -1,51 +1,11 @@
-const { cart } = require('../controllers/userController');
+// const { cart } = require('../controllers/userController');
 const cartSchema = require('../models/cartModel');
 const productSchema = require('../models/productModel');
 const productHelper = require('../helpers/productHelper')
 const ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = {
-    // addToUserCart: (userId, productId) => {
-
-    //     let productObject = {
-    //         productItemId: productId,
-    //         quantity: 1
-    //     }
-
-    //     return new Promise(async (resolve, reject) => {
-    //         let userCart = await cartSchema.findOne({ user: userId })
-
-    //         console.log("user cart", userCart);
-
-    //         if (userCart) {
-    //             let productExist = userCart.products.findIndex(product => product.productItemId == productId);
-    //             // console.log('//////////',productExist);
-    //             // if (productExist != -1) {
-    //             //     cartSchema.updateOne({ user: userId, "products.productItemId": productId }, { $inc: { "products.$.quantity": 1 } }, { upsert: true })
-    //             //         .then((response) => {
-    //             //             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    //             //             console.log(response);
-    //             //             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    //             //             resolve(response)
-    //             //         })
-    //             // } else {
-    //                 // cartSchema.updateOne({ user: userId }, { $push: { products: productObject } })
-    //                 //     .then((response) => {
-
-    //                 //         resolve(response)
-    //                 //     })
-    //             // }
-    //         } else {
-    //             let cart = new cartSchema({
-    //                 user: userId,
-    //                 products: productObject
-    //             })
-
-    //             await cart.save();
-    //             resolve(cart);
-    //         }
-    //     })
-    // },
+   
 
     addToUserCart: (userId, productId) => {
         return new Promise(async (resolve, reject) => {
@@ -113,10 +73,7 @@ module.exports = {
                 console.log(outOfStock);
             }
 
-            // userCartItems.forEach(async (product) => {
-            //     let isoutOfStock= await productHelper.isOutOfStock(product.item)
-            //     userCartItems.product.isOutOfStock=isoutOfStock;
-            // });
+          
 
             console.log("--------------------------------------");
             console.log("--------------------------------------");
@@ -183,47 +140,7 @@ module.exports = {
         })
     },
 
-    //-----------------------------------------------------------------------unwanted start---------------------
-
-    // incDecProductQuantity2: (userId, productId, quantity) => {
-    //     return new Promise(async (resolve, reject) => {
-    //         const cart = await cartSchema.findOne({ user: userId });
-    //         console.log(cart);   //got a big output and solved
-    //         console.log(",,,,,,,,,,,,,,,,,,,,,");
-    //         console.log(productId);
-    //         console.log(",,,,,,,,,,,,,,,,,,,,,");
-
-
-    //         const cartProductsWithFullDetails=await module.exports.getAllCartItems(userId);
-
-
-    //         console.log("cart Products",cartProductsWithFullDetails);
-
-    //         const cartProduct = cartProductsWithFullDetails.find((item) => {
-    //             return item.product._id.toString() == productId
-    //         }
-    //         );
-
-    //         console.log("cart product122223",cartProduct);
-
-    //         let newQuantity = cartProduct.quantity + parseInt(quantity);
-
-    //         if (newQuantity < 1 || newQuantity > 10) {
-    //             newQuantity = 1;
-    //         }
-
-    //         // const isOutOfStock = await productHelper.isOutOfStock(productId, newQuantity)
-    //         const isOutOfStock=cartProduct.product.isOutOfStock;
-    //         console.log("isoutofstock cartHelper");
-    //         cartProduct.quantity = newQuantity;
-    //         await cart.save();
-
-    //         resolve({ newQuantity, isOutOfStock })
-
-    //     })
-    // },
-
-    //-----------------------------------------------------------------------unwanted end---------------------
+  
 
 
 
