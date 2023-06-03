@@ -15,7 +15,7 @@ const csvParser = require('json-2-csv');
 const orderHepler = require("../helpers/orderHepler");
 const walletHelper = require("../helpers/walletHelper");
 
-const email = "admin@gmail.com";
+const email = "abingadgetplus@gmail.com";
 const password = "123";
 
 const adminLogin = async (req, res) => {
