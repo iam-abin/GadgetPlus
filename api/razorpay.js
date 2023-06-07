@@ -37,20 +37,16 @@ module.exports = {
 
             // console.log("sig received ", details['payment[razorpay_signature]']);
             // console.log("sig generated ", expectedSignature);
-            
+
             let response = { "signatureIsValid": false }
 
-            if (expectedSignature === details['payment[razorpay_signature]']){
+            if (expectedSignature === details['payment[razorpay_signature]']) {
                 response = { "signatureIsValid": true }
             }
             resolve(response);
-            
+
         })
     }
-
-
-
-
 
 }
 

@@ -1,4 +1,4 @@
-// const { cart } = require('../controllers/userController');
+// const { carts } = require('../controllers/userController'); //it forms circular dependency because requiring carthelper in usercontroller and vice-versa
 const cartSchema = require('../models/cartModel');
 const productSchema = require('../models/productModel');
 const productHelper = require('../helpers/productHelper')

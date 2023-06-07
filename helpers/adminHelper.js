@@ -1,13 +1,22 @@
-const { response } = require('express');
+
 const userSchema = require('../models/userModel');
 const productSchema = require('../models/productModel');
 const orderSchema = require('../models/orderModel')
 const categorySchema = require('../models/category')
+const adminSchema = require('../models/adminModel')
 
 
 
 
 module.exports = {
+
+    isAdminExists:(adminName,adminPassword)=>{
+        return new Promise(async (resolve,reject)=>{
+            const isAdminExist=  await adminSchema.findOne({email:adminName,password:adminPassword}) 
+            resolve(isAdminExist)
+        })
+    },
+
     findUsers: () => {
         return new Promise(async (resolve, reject) => {
             await userSchema.find()
@@ -179,26 +188,5 @@ module.exports = {
         })
     }
 
-    // salesReportPdf: (salesData) => {
-    //     return new Promise(async (resolve, reject) => {
-    //         // Create a document
-    //         const doc = new PDFDocument();
-
-    //         const stream = fs.createWriteStream('sales_report.pdf');
-    //         doc.pipe(stream);
-
-    //         doc.font('fonts/PalatinoBold.ttf')
-    //             .fontSize(25)
-    //             .text('Some text with an embedded font!', 100, 100);
-
-
-
-
-
-    //         // Finalize PDF file
-    //         doc.end();
-    //         resolve(doc)
-    //     })
-    // }
-
+   
 }

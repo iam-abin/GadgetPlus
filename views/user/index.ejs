@@ -2,8 +2,6 @@
     .banner-over-text {
         color: rgb(0, 0, 0);
     }
-
-
 </style>
 
 
@@ -115,13 +113,16 @@
                                 <div class="product-action-vertical">
                                     <% if (!featuredProducts[i].isInWishList) { %>
                                         <a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
-                                            data-value="<%= featuredProducts[i]._id%>" title="Add to wishlist"><span>add to wishlist</span>
+                                            data-value="<%= featuredProducts[i]._id%>" title="Add to wishlist"><span>add
+                                                to wishlist</span>
                                         </a>
-                                    <% } else {%>
-                                        <a href="/quickView" class="btn-product-icon btn-wishlist btn-expandable bg-danger"
-                                        data-value="<%= featuredProducts[i]._id%>" title="Remove from wishlist"><span>remove from wishlist</span>
-                                        </a>
-                                    <% } %>
+                                        <% } else {%>
+                                            <a href="/quickView"
+                                                class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                                data-value="<%= featuredProducts[i]._id%>"
+                                                title="Remove from wishlist"><span>remove from wishlist</span>
+                                            </a>
+                                            <% } %>
                                 </div><!-- End .product-action -->
 
                                 <% if (!featuredProducts[i].isInCart) { %>
@@ -133,8 +134,7 @@
                                         </div><!-- End .product-action -->
                                         <% } else {%>
                                             <div class="product-action">
-                                                <a href="/user-login"
-                                                    class=" btn-product btn-cart"><span>add
+                                                <a href="/user-login" class=" btn-product btn-cart"><span>add
                                                         tocart</span></a>
                                             </div><!-- End .product-action -->
                                             <% } %>
@@ -190,8 +190,7 @@
                     Experience stunning displays, capture breathtaking photos with advanced camera systems .
                     Explore the future of technology in the palm of your hand." </p>
 
-                <a href="" class="btn btn-primary-white "><span>Shop Now</span><i
-                        class="icon-long-arrow-right"></i></a>
+                <a href="" class="btn btn-primary-white "><span>Shop Now</span><i class="icon-long-arrow-right"></i></a>
             </div><!-- End .banner-content -->
         </div><!-- End .banner -->
     </div>
@@ -250,13 +249,16 @@
                                 <div class="product-action-vertical">
                                     <% if (!latestProducts[i].isInWishList) { %>
                                         <a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
-                                            data-value="<%= latestProducts[i]._id%>" title="Add to wishlist"><span>add to wishlist</span>
+                                            data-value="<%= latestProducts[i]._id%>" title="Add to wishlist"><span>add
+                                                to wishlist</span>
                                         </a>
-                                    <% } else {%>
-                                        <a href="/quickView" class="btn-product-icon btn-wishlist btn-expandable bg-danger"
-                                        data-value="<%= latestProducts[i]._id%>" title="Remove from wishlist"><span>remove from wishlist</span>
-                                        </a>
-                                    <% } %>
+                                        <% } else {%>
+                                            <a href="/quickView"
+                                                class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                                data-value="<%= latestProducts[i]._id%>"
+                                                title="Remove from wishlist"><span>remove from wishlist</span>
+                                            </a>
+                                            <% } %>
                                 </div><!-- End .product-action -->
 
                                 <% if (!latestProducts[i].isInCart) { %>
@@ -268,8 +270,7 @@
                                         </div><!-- End .product-action -->
                                         <% } else {%>
                                             <div class="product-action">
-                                                <a href="/user-login"
-                                                    class=" btn-product btn-cart"><span>add
+                                                <a href="/user-login" class=" btn-product btn-cart"><span>add
                                                         tocart</span></a>
                                             </div><!-- End .product-action -->
                                             <% } %>

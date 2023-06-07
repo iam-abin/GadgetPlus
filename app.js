@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const logger = require("morgan");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
+const createError = require('http-errors')
+const cors = require('cors')
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const nocache = require("nocache");
@@ -23,6 +25,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("layout", "layouts/userLayout"); // set default layout for user pages
 app.use(expressLayouts); //middleware that helps to create reusable layouts for your views
 
+app.use(cors())
 app.use(logger("dev"));
 app.use(express.urlencoded({ extended: false })); //for parsing form data
 app.use(express.json()); //for parsing json
@@ -51,6 +54,19 @@ app.use(
 
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
+
+
+app.use((req,res,next)=>{
+  return next(createError(404,"Page Not Found"))
+})
+
+app.use((error,req,res,next)=>{
+  res.locals.message=error.message;
+  const status = error.status || 500;
+  res.locals.status = status;
+
+  res.status(status).render("error",{headerFooter:true})
+})
 
 app.listen(PORT, () => {
   console.log(`Server startes on http://localhost:${PORT}`);

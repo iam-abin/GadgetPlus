@@ -3089,7 +3089,7 @@ ul.row-sm {
 }
 
 .mt-80 {
-    margin-top: 80px !important
+    margin-top: 50px !important
 }
 
 .mt-85 {
@@ -3249,7 +3249,7 @@ ul.row-sm {
 }
 
 .mb-80 {
-    margin-bottom: 80px !important
+    margin-bottom: 40px !important
 }
 
 .mb-85 {
@@ -3693,7 +3693,7 @@ body.offcanvas-active {
 }
 
 .content-main {
-    padding: 30px 3%;
+    padding: 0px 3%;
     margin-left: auto;
     margin-right: auto;
     background-color: #f8f9fa

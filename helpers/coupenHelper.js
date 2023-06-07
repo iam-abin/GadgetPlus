@@ -2,7 +2,6 @@ const couponSchema = require('../models/couponModel')
 const cartSchema = require('../models/cartModel')
 
 const voucherCode=require('voucher-code-generator')
-const orderSchema = require('../models/orderModel')
 
 module.exports = {
     addCouponToDb: (couponData) => {

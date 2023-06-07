@@ -1,4 +1,3 @@
-const { resolve } = require('path');
 const productSchema = require('../models/productModel');
 const ObjectId = require('mongoose').Types.ObjectId
 const fs = require('fs')

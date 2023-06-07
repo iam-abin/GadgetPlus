@@ -20,7 +20,7 @@ module.exports = {
                 .then((verification) => {
                     console.log(verification);
                     resolve(verification.sid)
-                }).catch((error)=>{
+                }).catch((error) => {
                     console.log(error);
                 })
         })
@@ -31,13 +31,13 @@ module.exports = {
             client.verify.v2.services(serviceSid)
                 .verificationChecks
                 .create({
-                    to: '+91'+mobileNo,
+                    to: '+91' + mobileNo,
                     code: otp
                 })
-                .then((verification)=> {
+                .then((verification) => {
                     console.log(verification.status);
                     resolve(verification.valid)
-                }).catch((error)=>{
+                }).catch((error) => {
                     console.log(error);
                 });
         })

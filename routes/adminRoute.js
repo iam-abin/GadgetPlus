@@ -4,7 +4,6 @@ const router=express.Router();
 const {adminAuthenticationChecking,adminChecking} = require('../middlewares/sessionHandling')
 const multer=require('../middlewares/multer')
 const adminController=require('../controllers/adminController');
-const productHelper = require('../helpers/productHelper');
 
 
 
@@ -12,21 +11,16 @@ router.get('/',adminAuthenticationChecking,adminController.adminLogin);
 
 router.post('/adminLogin',adminController.adminLoginPost);
 
+
 router.get('/admin-home',adminChecking,adminController.adminHome)
 
 router.get('/sales-report-page',adminChecking,adminController.salesReportPage);
 
 router.post('/sales-report',adminChecking,adminController.salesReport);
 
-// router.post('/sales-report-excel',adminChecking,adminController.salesReportExcel);
-
-// router.get('/sales-report-pdf',adminChecking,adminController.salesReportPdf);
-
 router.get('/users-List',adminChecking,adminController.usersList);
 
 router.get('/block-unblock-user/:id',adminChecking,adminController.blockUnBlockUser);
-
-// router.get('/unBlock-user/:id',adminChecking,adminController.unBlockUser);
 
 
 router.get('/product',adminChecking,adminController.productList); 
@@ -40,7 +34,6 @@ router.get('/edit-product/:slug',adminChecking,adminController.editProduct);
 router.post('/edit-product/:slug',adminChecking,multer.productUpload,adminController.postEditProduct)
 
 router.get('/delete-product/:slug',adminChecking,adminController.deleteProduct);
-
 
 
 router.get('/product-categories',adminChecking,adminController.productCategory); 
@@ -64,7 +57,6 @@ router.get('/order-details/:id',adminChecking,adminController.productOrderDetail
 router.get('/banner',adminChecking,adminController.banners);
 
 
-
 router.get('/coupon',adminChecking,adminController.coupons);
 
 router.post('/add-coupon',adminChecking,adminController.postAddCoupon)
@@ -73,16 +65,12 @@ router.get('/edit-coupon/:id',adminChecking,adminController.editCoupon)
 
 router.post('/edit-coupon',adminChecking,adminController.editCouponPost)
 
-
 router.get('/delete-coupon/:id',adminChecking,adminController.deleteCoupon)
-
 
 
 router.get('/userProfile/:id',adminChecking,adminController.userProfile);
 
-router.get('/Logout',adminController.adminLogout)
+router.get('/logout',adminController.adminLogout)
 
-
-// router.get('/',adminController.);
 
 module.exports=router;
