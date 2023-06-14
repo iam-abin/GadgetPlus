@@ -9,7 +9,7 @@ const cors = require('cors')
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const nocache = require("nocache");
-const methodOverride=require('method-override');
+const methodOverride = require('method-override');
 
 const connectDb = require("./config/db");
 
@@ -43,7 +43,8 @@ app.use(nocache());
 
 app.use(
   session({
-    secret: "Gadgets",
+    key: 'user_sid',
+    secret: 'thisisthekeyforuser',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -56,18 +57,20 @@ app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
 
-app.use((req,res,next)=>{
-  return next(createError(404,"Page Not Found"))
+app.use((req, res, next) => {
+  return next(createError(404, "Page Not Found"))
 })
 
-app.use((error,req,res,next)=>{
-  res.locals.message=error.message;
+
+app.use((error, req, res, next) => {
+  res.locals.message = error.message;
   const status = error.status || 500;
   res.locals.status = status;
 
-  res.status(status).render("error",{headerFooter:true})
+  res.status(status).render("error", { headerFooter: true })
 })
 
 app.listen(PORT, () => {
   console.log(`Server startes on http://localhost:${PORT}`);
 });
+

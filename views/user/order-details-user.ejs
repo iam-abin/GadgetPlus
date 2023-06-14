@@ -181,14 +181,14 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <%= productDetails[i].orderedProduct.product_price %>
+                                            <%= productDetails[i].orderedPrice[i] %>
                                         </td>
                                         <td>
                                             <%= productDetails[i].orderedItems.quantity %>
                                         </td>
                                         <td class="text-end">
                                             <%= productDetails[i].orderedProduct.product_price*productDetails[i].orderedItems.quantity
-                                                %>
+                                        %>
                                         </td>
                                     </tr>
                                     <% } %>
@@ -202,8 +202,8 @@
                                                         <dd></dd>
                                                     </dl>
                                                     <dl class="dlist">
-                                                        <dt>Shipping cost:</dt>
-                                                        <dd>$10.00</dd>
+                                                        <dt>coupon discount:</dt>
+                                                        <dd style="color: #00B517;">-<%= orderDetails.coupon %></dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt>Grand total:</dt>
@@ -321,9 +321,6 @@
                         //create invoice
                         easyinvoice.createInvoice(data, function (result) {
                             easyinvoice.download('gadgetPlus-invoice.pdf', result.pdf);
-                            //	you can download like this as well:
-                            //	easyinvoice.download();
-                            //	easyinvoice.download('myInvoice.pdf');   
                         });
 
                     }

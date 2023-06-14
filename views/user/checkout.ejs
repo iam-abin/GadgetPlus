@@ -213,6 +213,9 @@
 								</div>
 						</aside><!-- End .col-lg-3 -->
 					</div><!-- End .row -->
+					<div>
+						<input type="hidden" name="couponDiscount" id="couponDiscount">
+					</div>
 				</form>
 			</div><!-- End .container -->
 		</div><!-- End .checkout -->
@@ -388,10 +391,6 @@
 	$(document).ready(function () {
 		$('#checkout-form').submit((e) => {
 			e.preventDefault();
-			// let data=JSON.stringify($('#checkout-form').serialize())
-			// console.log($('#checkout-form').serialize().payment);
-			// console.log(data.payment);
-			// console.log($('#checkout-form').serialize().addressSelected);
 			console.log("hello");
 			$.ajax({
 				url: '/place-order',
@@ -657,6 +656,7 @@
 
 	function applyCoupon(totalAmount) {
 		const couponCode = document.getElementById('couponCode').value;
+		
 		console.log(couponCode);
 
 		$.ajax({
@@ -674,6 +674,12 @@
 					document.getElementById('couponApplySuccess').classList.remove('d-none')
 					document.getElementById('couponApplySuccess').innerHTML = res.message
 					document.getElementById('discount').innerHTML = -res.discount
+					console.log(";;;;;;;;;;;;;;;;;;;;;;;");
+					console.log(res);
+					console.log(res.discount);
+					console.log(";;;;;;;;;;;;;;;;;;;;;;;");
+
+					document.getElementById('couponDiscount').value = res.discount
 					document.getElementById('totalAmount').innerHTML = res.cart.totalAmount
 				} else {
 					console.log(res);

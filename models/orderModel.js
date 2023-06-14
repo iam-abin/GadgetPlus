@@ -7,18 +7,23 @@ const orderSchema = mongoose.Schema(
             ref: "users",
             required: true,
         },
-        orderedItems:[
+        orderedItems: [
             {
-                product:{
-                    type:mongoose.Schema.Types.ObjectId,
-                    ref:'products'
+                product: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'products'
                 },
-                quantity:Number
+                quantity: Number,
+               
             }
         ],
-        address:mongoose.Schema.Types.ObjectId,
-        orderDate:Date,
-        coupon:{
+        orderedPrice: {
+            type: Array,
+            default: []
+        },
+        address: mongoose.Schema.Types.ObjectId,
+        orderDate: Date,
+        coupon: {
             type: String,
             default: null
         },
@@ -26,9 +31,9 @@ const orderSchema = mongoose.Schema(
         // finalAmount:Number,
         paymentMethod: String,
         orderStatus: {
-            type:String,
-            enum:['pending','confirmed', 'shipped', 'outForDelivery' ,'delivered' ,'cancelled','return pending','returned'],
-            default:'pending'
+            type: String,
+            enum: ['pending', 'confirmed', 'shipped', 'outForDelivery', 'delivered', 'cancelled', 'return pending', 'returned'],
+            default: 'pending'
         }
     },
     {

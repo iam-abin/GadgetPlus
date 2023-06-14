@@ -98,6 +98,7 @@ const userLoginPost = async (req, res, next) => {
     await userHelper.doLogin(req.body)
         .then((response) => {
             if (response.loggedIn) {
+                console.log("hiii");
                 req.session.user = response.user;
                 loginStatus = req.session.user;
                 return res.status(202).json({ error: false, message: response.logginMessage })
@@ -106,6 +107,8 @@ const userLoginPost = async (req, res, next) => {
             }
         })
         .catch((error) => {
+            console.log("helooooo");
+            console.log(error);
             return next(error)
         })
 }
@@ -610,6 +613,9 @@ const productOrderDetails = async (req, res, next) => {
     try {
         const orderId = req.params.id;
         let orderDetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
+        // console.log("aaaaaaaaaaaaaaaaaaaaaa");
+        // console.log(orderDetails);
+        // console.log("aaaaaaaaaaaaaaaaaaaaaa");
         let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
         res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus })
     } catch (error) {

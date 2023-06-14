@@ -42,10 +42,19 @@ module.exports = {
             let date = orderDate();
             let userId = order.userId;
             let paymentMethod = order.payment;
+            let discount = null;
             let address = await addressHelper.getAnAddress(order.addressSelected);
             let orderedItems = cartItems
+            let orderedPrices=[]
+            if(order.couponDiscount){
+                discount=order.couponDiscount
+            }
 
             console.log("orderedItems", orderedItems);
+
+            for (let i = 0; i < orderedItems.length; i++) {
+                orderedPrices.push(orderedItems[i].product.product_price);
+            }
 
             console.log("orderedItems orderHelper ", orderedItems);
             let ordered = new orderSchema({
@@ -55,6 +64,8 @@ module.exports = {
                 totalAmount: totalAmount,
                 paymentMethod: paymentMethod,
                 orderStatus: status,
+                coupon:discount,
+                orderedPrice:orderedPrices,
                 orderedItems: orderedItems
             })
 
@@ -200,6 +211,7 @@ module.exports = {
                         totalAmount: 1,
                         paymentMethod: 1,
                         orderStatus:1,
+                        coupon:1,
                         address: {
                             $arrayElemAt: ['$userAddress', 0]
                         }
