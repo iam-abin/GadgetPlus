@@ -203,7 +203,17 @@
 											</div><!-- End .card-header -->
 										</div><!-- End .card -->
 
-
+										<br>
+										<div class="card">
+											<div class="card-header" id="heading-4">
+												<h2 class="card-title">
+													<h2 class="card-title">
+														<input type="radio" id="paypal" name="payment"
+															value="paypal"> <label for="paypal">Paypal</label><br>
+													</h2>
+												</h2>
+											</div><!-- End .card-header -->
+										</div><!-- End .card -->
 										<!-- <button type="submit">Place Order</button> -->
 										<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
 											<span class="btn-text">Place Order</span>
@@ -422,6 +432,12 @@
 							case 'razorpay':
 								console.log("razorpay");
 								paymentMethodrazorpayPayment(response);
+								break;
+							case 'paypal':
+								console.log("paypal");
+								console.log("paypal done");
+								// paymentMethodpaypalpayPayment(response);
+								location.href = response.paypalOrderDetails
 								break;
 							case 'wallet':
 								console.log("wallet");

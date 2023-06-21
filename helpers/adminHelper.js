@@ -73,11 +73,11 @@ module.exports = {
                 }
             ])
 
-            // if(totalRevenue){
-                response.totalRevenue = totalRevenue[0]?.revenue;
-            // }else{
-            //     response.totalRevenue=0
-            // }
+            if(!response.totalRevenue){
+                response.totalRevenue=0
+            }
+            response.totalRevenue = totalRevenue[0]?.revenue;
+ 
 
 
 

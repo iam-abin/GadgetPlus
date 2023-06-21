@@ -15,6 +15,7 @@ const { dateFormat } = require('../controllers/adminController')
 
 const twilio = require('../api/twilio');
 const razorpay = require('../api/razorpay')
+const paypal = require('../api/paypal');
 
 var easyinvoice = require('easyinvoice');
 
@@ -231,8 +232,8 @@ const getWallet = async (req, res, next) => {
 
 const userLogout = async (req, res, next) => {
     try {
-        req.session.user = false;
-        loginStatus = false;
+        req.session.user = null;    
+        loginStatus = null;
         res.redirect('/')
     } catch (error) {
         return next(error);
@@ -540,6 +541,31 @@ const placeOrder = async (req, res, next) => {
                             await cartHelper.clearCart(userId);
                             res.json({ paymentMethod: 'razorpay', orderDetails, razorpayOrderDetails, razorpaykeyId: process.env.RAZORPAY_KEY_ID })
                         })
+                })
+        } else if (req.body.payment == 'paypal') {
+            console.log("hiiiiiiiiiiiiiiiiiiiiiiheloooooooooooooooooooo");
+            await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
+                .then(async (orderDetails) => {
+                    console.log("after order upload");
+                    await paypal.paypayPay()
+                    .then(async(paypalOrderDetails)=>{
+                        await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
+                        await productHelper.decreaseStock(cartItems);
+                        await cartHelper.clearCart(userId);
+                        res.json({ paymentMethod: 'paypal', orderDetails, paypalOrderDetails })
+                    })
+                 
+                    
+
+                    console.log("after configure");
+
+                    // await razorpay.razorpayOrderCreate(orderDetails._id, orderDetails.totalAmount)
+                    //     .then(async (razorpayOrderDetails) => {
+                    //         await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
+                    //         await productHelper.decreaseStock(cartItems);
+                    //         await cartHelper.clearCart(userId);
+                    //         res.json({ paymentMethod: 'razorpay', orderDetails, razorpayOrderDetails, razorpaykeyId: process.env.RAZORPAY_KEY_ID })
+                    //     })
                 })
         }
         else if (req.body.payment == 'wallet') {
