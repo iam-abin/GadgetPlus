@@ -10,9 +10,15 @@ const adminSchema = require('../models/adminModel')
 
 module.exports = {
 
-    isAdminExists:(adminName,adminPassword)=>{
-        return new Promise(async (resolve,reject)=>{
-            const isAdminExist=  await adminSchema.findOne({email:adminName,password:adminPassword}) 
+    isAdminExists: (adminName, adminPassword) => {
+        return new Promise(async (resolve, reject) => {
+            const isAdminExist = await adminSchema.findOne({
+                $and: [
+                    { email: adminName },
+                    { password: adminPassword }
+                ]
+            });
+            console.log(isAdminExist, "isAdminExistisAdminExist");
             resolve(isAdminExist)
         })
     },
@@ -73,11 +79,11 @@ module.exports = {
                 }
             ])
 
-            if(!response.totalRevenue){
-                response.totalRevenue=0
+            if (!response.totalRevenue) {
+                response.totalRevenue = 0
             }
             response.totalRevenue = totalRevenue[0]?.revenue;
- 
+
 
 
 
@@ -188,5 +194,5 @@ module.exports = {
         })
     }
 
-   
+
 }

@@ -19,7 +19,6 @@ const paypal = require('../api/paypal');
 
 var easyinvoice = require('easyinvoice');
 
-let loginStatus;
 let cartCount;
 let wishListCount;
 
@@ -28,7 +27,7 @@ const landingPage = async (req, res, next) => {
     try {
         let latestProducts = await productHelper.getRecentProducts()
         let featuredProducts = await productHelper.getFeaturedProducts()
-        res.render('user/index', { loginStatus, latestProducts, featuredProducts })
+        res.render('user/index', { loginStatus:req.session.user, latestProducts, featuredProducts })
     } catch (error) {
         // console.log(error);next
         return next(error)
@@ -63,7 +62,7 @@ const userHome = async (req, res, next) => {
             featuredProducts[i].product_price = currencyFormat(featuredProducts[i].product_price)
         }
 
-        res.status(200).render('user/index', { loginStatus, cartCount, wishListCount, latestProducts, featuredProducts })
+        res.status(200).render('user/index', { loginStatus:req.session.user, cartCount, wishListCount, latestProducts, featuredProducts })
     } catch (error) {
         return next(error)
     }
@@ -101,7 +100,6 @@ const userLoginPost = async (req, res, next) => {
             if (response.loggedIn) {
                 console.log("hiii");
                 req.session.user = response.user;
-                loginStatus = req.session.user;
                 return res.status(202).json({ error: false, message: response.logginMessage })
             } else {
                 return res.status(401).json({ error: false, message: response.logginMessage })
@@ -174,7 +172,7 @@ const resetPassword = async (req, res, next) => {
 
 // otp login page
 const otpUser = (req, res) => {
-    res.render('user/otp-form', { loginStatus })
+    res.render('user/otp-form', { loginStatus:req.session.user })
 }
 
 // otp sending in login process
@@ -208,7 +206,6 @@ const otpVerifying = async (req, res, next) => {
         .then((status) => {
             if (status) {
                 req.session.user = req.session.tempUser;
-                loginStatus = req.session.user;
                 res.redirect('/')
             } else {
                 console.log("invalid otp");
@@ -232,8 +229,7 @@ const getWallet = async (req, res, next) => {
 
 const userLogout = async (req, res, next) => {
     try {
-        req.session.user = null;    
-        loginStatus = null;
+        req.session.user = null;  
         res.redirect('/')
     } catch (error) {
         return next(error);
@@ -246,7 +242,7 @@ const profile = async (req, res, next) => {
     try {
         let userId = req.session.user._id;
         let addresses = await addressHelper.findAddresses(userId);
-        res.render('user/profile', { loginStatus, addresses, cartCount, wishListCount })
+        res.render('user/profile', { loginStatus:req.session.user, addresses, cartCount, wishListCount })
     } catch (error) {
         return next(error);
     }
@@ -281,7 +277,7 @@ const viewProducts = async (req, res, next) => {
                 products[i].product_price = Number(products[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
             }
 
-            res.render('user/view-products', { product: products, loginStatus, cartCount, wishListCount })
+            res.render('user/view-products', { product: products, loginStatus:req.session.user, cartCount, wishListCount })
         } else {
             let filterData = JSON.parse(req.query.filterData);
             products = await productHelper.filterProduct(filterData)
@@ -297,7 +293,7 @@ const viewProducts = async (req, res, next) => {
                 }
                 products[i].product_price = Number(products[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
             }
-            res.json({ product: products, loginStatus, cartCount, wishListCount })
+            res.json({ product: products, loginStatus:req.session.user, cartCount, wishListCount })
         }
     } catch (error) {
         return next(error);
@@ -313,7 +309,7 @@ const viewAProduct = async (req, res, next) => {
             product.isInCart = isInCart;
         }
         product.product_price = currencyFormat(product.product_price)
-        res.render('user/quick-view', { product, cartCount, loginStatus, wishListCount });
+        res.render('user/quick-view', { product, cartCount, loginStatus:req.session.user, wishListCount });
     } catch (error) {
         return next(error);
     }
@@ -323,7 +319,7 @@ const wishlist = async (req, res, next) => {
     try {
         let userId = req.session.user._id;
         let wishList = await wishListHelper.getAllWishListItems(userId);
-        res.render('user/wishlist', { loginStatus, wishList, cartCount, wishListCount })
+        res.render('user/wishlist', { loginStatus:req.session.user, wishList, cartCount, wishListCount })
     } catch (error) {
         return next(error);
     }
@@ -361,7 +357,7 @@ const cart = async (req, res, next) => {
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
 
         totalandSubTotal = currencyFormatWithFractional(totalandSubTotal)
-        res.render('user/cart', { loginStatus, cartItems, cartCount, totalAmount: totalandSubTotal, wishListCount })
+        res.render('user/cart', { loginStatus:req.session.user, cartItems, cartCount, totalAmount: totalandSubTotal, wishListCount })
     } catch (error) {
         return next(error);
     }
@@ -485,7 +481,7 @@ const checkout = async (req, res, next) => {     //to view details and price pro
 
         }
 
-        res.render('user/checkout', { loginStatus, cartCount, wishListCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
+        res.render('user/checkout', { loginStatus:req.session.user, cartCount, wishListCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
     } catch (error) {
         return next(error);
     }
@@ -611,7 +607,7 @@ const verifyPayment = async (req, res, next) => {
 
 const orderSuccess = (req, res, next) => {
     try {
-        res.render('user/order-success', { loginStatus })
+        res.render('user/order-success', { loginStatus:req.session.user })
     } catch (error) {
         // console.log(error);
         return next(error)
@@ -629,7 +625,7 @@ const orders = async (req, res, next) => {
         }
         console.log("orders", userOrderDetails);
 
-        res.render('user/orders-user', { userOrderDetails, loginStatus, cartCount, wishListCount })
+        res.render('user/orders-user', { userOrderDetails, loginStatus:req.session.user, cartCount, wishListCount })
     } catch (error) {
         return next(error)
     }
@@ -639,11 +635,8 @@ const productOrderDetails = async (req, res, next) => {
     try {
         const orderId = req.params.id;
         let orderDetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
-        // console.log("aaaaaaaaaaaaaaaaaaaaaa");
-        // console.log(orderDetails);
-        // console.log("aaaaaaaaaaaaaaaaaaaaaa");
         let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
-        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus })
+        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus:req.session.user })
     } catch (error) {
         return next(error)
     }
@@ -673,7 +666,7 @@ const returnOrder = async (req, res, next) => {
 }
 
 const contact = async (req, res) => {
-    res.render('user/contact', { loginStatus, cartCount, wishListCount })
+    res.render('user/contact', { loginStatus :req.session.user, cartCount, wishListCount })
 }
 
 const searchProduct = async (req, res, next) => {
