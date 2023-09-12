@@ -1,9 +1,10 @@
 const userSchema = require('../models/userModel');
+
 const bcrypt = require('bcrypt');
 
 
-
 module.exports = {
+
     doLogin: (userData) => {
         return new Promise(async (resolve, reject) => {
             let user = await userSchema.findOne({ email: userData.email })
@@ -15,31 +16,25 @@ module.exports = {
                             response.user = user;
                             response.loggedIn = true;
                             response.logginMessage = "Login success";
-                            console.log("Login success");
                             resolve(response)
                         } else {
-                            response.logginMessage = "Invalid username or passworddd";
-                            //    console.log("Loggin failed");
-                            resolve(response)
-
+                            response.logginMessage = "Invalid username or passwordd";
+                            resolve(response);
                         }
                     })
                 } else {
                     response.logginMessage = "blocked user";
-                    // console.log("blocked user");
-                    resolve(response)
+                    resolve(response);
                 }
             } else {
                 response.logginMessage = "Invalid username or password";
-                // console.log("Invalid username or password");
-                resolve(response)
-
+                resolve(response);
             }
         })
     },
 
-    doSignup: (userData) => {
 
+    doSignup: (userData) => {
         return new Promise(async (resolve, reject) => {
             const isUserExist = await userSchema.findOne({ $or: [{ email: userData.email }, { phone: userData.phone }] });
             if (!isUserExist) {
@@ -51,25 +46,24 @@ module.exports = {
                     password: userData.password,
                     isActive: true,
                 }).then((data) => {
-                    resolve(data)
+                    resolve(data);
                 }).catch((error) => {
-                    reject(error)
+                    reject(error);
                 })
             } else {
-
-                resolve({ userExist: true })
+                resolve({ userExist: true });
             }
         })
-
     },
+
 
     changePassword: (newPassword, phone) => {
         return new Promise(async (resolve, reject) => {
             newPassword = await bcrypt.hash(newPassword, 10);
             let user= await userSchema.findOne({ phone: phone });
             user.password = newPassword;
-            await user.save()
-            resolve(user)
+            await user.save();
+            resolve(user);
         })
     }
 

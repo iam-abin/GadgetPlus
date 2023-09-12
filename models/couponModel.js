@@ -1,4 +1,5 @@
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
+
 
 const couponSchema=mongoose.Schema({
 
@@ -37,7 +38,9 @@ const couponSchema=mongoose.Schema({
         type:Date,
         default:Date.now()
     }
-})
+
+});
+
 
 //checking whether coupon is active or not
 couponSchema.pre('save',function(next){
@@ -48,7 +51,7 @@ couponSchema.pre('save',function(next){
         this.isActive="Active";
     }
     next();
-})
+});
 
 
 module.exports=new mongoose.model("Coupon",couponSchema);

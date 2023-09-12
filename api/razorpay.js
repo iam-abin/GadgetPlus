@@ -1,4 +1,6 @@
 const Razorpay = require('razorpay');
+const crypto = require("crypto");
+
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -7,6 +9,7 @@ const razorpay = new Razorpay({
 
 
 module.exports = {
+
     razorpayOrderCreate: (orderId, totalAmount) => {
         return new Promise(async (resolve, reject) => {
             razorpay.orders.create({
@@ -16,7 +19,6 @@ module.exports = {
                 payment_capture: 1,
             })
                 .then((orderDetails) => {
-                    console.log("razorpay orderDetailsorderDetails razorpay :", orderDetails);
                     resolve(orderDetails)
                 })
                 .catch((error) => {
@@ -25,26 +27,23 @@ module.exports = {
         })
     },
 
+
     verifyPaymentSignature: (details) => {
         return new Promise(async (resolve, reject) => {
 
             let body = details['payment[razorpay_order_id]'] + "|" + details['payment[razorpay_payment_id]'];
-
-            const crypto = require("crypto");
+            
             let expectedSignature = crypto.createHmac('sha256', `${process.env.RAZORPAY_KEY_SECRET}`)
                 .update(body.toString())
                 .digest('hex');
 
-            // console.log("sig received ", details['payment[razorpay_signature]']);
-            // console.log("sig generated ", expectedSignature);
-
-            let response = { "signatureIsValid": false }
+            let response = { "signatureIsValid": false };
 
             if (expectedSignature === details['payment[razorpay_signature]']) {
-                response = { "signatureIsValid": true }
+                response = { "signatureIsValid": true };
             }
-            resolve(response);
 
+            resolve(response);
         })
     }
 

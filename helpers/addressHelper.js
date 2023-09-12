@@ -1,8 +1,8 @@
 const addressSchema=require('../models/addressModel');
-const ObjectId=require('mongoose').Types.ObjectId
 
 
 module.exports={
+
     addAddress:(addressData)=>{
         return new Promise(async (resolve,reject)=>{
             let address = await new addressSchema({
@@ -67,8 +67,8 @@ module.exports={
         return new Promise(async (resolve,reject)=>{
             await addressSchema.findByIdAndDelete(addressId)
             .then((response)=>{
-                console.log(response)
-                resolve()
+                console.log(response);
+                resolve();
             })
         })
     }

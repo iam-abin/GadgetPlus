@@ -1,4 +1,5 @@
 const mongoose=require('mongoose');
+
 const ObjectId=mongoose.Types.ObjectId;
 
 
@@ -17,7 +18,7 @@ const addressSchema=mongoose.Schema({
 
 },{
     timestamps:true
-})
+});
 
 
-module.exports=mongoose.model('address',addressSchema)
+module.exports=mongoose.model('address',addressSchema);

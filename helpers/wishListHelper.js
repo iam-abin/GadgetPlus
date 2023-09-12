@@ -1,17 +1,17 @@
-
 const wishListSchema = require('../models/wishlistModel')
 const productSchema = require('../models/productModel');
+
 const ObjectId = require('mongoose').Types.ObjectId;
 
 
-
 module.exports = {
+
     addItemToWishList: (productId, userId) => {
         return new Promise(async (resolve, reject) => {
 
             const product = await productSchema.findOne({ _id: productId });
             if (!product.product_status) {
-                reject(Error("Product Not Found"))
+                reject(Error("Product Not Found"));
             }
 
             const wishList = await wishListSchema.updateOne(
@@ -28,16 +28,14 @@ module.exports = {
                 }
             )
 
-            console.log("1", wishList);
-            resolve(wishList)
+            resolve(wishList);
 
         })
     },
 
+
     removeAnItemFromWishList: async (userId, productId) => {
         return new Promise(async (resolve, reject) => {
-            console.log(userId);
-            console.log(productId);
             await wishListSchema.updateOne(
                 {
                     user: userId
@@ -47,13 +45,11 @@ module.exports = {
                 }
             )
                 .then((result) => {
-                    console.log(result);
-                    resolve(result)
+                    resolve(result);
                 })
         })
-
-
     },
+
 
     getAllWishListItems: (userId) => {
         return new Promise(async (resolve, reject) => {
@@ -85,7 +81,7 @@ module.exports = {
                         }
                     }
                 }
-            ])
+            ]);
 
             resolve(wishListItems)
         })
@@ -94,25 +90,23 @@ module.exports = {
 
     isProductInWishList:async (userId,productId)=>{
         try {
-            console.log("userId",userId);
-            console.log("productId",productId);
             const wishList=await wishListSchema.findOne({user:userId , 'products.productItemId':productId});
-            console.log(wishList);
             if(wishList){
-                return true
+                return true;
             }else{
-                return false
+                return false;
             }
         } catch (error) {
             console.log(error);
         }
     },
 
+
     getWishListCount: (userId) => {
         return new Promise(async (resolve, reject) => {
             let wishlist = await wishListSchema.findOne({ user: userId });
             let wishlistCount = wishlist?.products.length;
-            resolve(wishlistCount)
+            resolve(wishlistCount);
         })
     },
 

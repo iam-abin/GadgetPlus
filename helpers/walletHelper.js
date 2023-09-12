@@ -1,14 +1,12 @@
 const walletSchema=require('../models/walletModel');
+
 const ObjectId=require('mongoose').Types.ObjectId;
 
 module.exports={
 
     addMoneyToWallet:(userId,amount)=>{
         return new Promise(async (resolve,reject)=>{
-            let wallet=await walletSchema.findOne({user:userId})
-
-            console.log("wallet,",wallet);
-            console.log("wallet,",!wallet);
+            let wallet=await walletSchema.findOne({user:userId});
 
             if(!wallet){
                 wallet=new walletSchema({
@@ -16,12 +14,11 @@ module.exports={
                     walletBalance:amount
                 })
             }else{
-                console.log(typeof wallet.walletBalance,"????");
                 wallet.walletBalance+=amount;
             }
 
             await wallet.save();
-            resolve(wallet)
+            resolve(wallet);
         })
     },
 
@@ -33,14 +30,14 @@ module.exports={
             if(wallet.walletBalance>=amount){
                 wallet.walletBalance-=amount;
             }else{
-                resolve(false) 
+                resolve(false) ;
             }
 
-            await wallet.save()
-
-            resolve(true)
+            await wallet.save();
+            resolve(true);
         })
     },
+
 
     walletBalance:(userId)=>{
         return new Promise(async (resolve,reject)=>{
@@ -53,15 +50,15 @@ module.exports={
                }
             ])
             .then((balance)=>{
-                console.log("balance walletBalanceWalletHelper",balance);
                 if(!balance.length){
-                    resolve(0)
+                    resolve(0);
                 }else{
-                    resolve(balance[0].walletBalance)
+                    resolve(balance[0].walletBalance);
                 }
             })
         })
     }
+
 }
 
 

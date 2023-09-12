@@ -25,11 +25,10 @@ let wishListCount;
 
 const landingPage = async (req, res, next) => {
     try {
-        let latestProducts = await productHelper.getRecentProducts()
-        let featuredProducts = await productHelper.getFeaturedProducts()
-        res.render('user/index', { loginStatus:req.session.user, latestProducts, featuredProducts })
+        let latestProducts = await productHelper.getRecentProducts();
+        let featuredProducts = await productHelper.getFeaturedProducts();
+        res.render('user/index', { loginStatus: req.session.user, latestProducts, featuredProducts })
     } catch (error) {
-        // console.log(error);next
         return next(error)
     }
 }
@@ -62,7 +61,7 @@ const userHome = async (req, res, next) => {
             featuredProducts[i].product_price = currencyFormat(featuredProducts[i].product_price)
         }
 
-        res.status(200).render('user/index', { loginStatus:req.session.user, cartCount, wishListCount, latestProducts, featuredProducts })
+        res.status(200).render('user/index', { loginStatus: req.session.user, cartCount, wishListCount, latestProducts, featuredProducts })
     } catch (error) {
         return next(error)
     }
@@ -98,7 +97,6 @@ const userLoginPost = async (req, res, next) => {
     await userHelper.doLogin(req.body)
         .then((response) => {
             if (response.loggedIn) {
-                console.log("hiii");
                 req.session.user = response.user;
                 return res.status(202).json({ error: false, message: response.logginMessage })
             } else {
@@ -106,8 +104,6 @@ const userLoginPost = async (req, res, next) => {
             }
         })
         .catch((error) => {
-            console.log("helooooo");
-            console.log(error);
             return next(error)
         })
 }
@@ -124,16 +120,13 @@ const otpSendingForgot = async (req, res, next) => {
         await userSchema.findOne({ phone: find.phone })
             .then(async (userData) => {
                 if (userData) {
-                    console.log(userData + "find mobile no from db");
                     await twilio.sentOtp(find.phone);
                     res.render('user/otp-fill-forgotpswd');
                 } else {
-                    console.log("mobile not found");
                     res.redirect('/user-signup')
                 }
             })
             .catch((error) => {
-                console.log(error + "ERROR");
                 res.redirect('/user-signup')
             })
     } catch (error) {
@@ -160,8 +153,7 @@ const resetPassword = async (req, res, next) => {
     try {
         const phone = req.session.mobile;
         let newPassword = req.body.confirmPassword;
-        let user = await userHelper.changePassword(newPassword, phone);
-        console.log("resetted", user, "resetted");
+        await userHelper.changePassword(newPassword, phone);
         res.redirect('/user-login')
     } catch (error) {
         return next(error);
@@ -172,7 +164,7 @@ const resetPassword = async (req, res, next) => {
 
 // otp login page
 const otpUser = (req, res) => {
-    res.render('user/otp-form', { loginStatus:req.session.user })
+    res.render('user/otp-form', { loginStatus: req.session.user })
 }
 
 // otp sending in login process
@@ -182,23 +174,19 @@ const otpSending = async (req, res) => {
     await userSchema.findOne({ phone: find.phone })
         .then(async (userData) => {
             if (userData) {
-                console.log(userData + "find mobile no from db");
                 req.session.tempUser = userData;
                 await twilio.sentOtp(find.phone);
                 res.render('user/otp-fill');
             } else {
-                console.log("mobile not found");
                 res.redirect('/user-signup')
             }
         })
         .catch((error) => {
-            console.log(error + "ERROR");
             res.redirect('/user-signup')
         })
 }
 
 // otp verification process
-
 const otpVerifying = async (req, res, next) => {
     const phone = req.session.mobile;
     const otp = req.body.otp;
@@ -208,7 +196,6 @@ const otpVerifying = async (req, res, next) => {
                 req.session.user = req.session.tempUser;
                 res.redirect('/')
             } else {
-                console.log("invalid otp");
                 res.redirect('/user-signup')
             }
         }).catch((error) => {
@@ -229,20 +216,18 @@ const getWallet = async (req, res, next) => {
 
 const userLogout = async (req, res, next) => {
     try {
-        req.session.user = null;  
+        req.session.user = null;
         res.redirect('/')
     } catch (error) {
         return next(error);
     }
 }
 
-
-
 const profile = async (req, res, next) => {
     try {
         let userId = req.session.user._id;
         let addresses = await addressHelper.findAddresses(userId);
-        res.render('user/profile', { loginStatus:req.session.user, addresses, cartCount, wishListCount })
+        res.render('user/profile', { loginStatus: req.session.user, addresses, cartCount, wishListCount })
     } catch (error) {
         return next(error);
     }
@@ -277,7 +262,7 @@ const viewProducts = async (req, res, next) => {
                 products[i].product_price = Number(products[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
             }
 
-            res.render('user/view-products', { product: products, loginStatus:req.session.user, cartCount, wishListCount })
+            res.render('user/view-products', { product: products, loginStatus: req.session.user, cartCount, wishListCount })
         } else {
             let filterData = JSON.parse(req.query.filterData);
             products = await productHelper.filterProduct(filterData)
@@ -293,7 +278,7 @@ const viewProducts = async (req, res, next) => {
                 }
                 products[i].product_price = Number(products[i].product_price).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
             }
-            res.json({ product: products, loginStatus:req.session.user, cartCount, wishListCount })
+            res.json({ product: products, loginStatus: req.session.user, cartCount, wishListCount })
         }
     } catch (error) {
         return next(error);
@@ -309,7 +294,7 @@ const viewAProduct = async (req, res, next) => {
             product.isInCart = isInCart;
         }
         product.product_price = currencyFormat(product.product_price)
-        res.render('user/quick-view', { product, cartCount, loginStatus:req.session.user, wishListCount });
+        res.render('user/quick-view', { product, cartCount, loginStatus: req.session.user, wishListCount });
     } catch (error) {
         return next(error);
     }
@@ -319,7 +304,7 @@ const wishlist = async (req, res, next) => {
     try {
         let userId = req.session.user._id;
         let wishList = await wishListHelper.getAllWishListItems(userId);
-        res.render('user/wishlist', { loginStatus:req.session.user, wishList, cartCount, wishListCount })
+        res.render('user/wishlist', { loginStatus: req.session.user, wishList, cartCount, wishListCount })
     } catch (error) {
         return next(error);
     }
@@ -329,7 +314,7 @@ const addToWishList = async (req, res, next) => {
     try {
         let productId = req.body.productId;
         let user = req.session.user._id;
-        let result = wishListHelper.addItemToWishList(productId, user)
+        wishListHelper.addItemToWishList(productId, user)
         res.json({ message: `item added to wishList ${productId}` })
     } catch (error) {
         return next(error);
@@ -357,7 +342,7 @@ const cart = async (req, res, next) => {
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
 
         totalandSubTotal = currencyFormatWithFractional(totalandSubTotal)
-        res.render('user/cart', { loginStatus:req.session.user, cartItems, cartCount, totalAmount: totalandSubTotal, wishListCount })
+        res.render('user/cart', { loginStatus: req.session.user, cartItems, cartCount, totalAmount: totalandSubTotal, wishListCount })
     } catch (error) {
         return next(error);
     }
@@ -448,7 +433,7 @@ const editAddress = async (req, res, next) => {
 
 const editAddressPost = async (req, res, next) => {
     try {
-        let addressUpdated = await addressHelper.editAnAddress(req.body);
+        await addressHelper.editAnAddress(req.body);
         res.json({ message: "address updated" })
     } catch (error) {
         return next(error);
@@ -481,7 +466,7 @@ const checkout = async (req, res, next) => {     //to view details and price pro
 
         }
 
-        res.render('user/checkout', { loginStatus:req.session.user, cartCount, wishListCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
+        res.render('user/checkout', { loginStatus: req.session.user, cartCount, wishListCount, walletBalance, user, totalAmount: totalAmount, cartItems, address: userAddress })         //loginstatus contain user login info
     } catch (error) {
         return next(error);
     }
@@ -501,7 +486,7 @@ const applyCoupon = async (req, res, next) => {
 
 const placeOrder = async (req, res, next) => {
     try {
-        let userId = req.body.userId
+        let userId = req.body.userId;
         let cartItems = await cartHelper.getAllCartItems(userId);
         let coupon = await couponSchema.find({ user: userId })
 
@@ -520,7 +505,7 @@ const placeOrder = async (req, res, next) => {
         const totalAmount = await cartHelper.totalAmount(userId); // instead find cart using user id and take total amound from that 
 
         if (req.body.payment == 'COD') {
-            const placeOrder = await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
+            await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
                 .then(async (orderDetails) => {
                     await productHelper.decreaseStock(cartItems);
                     await cartHelper.clearCart(userId);
@@ -538,30 +523,17 @@ const placeOrder = async (req, res, next) => {
                             res.json({ paymentMethod: 'razorpay', orderDetails, razorpayOrderDetails, razorpaykeyId: process.env.RAZORPAY_KEY_ID })
                         })
                 })
-        } else if (req.body.payment == 'paypal') {
-            console.log("hiiiiiiiiiiiiiiiiiiiiiiheloooooooooooooooooooo");
+        }
+        else if (req.body.payment == 'paypal') {
             await orderHepler.orderPlacing(req.body, totalAmount, cartItems)
                 .then(async (orderDetails) => {
-                    console.log("after order upload");
                     await paypal.paypayPay()
-                    .then(async(paypalOrderDetails)=>{
-                        await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
-                        await productHelper.decreaseStock(cartItems);
-                        await cartHelper.clearCart(userId);
-                        res.json({ paymentMethod: 'paypal', orderDetails, paypalOrderDetails })
-                    })
-                 
-                    
-
-                    console.log("after configure");
-
-                    // await razorpay.razorpayOrderCreate(orderDetails._id, orderDetails.totalAmount)
-                    //     .then(async (razorpayOrderDetails) => {
-                    //         await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
-                    //         await productHelper.decreaseStock(cartItems);
-                    //         await cartHelper.clearCart(userId);
-                    //         res.json({ paymentMethod: 'razorpay', orderDetails, razorpayOrderDetails, razorpaykeyId: process.env.RAZORPAY_KEY_ID })
-                    //     })
+                        .then(async (paypalOrderDetails) => {
+                            await orderHepler.changeOrderStatus(orderDetails._id, 'confirmed');
+                            await productHelper.decreaseStock(cartItems);
+                            await cartHelper.clearCart(userId);
+                            res.json({ paymentMethod: 'paypal', orderDetails, paypalOrderDetails })
+                        })
                 })
         }
         else if (req.body.payment == 'wallet') {
@@ -579,7 +551,6 @@ const placeOrder = async (req, res, next) => {
             }
         }
     } catch (error) {
-        // console.log(error);
         return next(error)
     }
 }
@@ -607,10 +578,9 @@ const verifyPayment = async (req, res, next) => {
 
 const orderSuccess = (req, res, next) => {
     try {
-        res.render('user/order-success', { loginStatus:req.session.user })
+        res.render('user/order-success', { loginStatus: req.session.user })
     } catch (error) {
-        // console.log(error);
-        return next(error)
+        return next(error);
     }
 }
 
@@ -623,11 +593,9 @@ const orders = async (req, res, next) => {
             userOrderDetails[i].orderDate = dateFormat(userOrderDetails[i].orderDate);
             userOrderDetails[i].totalAmount = currencyFormat(userOrderDetails[i].totalAmount);
         }
-        console.log("orders", userOrderDetails);
-
-        res.render('user/orders-user', { userOrderDetails, loginStatus:req.session.user, cartCount, wishListCount })
+        res.render('user/orders-user', { userOrderDetails, loginStatus: req.session.user, cartCount, wishListCount })
     } catch (error) {
-        return next(error)
+        return next(error);
     }
 }
 
@@ -636,9 +604,9 @@ const productOrderDetails = async (req, res, next) => {
         const orderId = req.params.id;
         let orderDetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
         let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
-        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus:req.session.user })
+        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus: req.session.user });
     } catch (error) {
-        return next(error)
+        return next(error);
     }
 }
 
@@ -646,11 +614,10 @@ const cancelOrder = async (req, res, next) => {
     const userId = req.body.userId;
     const orderId = req.body.orderId;
     try {
-        const cancelled = await orderHepler.cancelOrder(userId, orderId)
-        res.status(200).json({ isCancelled: true, message: "order canceled successfully" })
+        await orderHepler.cancelOrder(userId, orderId);
+        res.status(200).json({ isCancelled: true, message: "order canceled successfully" });
     } catch (error) {
-        // console.log(error);
-        return next(error)
+        return next(error);
     }
 }
 
@@ -658,15 +625,15 @@ const returnOrder = async (req, res, next) => {
     const userId = req.body.userId;
     const orderId = req.body.orderId;
     try {
-        const returnedResponse = await orderHepler.returnOrder(userId, orderId)
-        res.status(200).json({ isreturned: 'return pending', message: "order returned Process Started" })
+        await orderHepler.returnOrder(userId, orderId);
+        res.status(200).json({ isreturned: 'return pending', message: "order returned Process Started" });
     } catch (error) {
-        return next(error)
+        return next(error);
     }
 }
 
 const contact = async (req, res) => {
-    res.render('user/contact', { loginStatus :req.session.user, cartCount, wishListCount })
+    res.render('user/contact', { loginStatus: req.session.user, cartCount, wishListCount });
 }
 
 const searchProduct = async (req, res, next) => {
@@ -674,9 +641,9 @@ const searchProduct = async (req, res, next) => {
     try {
         let searchResult = await productSchema.find({ product_name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
         searchResult = searchResult.slice(0, 5);
-        res.send({ searchResult })
+        res.send({ searchResult });
     } catch (error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -686,12 +653,13 @@ const errorPage = (req, res) => {
 
 // convert a number to a indian currency format
 function currencyFormat(amount) {
-    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
+    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
 }
 
 function currencyFormatWithFractional(amount) {
-    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR' })
+    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR' });
 }
+
 
 module.exports = {
     landingPage,
@@ -705,7 +673,6 @@ module.exports = {
     otpSendingForgot,
     otpVerifyingForgot,
     resetPassword,
-
     otpUser,
     otpSending,
     otpVerifying,
@@ -713,11 +680,9 @@ module.exports = {
     userLogout,
     viewProducts,
     viewAProduct,
-
     wishlist,
     addToWishList,
     removeFromWishList,
-
     cart,
     addToCart,
     incDecQuantity,
@@ -732,15 +697,11 @@ module.exports = {
     placeOrder,
     verifyPayment,
     orderSuccess,
-
     orders,
     productOrderDetails,
-
     cancelOrder,
     returnOrder,
     contact,
-
     searchProduct,
-
     errorPage,
 }

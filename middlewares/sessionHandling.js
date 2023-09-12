@@ -1,4 +1,3 @@
-
 const userAuthenticationCheck = async (req, res, next) =>{
     try {
         if(req.session.user && req.cookies.user_sid){
@@ -24,6 +23,7 @@ const userChecking = async (req, res, next) =>{
     }
 }
 
+
 const adminAuthenticationChecking=async (req,res,next)=>{
     try{
         if(req.session.admin){
@@ -36,6 +36,7 @@ const adminAuthenticationChecking=async (req,res,next)=>{
     }
 }
 
+
 const adminChecking=(req,res,next)=>{
     try {
         if(req.session.admin){
@@ -47,6 +48,7 @@ const adminChecking=(req,res,next)=>{
         res.status(500).redirect('/error')
     }
 }
+
 
 module.exports = {
     userAuthenticationCheck,

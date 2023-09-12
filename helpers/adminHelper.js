@@ -1,11 +1,8 @@
-
 const userSchema = require('../models/userModel');
 const productSchema = require('../models/productModel');
 const orderSchema = require('../models/orderModel')
 const categorySchema = require('../models/category')
 const adminSchema = require('../models/adminModel')
-
-
 
 
 module.exports = {
@@ -18,36 +15,33 @@ module.exports = {
                     { password: adminPassword }
                 ]
             });
-            console.log(isAdminExist, "isAdminExistisAdminExist");
-            resolve(isAdminExist)
+            resolve(isAdminExist);
         })
     },
+
 
     findUsers: () => {
         return new Promise(async (resolve, reject) => {
             await userSchema.find()
                 .then((response) => {
-                    resolve(response)
+                    resolve(response);
                 }).catch((error) => {
                     console.log(error);
-                    reject(error)
+                    reject(error);
                 })
         })
     },
 
-    blockOrUnBlockUser: (userId) => {
 
+    blockOrUnBlockUser: (userId) => {
         return new Promise(async (resolve, reject) => {
             const user = await userSchema.findById(userId);
-            // if(user.isActive){
-            //     req.session.user=false
-            // }
-            user.isActive = !user.isActive
-            await user.save()
-
-            resolve(user)
+            user.isActive = !user.isActive;
+            await user.save();
+            resolve(user);
         })
     },
+
 
     findAUser: (userId) => {
         return new Promise(async (resolve, reject) => {
@@ -58,7 +52,6 @@ module.exports = {
                 .catch((error) => {
                     console.log(error);
                 })
-
         })
     },
 
@@ -83,9 +76,6 @@ module.exports = {
                 response.totalRevenue = 0
             }
             response.totalRevenue = totalRevenue[0]?.revenue;
-
-
-
 
             monthlyRevenue = await orderSchema.aggregate([
                 {
@@ -114,15 +104,13 @@ module.exports = {
                 }
             ])
             response.totalProducts = totalProducts[0]?.total;
-
             response.totalOrders = await orderSchema.find({ orderStatus: 'confirmed' }).count();
-
             response.numberOfCategories = await categorySchema.find({}).count();
 
-            console.log(response);
             resolve(response)
         })
     },
+
 
     getChartDetails: () => {
         return new Promise(async (resolve, reject) => {
@@ -138,8 +126,8 @@ module.exports = {
                 }
             ])
 
-            let monthlyData = []
-            let dailyData = []
+            let monthlyData = [];
+            let dailyData = [];
 
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -163,36 +151,34 @@ module.exports = {
 
             for (let i = 0; i < months.length; i++) {
                 if (monthlyMap.has(months[i])) {
-                    monthlyData.push(monthlyMap.get(months[i]))
+                    monthlyData.push(monthlyMap.get(months[i]));
                 } else {
-                    monthlyData.push(0)
+                    monthlyData.push(0);
                 }
             }
 
             //taking the count of orders in each day of a week
             orders.forEach((order) => {
                 const date = new Date(order.orderDate);
-                const day = date.toLocaleDateString('en-US', { weekday: 'long' })
+                const day = date.toLocaleDateString('en-US', { weekday: 'long' });
 
                 if (!dailyMap.has(day)) {
-                    dailyMap.set(day, 1)
+                    dailyMap.set(day, 1);
                 } else {
-                    dailyMap.set(day, dailyMap.get(day) + 1)
+                    dailyMap.set(day, dailyMap.get(day) + 1);
                 }
             })
 
             for (let i = 0; i < days.length; i++) {
                 if (dailyMap.has(days[i])) {
-                    dailyData.push(dailyMap.get(days[i]))
+                    dailyData.push(dailyMap.get(days[i]));
                 } else {
-                    dailyData.push(0)
+                    dailyData.push(0);
                 }
             }
 
-            resolve({ monthlyData: monthlyData, dailyData: dailyData })
-
+            resolve({ monthlyData: monthlyData, dailyData: dailyData });
         })
     }
-
 
 }

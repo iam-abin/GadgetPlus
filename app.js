@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
 const logger = require("morgan");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
@@ -34,7 +33,7 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
-// // db connection
+// db connection
 connectDb();
 
 

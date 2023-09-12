@@ -1,6 +1,8 @@
 const mongoose=require('mongoose');
 
+
 const productSchema=new mongoose.Schema({
+
     product_name:{
         type:String,
         required:true,
@@ -14,7 +16,6 @@ const productSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"categories",
         required:true,
-        // unique:true,
     },
     product_price:{
         type:Number,
@@ -41,10 +42,9 @@ const productSchema=new mongoose.Schema({
         required:true,
         unique:true
     }
-},
-{
+},{
     timestamps:true,
-})
+});
 
 
 module.exports=mongoose.model('product',productSchema);

@@ -1,5 +1,6 @@
 const paypal = require('paypal-rest-sdk');
 
+
 paypal.configure({
     'mode': 'sandbox', //sandbox or live 
     'client_id': process.env.PAYPAL_CLIENT_ID, // please provide your client id here 
@@ -8,6 +9,7 @@ paypal.configure({
 
 
 module.exports = {
+
     paypayPay: () => {
         return new Promise((resolve, reject) => {
 
@@ -30,14 +32,6 @@ module.exports = {
             };
 
             paypal.payment.create(create_payment_json, function (error, payment) {
-                // if (error) {
-                //     throw error;
-                // } else {
-                //     console.log("Create Payment Response");
-                //     console.log(payment);
-                //     resolve(payment);
-                // }
-
                 if (error) {
                     throw error;
                 } else {
@@ -52,7 +46,7 @@ module.exports = {
                 }
             });
 
-
         })
     }
+
 }

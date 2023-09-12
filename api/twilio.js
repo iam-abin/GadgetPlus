@@ -8,8 +8,8 @@ const client = require('twilio')(accountSid, authToken);
 
 
 module.exports = {
+
     sentOtp: (mobileNo) => {
-        console.log(mobileNo);
         return new Promise((resolve, reject) => {
             client.verify.v2.services(serviceSid)
                 .verifications
@@ -18,13 +18,13 @@ module.exports = {
                     channel: 'sms'
                 })
                 .then((verification) => {
-                    console.log(verification);
-                    resolve(verification.sid)
+                    resolve(verification.sid);
                 }).catch((error) => {
                     console.log(error);
                 })
         })
     },
+
 
     verifyOtp: (mobileNo, otp) => {
         return new Promise((resolve, reject) => {
@@ -35,11 +35,11 @@ module.exports = {
                     code: otp
                 })
                 .then((verification) => {
-                    console.log(verification.status);
-                    resolve(verification.valid)
+                    resolve(verification.valid);
                 }).catch((error) => {
                     console.log(error);
                 });
         })
     }
+
 }

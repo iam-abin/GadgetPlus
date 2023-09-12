@@ -1,6 +1,8 @@
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
+
 
 const cartModel=mongoose.Schema({
+
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"users",
@@ -28,16 +30,10 @@ const cartModel=mongoose.Schema({
         type:Number,
         required:true
     },
-    
-    // status:{
-    //     type:Boolean,
-    //     default:true
-    // }
-},
-{
+
+},{
     timestamps:true
-}
-)
+});
 
 
-module.exports=new mongoose.model('Cart',cartModel)
+module.exports=new mongoose.model('Cart',cartModel);
