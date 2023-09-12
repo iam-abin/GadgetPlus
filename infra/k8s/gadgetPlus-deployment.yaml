@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gadgetplus-deployment
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: gadgetplus
+  template:
+    metadata:
+      labels:
+        app: gadgetplus
+    spec:
+      containers:
+        - name: gadgetplus
+          image: abinv/gadgetplus
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: gadgetplus-service
+spec: 
+  selector: 
+    app: gadgetplus
+  ports:
+    - name: gadgetplus
+      protocol: TCP
+      port: 4000
+      targetPort: 4000
