@@ -11,7 +11,7 @@ module.exports={
             if(!wallet){
                 wallet=new walletSchema({
                     user:userId,
-                    walletBalance:amount
+                    walletBalance: amount 
                 })
             }else{
                 wallet.walletBalance+=amount;
@@ -26,6 +26,10 @@ module.exports={
     payUsingWallet:(userId,amount)=>{
         return new Promise(async (resolve,reject)=>{
             let wallet=await walletSchema.findOne({user:userId});
+
+            if(!wallet){
+                return resolve(false)
+            }
 
             if(wallet.walletBalance>=amount){
                 wallet.walletBalance-=amount;

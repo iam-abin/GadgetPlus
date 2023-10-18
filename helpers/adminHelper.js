@@ -105,7 +105,7 @@ module.exports = {
             ])
             response.totalProducts = totalProducts[0]?.total;
             response.totalOrders = await orderSchema.find({ orderStatus: 'confirmed' }).count();
-            response.numberOfCategories = await categorySchema.find({}).count();
+            response.numberOfCategories = await categorySchema.find({"status": true}).count();
 
             resolve(response)
         })
