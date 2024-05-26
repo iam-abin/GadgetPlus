@@ -96,9 +96,12 @@
                     </span> <br>
                     <small class="text-muted ml-4">Order ID: <%= orderDetails._id %></small>
                 </div>
-                <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
-                    <button class="float-right mr-5" id="invoice">Download Invoice</button>
-                </div>
+                <% if (orderDetails.orderStatus =="delivered") { %>
+                    <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
+                        <button class="float-right mr-5" id="invoice">Download Invoice</button>
+                    </div>
+                 <% } %> 
+                 
             </div>
 
         </header> <!-- card-header end// -->
@@ -181,13 +184,13 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <%= productDetails[i].orderedPrice[i] %>
+                                            <%= formatCurrency(productDetails[i]?.orderedPrice[i]) %>
                                         </td>
                                         <td>
                                             <%= productDetails[i].orderedItems.quantity %>
                                         </td>
                                         <td class="text-end">
-                                            <%= productDetails[i].orderedProduct.product_price*productDetails[i].orderedItems.quantity
+                                            <%= formatCurrency((productDetails[i]?.orderedProduct?.product_price)*(productDetails[i].orderedItems.quantity))
                                         %>
                                         </td>
                                     </tr>
@@ -208,7 +211,7 @@
                                                     <dl class="dlist">
                                                         <dt>Grand total:</dt>
                                                         <dd> <b class="h5">
-                                                                <%= orderDetails.totalAmount %>
+                                                                <%= formatCurrency(orderDetails.totalAmount) %>
                                                             </b> </dd>
                                                     </dl>
                                                     <dl class="dlist">
@@ -223,6 +226,7 @@
                                                       <% } %>
                                                         
 
+                                                      
 
                                                     <% if (orderDetails.orderStatus == 'delivered') { %>
                                                         <button class="float-left ml-5 " style="background-color: rgb(60, 109, 182);" onclick="returnOrder('<%= orderDetails.user %>','<%= orderDetails._id %>')">Return order</button>

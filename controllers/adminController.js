@@ -9,6 +9,10 @@ const walletHelper = require("../helpers/walletHelper");
 var easyinvoice = require("easyinvoice");
 const csvParser = require("json-2-csv");
 
+const { formatDate } = require("../utils/date-format");
+const { currencyFormatWithoutDecimal } = require("../utils/currency-format");
+
+
 const adminLogin = async (req, res, next) => {
 	try {
 		res.render("admin/adminLogin", {
@@ -46,10 +50,10 @@ const adminHome = async (req, res, next) => {
 		const dashboardDetails = await adminHelper.getDashboardDetails();
 		console.log(dashboardDetails, "dashboardDetails");
 		dashboardDetails.totalRevenue = dashboardDetails.totalRevenue
-			? currencyFormat(dashboardDetails.totalRevenue)
+			? currencyFormatWithoutDecimal(dashboardDetails.totalRevenue)
 			: 0;
 		dashboardDetails.monthlyRevenue = dashboardDetails.monthlyRevenue
-			? currencyFormat(dashboardDetails.monthlyRevenue)
+			? currencyFormatWithoutDecimal(dashboardDetails.monthlyRevenue)
 			: 0;
 
 		res.render("admin/admin-home", {
@@ -67,7 +71,7 @@ const salesReportPage = async (req, res, next) => {
 	try {
 		const sales = await orderHelper.getAllDeliveredOrders();
 		sales.forEach((order) => {
-			order.orderDate = dateFormat(order.orderDate);
+			order.orderDate = formatDate(order.orderDate);
 		});
 		res.render("admin/sales-report", {
 			sales,
@@ -90,8 +94,8 @@ const salesReport = async (req, res, next) => {
 			endDate
 		);
 		for (let i = 0; i < salesReport.length; i++) {
-			salesReport[i].orderDate = dateFormat(salesReport[i].orderDate);
-			salesReport[i].totalAmount = currencyFormat(
+			salesReport[i].orderDate = formatDate(salesReport[i].orderDate);
+			salesReport[i].totalAmount = currencyFormatWithoutDecimal(
 				salesReport[i].totalAmount
 			);
 		}
@@ -146,10 +150,10 @@ const productList = (req, res, next) => {
 		.getAllProductsWithLookup()
 		.then((responseProduct) => {
 			for (let i = 0; i < responseProduct.length; i++) {
-				responseProduct[i].product_price = currencyFormat(
+				responseProduct[i].product_price = currencyFormatWithoutDecimal(
 					responseProduct[i].product_price
 				);
-				responseProduct[i].product_discount = currencyFormat(
+				responseProduct[i].product_discount = currencyFormatWithoutDecimal(
 					responseProduct[i].product_discount
 				);
 			}
@@ -164,7 +168,7 @@ const productList = (req, res, next) => {
 		});
 };
 
-// To get add product list and product page.  
+// To get add product list and product page.
 const addProduct = async (req, res, next) => {
 	categoryHelper
 		.getAllcategory()
@@ -179,9 +183,9 @@ const addProduct = async (req, res, next) => {
 		});
 };
 
-const postAddProduct = async(req, res, next) => {
+const postAddProduct = async (req, res, next) => {
 	const categories = await categoryHelper.getAllcategory();
-	if(!categories){
+	if (!categories) {
 		return next("Add atleast one category");
 	}
 
@@ -343,8 +347,8 @@ const productOrders = async (req, res, next) => {
 	try {
 		let orders = await orderHelper.getAllOrders();
 		for (let i = 0; i < orders.length; i++) {
-			orders[i].totalAmount = currencyFormat(orders[i].totalAmount);
-			orders[i].orderDate = dateFormat(orders[i].orderDate);
+			orders[i].totalAmount = currencyFormatWithoutDecimal(orders[i].totalAmount);
+			orders[i].orderDate = formatDate(orders[i].orderDate);
 		}
 		res.render("admin/orders", { layout: "layouts/adminLayout", orders });
 	} catch (error) {
@@ -387,21 +391,21 @@ const productOrderDetails = async (req, res, next) => {
 		); //got ordered products details
 
 		for (let i = 0; i < orderdetails.length; i++) {
-			orderdetails[i].discount = currencyFormat(orderdetails[i].discount);
+			orderdetails[i].discount = currencyFormatWithoutDecimal(orderdetails[i].discount);
 		}
 
 		for (let i = 0; i < productDetails.length; i++) {
 			productDetails[i].orderedProduct.totalPriceOfOrderedProducts =
-				currencyFormat(
+				currencyFormatWithoutDecimal(
 					productDetails[i].orderedProduct.product_price *
 						productDetails[i].orderedItems.quantity
 				);
-			productDetails[i].orderedProduct.product_price = currencyFormat(
+			productDetails[i].orderedProduct.product_price = currencyFormatWithoutDecimal(
 				productDetails[i].orderedProduct.product_price
 			);
 		}
 
-		orderdetails.totalAmount = currencyFormat(orderdetails.totalAmount);
+		orderdetails.totalAmount = currencyFormatWithoutDecimal(orderdetails.totalAmount);
 		res.render("admin/order-details", {
 			orderdetails,
 			productDetails,
@@ -421,8 +425,8 @@ const coupons = async (req, res, next) => {
 		let allCoupons = await coupenHelper.getAllCoupons();
 
 		for (let i = 0; i < allCoupons.length; i++) {
-			allCoupons[i].discount = currencyFormat(allCoupons[i].discount);
-			allCoupons[i].expiryDate = dateFormat(allCoupons[i].expiryDate);
+			allCoupons[i].discount = currencyFormatWithoutDecimal(allCoupons[i].discount);
+			allCoupons[i].expiryDate = formatDate(allCoupons[i].expiryDate);
 		}
 		res.render("admin/coupon", {
 			coupons: allCoupons,
@@ -477,10 +481,10 @@ const userProfile = async (req, res, next) => {
 		req.params.id
 	);
 	for (let i = 0; i < userOrderDetails.length; i++) {
-		userOrderDetails[i].totalAmount = currencyFormat(
+		userOrderDetails[i].totalAmount = currencyFormatWithoutDecimal(
 			userOrderDetails[i].totalAmount
 		);
-		userOrderDetails[i].orderDate = dateFormat(
+		userOrderDetails[i].orderDate = formatDate(
 			userOrderDetails[i].orderDate
 		);
 	}
@@ -502,26 +506,6 @@ const adminLogout = (req, res) => {
 	req.session.admin = false;
 	res.redirect("/admin");
 };
-
-function dateFormat(date) {
-	return date.toISOString().slice(0, 10);
-}
-
-// convert a number to a indian currency format
-function currencyFormat(amount) {
-	return Number(amount).toLocaleString("en-in", {
-		style: "currency",
-		currency: "INR",
-		minimumFractionDigits: 0,
-	});
-}
-
-function currencyFormatWithFractional(amount) {
-	return Number(amount).toLocaleString("en-in", {
-		style: "currency",
-		currency: "INR",
-	});
-}
 
 module.exports = {
 	adminLogin,
@@ -553,5 +537,5 @@ module.exports = {
 	editCouponPost,
 	deleteCoupon,
 	userProfile,
-	dateFormat,
+	formatDate,
 };
