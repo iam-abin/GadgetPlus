@@ -23,6 +23,7 @@ module.exports = {
             }).then((result) => {
                 resolve(result);
             }).catch((error) => {
+                reject(error);
                 console.log(error);
             })
         })

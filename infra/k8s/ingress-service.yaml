@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
-    - host: gadgetplus.dev
+    - host: gadgetplus.abi
       http: 
         paths: 
           - path: /?(.*)

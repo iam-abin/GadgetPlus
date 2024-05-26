@@ -164,6 +164,7 @@ const productList = (req, res, next) => {
 		});
 };
 
+// To get add product list and product page.  
 const addProduct = async (req, res, next) => {
 	categoryHelper
 		.getAllcategory()
@@ -178,11 +179,16 @@ const addProduct = async (req, res, next) => {
 		});
 };
 
-const postAddProduct = (req, res, next) => {
+const postAddProduct = async(req, res, next) => {
+	const categories = await categoryHelper.getAllcategory();
+	if(!categories){
+		return next("Add atleast one category");
+	}
+
 	productHelper
 		.addProductToDb(req.body, req.files)
 		.then((response) => {
-			res.status(500).redirect("/admin/product");
+			res.status(201).redirect("/admin/product");
 		})
 		.catch((error) => {
 			return next(error);

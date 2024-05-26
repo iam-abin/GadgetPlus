@@ -19,54 +19,54 @@
             <% if (!categories.length) { %>
               <h1>No Coupons Are Added Yet</h1>
               <% } else { %>
-            <table class="table table-hover" id="categoryTable">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% for( let i=0; i < categories.length; i++ ) { %>
+                <table class="table table-hover" id="categoryTable">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for( let i=0; i < categories.length; i++ ) { %>
 
-                  <tr>
-                    <td>
-                      <%= i+1 %>
-                    </td>
-                    <td><b>
-                        <%= categories[i].name %>
-                      </b></td>
-                    <td>
-                      <%= categories[i].description %>
-                    </td>
-                    <td width="20%">
-                      <button type="button" onclick="getCategory('<%= categories[i]._id %>')" class="btn btn-primary"
-                        style="height: 35px" data-bs-whatever="@getbootstrap">
-                        Edit
-                      </button>
-
-                      <% if (categories[i].status) { %>
-                        <button id="delete-category<%= categories[i]._id %>"
-                          class="btn btn-sm btn-success rounded font-sm mt-15"
-                          onclick="deleteACategory('<%= categories[i]._id %>') ">
-                          Listed
-                        </button>
-                        <% } else { %>
-                          <button id="delete-category<%= categories[i]._id %>"
-                            class="btn btn-sm btn-danger rounded font-sm mt-15"
-                            onclick="deleteACategory('<%= categories[i]._id %>') ">
-                            Unlisted
+                      <tr>
+                        <td>
+                          <%= i+1 %>
+                        </td>
+                        <td><b>
+                            <%= categories[i].name %>
+                          </b></td>
+                        <td>
+                          <%= categories[i].description %>
+                        </td>
+                        <td width="20%">
+                          <button type="button" onclick="getCategory('<%= categories[i]._id %>')"
+                            class="btn btn-primary" style="height: 35px" data-bs-whatever="@getbootstrap">
+                            Edit
                           </button>
 
-                          <% } %>
-                    </td>
-                  </tr>
-                  <% } %>
-              </tbody>
-            </table>
-            <% } %>
+                          <% if (categories[i].status) { %>
+                            <button id="delete-category<%= categories[i]._id %>"
+                              class="btn btn-sm btn-success rounded font-sm mt-15"
+                              onclick="deleteACategory('<%= categories[i]._id %>') ">
+                              Listed
+                            </button>
+                            <% } else { %>
+                              <button id="delete-category<%= categories[i]._id %>"
+                                class="btn btn-sm btn-danger rounded font-sm mt-15"
+                                onclick="deleteACategory('<%= categories[i]._id %>') ">
+                                Unlisted
+                              </button>
+
+                              <% } %>
+                        </td>
+                      </tr>
+                      <% } %>
+                  </tbody>
+                </table>
+                <% } %>
           </div>
         </div>
         <!-- .col// -->
@@ -127,7 +127,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form  id="editProductCategoryForm">
+        <form id="editProductCategoryForm">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Category Name</label>
             <input type="text" class="form-control" id="editCategoryName" name="categoryName" />
@@ -247,43 +247,42 @@
     console.log(categoryDescription);
     console.log("helloGetelem");
 
-    let data={
-      categoryName:categoryName,
-      categoryDescription:categoryDescription
+    let data = {
+      categoryName: categoryName,
+      categoryDescription: categoryDescription
     }
 
     $.ajax({
-      url:'/admin/add-productCategory',
+      url: '/admin/add-productCategory',
       method: 'post',
       data: data
     })
-    .then((res)=>{
-      if(res){
-        document.getElementById('categoryError').classList.add('d-none');
-        // document.getElementById("exampleModal").parentNode.removeChild(modal);
-        Toastify({
-              text: `category added successfully`,
-              duration: 3000,
-              gravity: "top", // `top` or `bottom`
-              position: "right", // `left`, `center` or `right`
-              stopOnFocus: true, // Prevents dismissing of toast on hover
-              style: {
-                background: "green",
-              },
-            }).showToast();
+      .then((res) => {
+        if (res) {
+          document.getElementById('categoryError').classList.add('d-none');
+          $('#exampleModal').modal('hide');
+          Toastify({
+            text: `category added successfully`,
+            duration: 3000,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "green",
+            },
+          }).showToast();
 
-        
-      }else{
-        document.getElementById('categoryError').classList.remove('d-none')
-        console.log("error");
-      }
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
+        } else {
+          document.getElementById('categoryError').classList.remove('d-none')
+          console.log("error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   })
 
-//Edit category
+  //Edit category
 
   document.getElementById('editProductCategoryForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -294,10 +293,10 @@
     const categoryDescription = document.getElementById('editCategoryDescription').value
     const categoryId = document.getElementById('editCategoryId').value
 
-    let data={
-      categoryName:categoryName,
-      categoryDescription:categoryDescription,
-      categoryId:categoryId
+    let data = {
+      categoryName: categoryName,
+      categoryDescription: categoryDescription,
+      categoryId: categoryId
     }
 
     fetch('/admin/edit-productCategoryPost', {
@@ -307,34 +306,34 @@
       },
       body: JSON.stringify(data)
     })
-    .then((res)=>{
-      if(res.ok){
-        console.log("bahuuuuuuuuuuuuuuuuuubali");
-        document.getElementById('editCategoryError').classList.add('d-none');
-        // document.getElementById("exampleModal").parentNode.removeChild(modal);
-        Toastify({
-              text: `category Updated successfully`,
-              duration: 3000,
-              gravity: "top", // `top` or `bottom`
-              position: "right", // `left`, `center` or `right`
-              stopOnFocus: true, // Prevents dismissing of toast on hover
-              style: {
-                background: "green",
-              },
-            }).showToast();
+      .then((res) => {
+        if (res.ok) {
+          document.getElementById('editCategoryError').classList.add('d-none');
+          $('#exampleModal').modal('hide');
+          
+          Toastify({
+            text: `category Updated successfully`,
+            duration: 3000,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "green",
+            },
+          }).showToast();
 
-            setTimeout(()=>{
-              location.reload()
-            },3000)
-        
-      }else{
-        document.getElementById('editCategoryError').classList.remove('d-none')
-        console.log("error");
-      }
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
+          setTimeout(() => {
+            location.reload()
+          }, 3000)
+
+        } else {
+          document.getElementById('editCategoryError').classList.remove('d-none')
+          console.log("error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   })
 
 </script>

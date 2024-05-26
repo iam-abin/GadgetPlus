@@ -11,18 +11,20 @@ router.get('/',adminAuthenticationChecking,adminController.adminLogin);
 
 router.post('/adminLogin',adminController.adminLoginPost);
 
-
 router.get('/admin-home',adminChecking,adminController.adminHome)
 
+// Sales Report Routes
 router.get('/sales-report-page',adminChecking,adminController.salesReportPage);
 
 router.post('/sales-report',adminChecking,adminController.salesReport);
 
+// User Management Routes
 router.get('/users-List',adminChecking,adminController.usersList);
 
 router.get('/block-unblock-user/:id',adminChecking,adminController.blockUnBlockUser);
 
 
+// Product Management Routes
 router.get('/product',adminChecking,adminController.productList); 
 
 router.get('/add-product',adminChecking,adminController.addProduct);
@@ -35,7 +37,7 @@ router.post('/edit-product/:slug',adminChecking,multer.productUpload,adminContro
 
 router.get('/delete-product/:slug',adminChecking,adminController.deleteProduct);
 
-
+// Category Management Routes
 router.get('/product-categories',adminChecking,adminController.productCategory); 
 
 router.post('/add-productCategory',adminChecking,adminController.postAddProductCategory);
@@ -46,17 +48,17 @@ router.post('/edit-productCategoryPost',adminChecking,adminController.editProduc
 
 router.get('/delete-productCategory/:id',adminChecking,adminController.deleteProductCategory)
 
-
+// Order Management Routes
 router.get('/orders',adminChecking,adminController.productOrders);
 
 router.post('/order-status',adminChecking,adminController.changeProductOrderStatus);
 
 router.get('/order-details/:id',adminChecking,adminController.productOrderDetails);
 
-
+// Banner Route
 router.get('/banner',adminChecking,adminController.banners);
 
-
+// Coupon Management Routes
 router.get('/coupon',adminChecking,adminController.coupons);
 
 router.post('/add-coupon',adminChecking,adminController.postAddCoupon)
@@ -67,9 +69,10 @@ router.post('/edit-coupon',adminChecking,adminController.editCouponPost)
 
 router.get('/delete-coupon/:id',adminChecking,adminController.deleteCoupon)
 
-
+// user Profile Route
 router.get('/userProfile/:id',adminChecking,adminController.userProfile);
 
+// Logout Route
 router.get('/logout',adminController.adminLogout)
 
 
