@@ -1,70 +1,77 @@
-const userSchema = require('../models/userModel');
+const userModel = require("../models/userModel");
 
-const bcrypt = require('bcrypt');
-
+const bcrypt = require("bcrypt");
 
 module.exports = {
+	doLogin: async (userData) => {
+        let response = {};
+        
+		try {
+			let user = await userModel.findOne({ email: userData.email });
+			if (!user) {
+				response.logginMessage = "Invalid username or passwordd";
+				return response;
+			}
 
-    doLogin: (userData) => {
-        return new Promise(async (resolve, reject) => {
-            let user = await userSchema.findOne({ email: userData.email })
-            let response = {}
-            if (user) {
-                if (user.isActive) {
-                    bcrypt.compare(userData.password, user.password).then((result) => {
-                        if (result) {
-                            response.user = user;
-                            response.loggedIn = true;
-                            response.logginMessage = "Login success";
-                            resolve(response)
-                        } else {
-                            response.logginMessage = "Invalid username or passwordd";
-                            resolve(response);
-                        }
-                    })
-                } else {
-                    response.logginMessage = "blocked user";
-                    resolve(response);
-                }
-            } else {
-                response.logginMessage = "Invalid username or password";
-                resolve(response);
-            }
-        })
-    },
+			if (!user.isActive) {
+				response.logginMessage = "blocked user";
+				return response;
+			}
 
+			const passwordCorrect = await bcrypt.compare(
+				userData.password,
+				user.password
+			);
 
-    doSignup: (userData) => {
-        return new Promise(async (resolve, reject) => {
-            const isUserExist = await userSchema.findOne({ $or: [{ email: userData.email }, { phone: userData.phone }] });
-            if (!isUserExist) {
-                userData.password = await bcrypt.hash(userData.password, 10);
-                userSchema.create({
-                    name: userData.name,
-                    email: userData.email,
-                    phone: userData.phone,
-                    password: userData.password,
-                    isActive: true,
-                }).then((data) => {
-                    resolve(data);
-                }).catch((error) => {
-                    reject(error);
-                })
-            } else {
-                resolve({ userExist: true });
-            }
-        })
-    },
+			if (!passwordCorrect) {
+				response.logginMessage = "Invalid username or passwordd";
+				return response;
+			}
 
+			// if user present in d
+			response.user = user;
+			response.loggedIn = true;
+			response.logginMessage = "Login success";
+			return response;
+            
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    changePassword: (newPassword, phone) => {
-        return new Promise(async (resolve, reject) => {
-            newPassword = await bcrypt.hash(newPassword, 10);
-            let user= await userSchema.findOne({ phone: phone });
-            user.password = newPassword;
-            await user.save();
-            resolve(user);
-        })
-    }
+	doSignup: async (userData) => {
+		try {
+			const isUserExist = await userModel.findOne({
+				$or: [{ email: userData.email }, { phone: userData.phone }],
+			});
+			if (!isUserExist) {
+				userData.password = await bcrypt.hash(userData.password, 10);
+				const user = await userModel.create({
+					name: userData.name,
+					email: userData.email,
+					phone: userData.phone,
+					password: userData.password,
+					isActive: true,
+				});
 
-}
+				return user;
+			} else {
+				return { userExist: true };
+			}
+		} catch (error) {
+			throw error;
+		}
+	},
+
+	changePassword: async (newPassword, phone) => {
+		try {
+			newPassword = await bcrypt.hash(newPassword, 10);
+			let user = await userModel.findOne({ phone });
+			user.password = newPassword;
+			await user.save();
+			return user;
+		} catch (error) {
+			throw error;
+		}
+	},
+};

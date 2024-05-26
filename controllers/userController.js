@@ -13,6 +13,8 @@ const walletHelper = require('../helpers/walletHelper');
 
 const { dateFormat } = require('../controllers/adminController')
 
+const {formatCurrency} = require('../utils/currency-format')
+
 const twilio = require('../api/twilio');
 const razorpay = require('../api/razorpay')
 const paypal = require('../api/paypal');
@@ -48,7 +50,7 @@ const userHome = async (req, res, next) => {
             latestProducts[i].isInWishList = isInWishList;
             latestProducts[i].isInCart = isInCart;
 
-            latestProducts[i].product_price = currencyFormat(latestProducts[i].product_price)
+            latestProducts[i].product_price = formatCurrency(latestProducts[i].product_price)
         }
 
         for (let i = 0; i < featuredProducts.length; i++) {
@@ -58,7 +60,7 @@ const userHome = async (req, res, next) => {
             featuredProducts[i].isInWishList = isInWishList;
             featuredProducts[i].isInCart = isInCart;
 
-            featuredProducts[i].product_price = currencyFormat(featuredProducts[i].product_price)
+            featuredProducts[i].product_price = formatCurrency(featuredProducts[i].product_price)
         }
 
         res.status(200).render('user/index', { loginStatus: req.session.user, cartCount, wishListCount, latestProducts, featuredProducts })
@@ -207,7 +209,7 @@ const getWallet = async (req, res, next) => {
     try {
         let userId = req.session.user._id
         let walletBalance = await walletHelper.walletBalance(userId);
-        walletDetails = currencyFormat(walletBalance)
+        walletDetails = formatCurrency(walletBalance)
         res.json({ walletDetails });
     } catch (error) {
         return next(error);
@@ -293,7 +295,7 @@ const viewAProduct = async (req, res, next) => {
             const isInCart = await cartHelper.isAProductInCart(req.session.user._id, product._id);
             product.isInCart = isInCart;
         }
-        product.product_price = currencyFormat(product.product_price)
+        product.product_price = formatCurrency(product.product_price)
         res.render('user/quick-view', { product, cartCount, loginStatus: req.session.user, wishListCount });
     } catch (error) {
         return next(error);
@@ -341,7 +343,7 @@ const cart = async (req, res, next) => {
         wishListCount = await wishListHelper.getWishListCount(user._id)
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id, cartItems)
 
-        totalandSubTotal = currencyFormatWithFractional(totalandSubTotal)
+        totalandSubTotal = formatCurrency(totalandSubTotal)
         res.render('user/cart', { loginStatus: req.session.user, cartItems, cartCount, totalAmount: totalandSubTotal, wishListCount })
     } catch (error) {
         return next(error);
@@ -455,7 +457,7 @@ const checkout = async (req, res, next) => {     //to view details and price pro
 
         let cartItems = await cartHelper.getAllCartItems(user._id);
         let walletBalance = await walletHelper.walletBalance(user._id)
-        walletBalance = currencyFormat(walletBalance);
+        walletBalance = formatCurrency(walletBalance);
 
         let totalAmount = await cartHelper.totalSubtotal(user._id, cartItems);
         totalAmount = totalAmount.toLocaleString('en-in', { style: 'currency', currency: 'INR' })
@@ -591,7 +593,7 @@ const orders = async (req, res, next) => {
         const userOrderDetails = await orderHepler.getAllOrderDetailsOfAUser(user._id);
         for (let i = 0; i < userOrderDetails.length; i++) {
             userOrderDetails[i].orderDate = dateFormat(userOrderDetails[i].orderDate);
-            userOrderDetails[i].totalAmount = currencyFormat(userOrderDetails[i].totalAmount);
+            userOrderDetails[i].totalAmount = formatCurrency(userOrderDetails[i].totalAmount);
         }
         res.render('user/orders-user', { userOrderDetails, loginStatus: req.session.user, cartCount, wishListCount })
     } catch (error) {
@@ -599,12 +601,13 @@ const orders = async (req, res, next) => {
     }
 }
 
+
 const productOrderDetails = async (req, res, next) => {
     try {
         const orderId = req.params.id;
         let orderDetails = await orderHepler.getOrderedUserDetailsAndAddress(orderId); //got user details
         let productDetails = await orderHepler.getOrderedProductsDetails(orderId); //got ordered products details
-        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus: req.session.user });
+        res.render('user/order-details-user', { orderDetails, cartCount, wishListCount, productDetails, loginStatus: req.session.user, formatCurrency });
     } catch (error) {
         return next(error);
     }
@@ -649,15 +652,6 @@ const searchProduct = async (req, res, next) => {
 
 const errorPage = (req, res) => {
     res.render('error')
-}
-
-// convert a number to a indian currency format
-function currencyFormat(amount) {
-    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
-}
-
-function currencyFormatWithFractional(amount) {
-    return Number(amount).toLocaleString('en-in', { style: 'currency', currency: 'INR' });
 }
 
 

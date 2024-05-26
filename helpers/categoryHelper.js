@@ -1,68 +1,61 @@
-const categorySchema=require('../models/category');
+const categoryModel = require("../models/category");
 
-
-module.exports={
-
-    addCategoryTooDb:(productData)=>{
-        return new Promise(async(resolve,reject)=>{
-            let category = await new categorySchema({
+module.exports = {
+	addCategoryTooDb: async (productData) => {
+		try {
+            let category = new categoryModel({
                 name: productData.categoryName,
                 description: productData.categoryDescription,
-              });
-              await category.save()
-              .then(()=>{
-                  resolve(category._id);
-              }).catch((error)=>{
-                reject(error);
-              })
-        })
-    },
+            });
+            await category.save();
 
+            return category._id;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    getAllcategory:()=>{
-        return new Promise(async (resolve, reject) => {
-           await categorySchema.find()
-           .then((result)=>{
-               resolve(result);
-           })
-          });
-    },
+	getAllcategory: async () => {
+		try {
+			const categories = await categoryModel.find();
+			return categories;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	getAcategory: async (categoryId) => {
+		try {
+			const category = await categoryModel.findById(categoryId);
+			return category;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    getAcategory:async (categoryId)=>{
-        return new Promise(async (resolve,reject)=>{
-            await categorySchema.findById({_id:categoryId})
-            .then((result)=>{
-                resolve(result);
-            })
-        })
-    },
+	editCategory: async (categoryAfterEdit) => {
+		try {
+			let category = await categoryModel.findById(
+				categoryAfterEdit.categoryId
+			);
+			category.name = categoryAfterEdit.categoryName;
+			category.description = categoryAfterEdit.categoryDescription;
 
+			const editedCategory = await category.save();
+			return editedCategory;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    editCategory:(categoryAfterEdit)=>{
-        return new Promise(async(resolve,reject)=>{
-            let category=await categorySchema.findById({_id:categoryAfterEdit.categoryId});
-            category.name=categoryAfterEdit.categoryName;
-            category.description=categoryAfterEdit.categoryDescription;
-
-            await category.save()
-            .then((category)=>{
-                resolve(category);
-            })
-            .catch((error)=>{
-                reject(error);
-            })
-        })
-    },
-
-
-    softDeleteAProductCategory: async(categoryId)=>{
-        return new Promise(async (resolve,reject)=>{
-            let category=await categorySchema.findById({_id:categoryId});
-            category.status=!category.status;
-            category.save();
-            resolve(category);
-        })
-    }
-
-}
+	softDeleteAProductCategory: async (categoryId) => {
+		try {
+			let category = await categoryModel.findById(categoryId);
+			category.status = !category.status;
+			category.save();
+			return category;
+		} catch (error) {
+			throw error;
+		}
+	},
+};
