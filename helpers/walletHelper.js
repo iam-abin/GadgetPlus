@@ -1,69 +1,68 @@
-const walletSchema=require('../models/walletModel');
+const walletModel = require("../models/walletModel");
 
-const ObjectId=require('mongoose').Types.ObjectId;
+const ObjectId = require("mongoose").Types.ObjectId;
 
-module.exports={
+module.exports = {
+	addMoneyToWallet: async (userId, amount) => {
+		try {
+			let wallet = await walletModel.findOne({ user: userId });
 
-    addMoneyToWallet:(userId,amount)=>{
-        return new Promise(async (resolve,reject)=>{
-            let wallet=await walletSchema.findOne({user:userId});
+			if (!wallet) {
+				wallet = new walletModel({
+					user: userId,
+					walletBalance: amount,
+				});
+			} else {
+				wallet.walletBalance += amount;
+			}
 
-            if(!wallet){
-                wallet=new walletSchema({
-                    user:userId,
-                    walletBalance: amount 
-                })
-            }else{
-                wallet.walletBalance+=amount;
-            }
+			await wallet.save();
+			resolve(wallet);
+		} catch (error) {
+			throw error;
+		}
+	},
 
-            await wallet.save();
-            resolve(wallet);
-        })
-    },
+	payUsingWallet: async (userId, amount) => {
+		try {
+			let wallet = await walletModel.findOne({ user: userId });
 
+			if (!wallet) {
+				return false;
+			}
 
-    payUsingWallet:(userId,amount)=>{
-        return new Promise(async (resolve,reject)=>{
-            let wallet=await walletSchema.findOne({user:userId});
+			// reduce the wallet amount
+			if (wallet.walletBalance >= amount) {
+				wallet.walletBalance -= amount;
+			} else {
+				return false;
+			}
 
-            if(!wallet){
-                return resolve(false)
-            }
+			await wallet.save();
+			return true;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-            if(wallet.walletBalance>=amount){
-                wallet.walletBalance-=amount;
-            }else{
-                resolve(false) ;
-            }
+	walletBalance: async (userId) => {
+		try {
+			const balance = await walletModel.aggregate([
+				{
+					$match: { user: new ObjectId(userId) },
+				},
+				{
+					$project: { walletBalance: 1 },
+				},
+			]);
 
-            await wallet.save();
-            resolve(true);
-        })
-    },
-
-
-    walletBalance:(userId)=>{
-        return new Promise(async (resolve,reject)=>{
-            await walletSchema.aggregate([
-               {
-                $match:{user:new ObjectId(userId)}
-               },
-               {
-                $project:{walletBalance:1}
-               }
-            ])
-            .then((balance)=>{
-                if(!balance.length){
-                    resolve(0);
-                }else{
-                    resolve(balance[0].walletBalance);
-                }
-            })
-        })
-    }
-
-}
-
-
-                
+			if (!balance.length) {
+				return 0;
+			} else {
+				return balance[0].walletBalance;
+			}
+		} catch (error) {
+			throw error;
+		}
+	},
+};

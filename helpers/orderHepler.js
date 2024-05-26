@@ -1,267 +1,271 @@
-const orderSchema = require('../models/orderModel');
+const orderModel = require("../models/orderModel");
 
-const addressHelper = require('./addressHelper');
-const walletHelper = require('./walletHelper');
+const addressHelper = require("./addressHelper");
+const walletHelper = require("./walletHelper");
 
-const ObjectId = require('mongoose').Types.ObjectId;
+const ObjectId = require("mongoose").Types.ObjectId;
 
+function orderStatusCount(orderStatuses) {
+	//to display on doughnut chart
+	let counts = {};
 
-function orderDate() {
-    const date = new Date();
-    console.log(date);
-    return date
+	orderStatuses.forEach((oneStatus) => {
+		let status = oneStatus.orderStatus;
+		if (counts[status]) {
+			counts[status]++;
+		} else {
+			counts[status] = 1;
+		}
+	});
+	return counts;
 }
-
-function orderStatusCount(orderStatuses) {   //to display on doughnut chart
-    let counts = {};
-
-    orderStatuses.forEach(oneStatus => {
-        let status = oneStatus.orderStatus;
-        if (counts[status]) {
-            counts[status]++;
-        } else {
-            counts[status] = 1;
-        }
-    });
-    return counts
-}
-
 
 module.exports = {
+	orderPlacing: async (order, totalAmount, cartItems) => {
+		try {
+			let status = order.payment == "COD" ? "confirmed" : "pending";
+			let address = await addressHelper.getAnAddress(
+				order.addressSelected
+			);
 
-    orderPlacing: (order, totalAmount, cartItems) => {
-        return new Promise(async (resolve, reject) => {
-            let status = order.payment == 'COD' ? 'confirmed' : 'pending';
-            let date = orderDate();
-            let userId = order.userId;
-            let paymentMethod = order.payment;
-            let discount = null;
-            let address = await addressHelper.getAnAddress(order.addressSelected);
-            let orderedItems = cartItems;
-            let orderedPrices = [];
+			let discount = null;
+			if (order.couponDiscount) {
+				discount = order.couponDiscount;
+			}
 
-            if (order.couponDiscount) {
-                discount = order.couponDiscount;
-            }
+			let orderedItems = cartItems;
+			let orderedPrices = [];
+			for (let i = 0; i < orderedItems.length; i++) {
+				orderedPrices.push(orderedItems[i].product.product_price);
+			}
 
-            for (let i = 0; i < orderedItems.length; i++) {
-                orderedPrices.push(orderedItems[i].product.product_price);
-            }
+			let orderPlaced = new orderModel({
+				user: order.userId,
+				address: address,
+				orderDate: new Date(),
+				totalAmount: totalAmount,
+				paymentMethod: order.payment,
+				orderStatus: status,
+				coupon: discount,
+				orderedPrice: orderedPrices,
+				orderedItems: orderedItems,
+			});
 
-            let ordered = new orderSchema({
-                user: userId,
-                address: address,
-                orderDate: date,
-                totalAmount: totalAmount,
-                paymentMethod: paymentMethod,
-                orderStatus: status,
-                coupon: discount,
-                orderedPrice: orderedPrices,
-                orderedItems: orderedItems
-            });
+			await orderPlaced.save();
+			return orderPlaced;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-            await ordered.save();
-            resolve(ordered);
-        })
-    },
+	getAllOrders: async () => {
+		try {
+			const orders = await orderModel.aggregate([
+				{
+					$lookup: {
+						from: "users",
+						localField: "user",
+						foreignField: "_id",
+						as: "userDetails",
+					},
+				},
+			]);
+			return orders;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	getAllDeliveredOrders: async () => {
+		try {
+			const delivered = await orderModel.aggregate([
+				{
+					$match: { orderStatus: "delivered" },
+				},
+				{
+					$lookup: {
+						from: "users",
+						localField: "user",
+						foreignField: "_id",
+						as: "userDetails",
+					},
+				},
+			]);
+			return delivered;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    getAllOrders: () => {
-        return new Promise(async (resolve, reject) => {
-            await orderSchema.aggregate([
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'user',
-                        foreignField: '_id',
-                        as: 'userDetails'
-                    }
-                }
-            ])
-                .then((result) => {
-                    resolve(result);
-                })
-        })
-    },
+	getAllDeliveredOrdersByDate: async (startDate, endDate) => {
+		try {
+			const deliveredOrders = await orderModel
+				.find({
+					orderDate: { $gte: startDate, $lte: endDate },
+					orderStatus: "delivered",
+				})
+				.lean();
+			return deliveredOrders;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	getAllOrderStatusesCount: async () => {
+		try {
+			const orderStatuses = await orderModel
+				.find()
+				.select({ _id: 0, orderStatus: 1 });
+			// const orderStatuses = await orderModel.find().select({ _id: 0, orderStatus: 1 }).count()
+			const eachOrderStatusCount = orderStatusCount(orderStatuses);
 
-    getAllDeliveredOrders: () => {
-        return new Promise(async (resolve, reject) => {
-            await orderSchema.aggregate([
-                {
-                    $match: { orderStatus: 'delivered' }
-                },
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'user',
-                        foreignField: '_id',
-                        as: 'userDetails'
-                    }
-                }
-            ])
-                .then((result) => {
-                    resolve(result);
-                })
-        })
-    },
+			return eachOrderStatusCount;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	getAllOrderDetailsOfAUser: async (userId) => {
+		try {
+			const userOrderDetails = await orderModel.aggregate([
+				{
+					$match: { user: new ObjectId(userId) },
+				},
+				{
+					$lookup: {
+						from: "addresses",
+						localField: "address",
+						foreignField: "_id",
+						as: "addressLookedup",
+					},
+				},
+			]);
 
-    getAllDeliveredOrdersByDate: (startDate, endDate) => {
-        return new Promise(async (resolve, reject) => {
-            await orderSchema.find({ orderDate: { $gte: startDate, $lte: endDate }, orderStatus: 'delivered' }).lean()
-                .then((result) => {
-                    resolve(result);
-                })
-        })
-    },
+			return userOrderDetails;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	changeOrderStatus: async (orderId, changeStatus) => {
+		try {
+			const orderstatusChange = await orderModel.findOneAndUpdate(
+				{ _id: orderId },
+				{
+					$set: {
+						orderStatus: changeStatus,
+					},
+				},
+				{
+					new: true,
+				}
+			);
 
-    getAllOrderStatusesCount: async () => {
-        try {
-            const orderStatuses = await orderSchema.find().select({ _id: 0, orderStatus: 1 });
+			return orderstatusChange;
+		} catch (error) {
+			throw new Error("failed to change status!something wrong");
+		}
+	},
 
-            const eachOrderStatusCount = orderStatusCount(orderStatuses);
+	getOrderedUserDetailsAndAddress: async (orderId) => {
+		try {
+			const result = await orderModel.aggregate([
+				{
+					$match: { _id: new ObjectId(orderId) },
+				},
+				{
+					$lookup: {
+						from: "addresses",
+						localField: "address",
+						foreignField: "_id",
+						as: "userAddress",
+					},
+				},
+				{
+					$project: {
+						user: 1,
+						totalAmount: 1,
+						paymentMethod: 1,
+						orderStatus: 1,
+						coupon: 1,
+						address: {
+							$arrayElemAt: ["$userAddress", 0],
+						},
+					},
+				},
+			]);
 
-            return eachOrderStatusCount;
-        } catch (error) {
-            console.log(error);
-        }
-    },
+			return result[0];
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	getOrderedProductsDetails: async (orderId) => {
+		try {
+			const orderedProducts = await orderModel.aggregate([
+				{
+					$match: { _id: new ObjectId(orderId) },
+				},
+				{
+					$unwind: "$orderedItems",
+				},
+				{
+					$lookup: {
+						from: "products",
+						localField: "orderedItems.product",
+						foreignField: "_id",
+						as: "orderedProduct",
+					},
+				},
+				{
+					$unwind: "$orderedProduct",
+				},
+			]);
 
-    getAllOrderDetailsOfAUser: (userId) => {
-        return new Promise(async (resolve, reject) => {
-            const userOrderDetails = await orderSchema.aggregate([
-                {
-                    $match: { user: new ObjectId(userId) }
-                },
-                {
-                    $lookup: {
-                        from: 'addresses',
-                        localField: 'address',
-                        foreignField: '_id',
-                        as: 'addressLookedup'
-                    }
-                },
+			return orderedProducts;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-            ])
+	cancelOrder: async (userId, orderId) => {
+		try {
+			const cancelledResponse = await orderModel.findOneAndUpdate(
+				{ _id: new ObjectId(orderId) },
+				{ $set: { orderStatus: "cancelled" } },
+				{ new: true }
+			);
 
-            resolve(userOrderDetails);
-        })
-    },
+			if (cancelledResponse.paymentMethod != "COD") {
+				await walletHelper.addMoneyToWallet(
+					userId,
+					cancelledResponse.totalAmount
+				);
+			}
 
+			return cancelledResponse.orderStatus;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    changeOrderStatus: async (orderId, changeStatus) => {
-        try {
-            const orderstatusChange = await orderSchema.findOneAndUpdate(
-                { _id: orderId },
-                {
-                    $set: {
-                        orderStatus: changeStatus
-                    }
-                },
-                {
-                    new: true
-                });
+	returnOrder: async (userId, orderId) => {
+		try {
+			const order = await orderModel.findOne({
+				_id: new ObjectId(orderId),
+			});
 
-            return orderstatusChange;
-        } catch (error) {
-            throw new Error('failed to change status!something wrong');
-        }
-    },
+			if (order.orderStatus == "delivered")
+				order.orderStatus = "return pending";
+            
+			if (order.orderStatus == "return pending")
+				order.orderStatus = "returned";
 
-
-    getOrderedUserDetailsAndAddress: (orderId) => {
-        return new Promise(async (resolve, reject) => {
-            await orderSchema.aggregate([
-                {
-                    $match: { _id: new ObjectId(orderId) }
-                },
-                {
-                    $lookup: {
-                        from: 'addresses',
-                        localField: 'address',
-                        foreignField: '_id',
-                        as: 'userAddress'
-                    }
-                },
-                {
-                    $project: {
-                        user: 1,
-                        totalAmount: 1,
-                        paymentMethod: 1,
-                        orderStatus: 1,
-                        coupon: 1,
-                        address: {
-                            $arrayElemAt: ['$userAddress', 0]
-                        }
-                    }
-                },
-            ]).then((result) => {
-                resolve(result[0])
-            })
-        })
-    },
-
-
-    getOrderedProductsDetails: (orderId) => {
-        return new Promise(async (resolve, reject) => {
-            await orderSchema.aggregate([
-                {
-                    $match: { _id: new ObjectId(orderId) }
-                },
-                {
-                    $unwind: '$orderedItems'
-                },
-                {
-                    $lookup: {
-                        from: 'products',
-                        localField: 'orderedItems.product',
-                        foreignField: '_id',
-                        as: 'orderedProduct'
-                    }
-                },
-                {
-                    $unwind: '$orderedProduct'
-                }
-            ]).then((result) => {
-                resolve(result);
-            })
-        })
-    },
-
-
-    cancelOrder: (userId, orderId) => {
-        return new Promise(async (resolve, reject) => {
-            const cancelledResponse = await orderSchema.findOneAndUpdate(
-                { _id: new ObjectId(orderId) },
-                { $set: { orderStatus: "cancelled" } },
-                { new: true }
-            );
-
-            if (cancelledResponse.paymentMethod != 'COD') {
-                await walletHelper.addMoneyToWallet(userId, cancelledResponse.totalAmount);
-            }
-
-            resolve(cancelledResponse.orderStatus)
-        })
-    },
-
-
-    returnOrder: (userId, orderId) => {
-        return new Promise(async (resolve, reject) => {
-            const order = await orderSchema.findOne({ _id: new ObjectId(orderId) });
-       
-            if (order.orderStatus == 'delivered') {
-                order.orderStatus = 'return pending';
-            } else if (order.orderStatus == 'return pending') {
-                order.orderStatus = 'returned';
-            }
-
-            await order.save();
-            resolve(order);
-        })
-    }
-
-}
+			await order.save();
+			return order;
+		} catch (error) {
+			throw error;
+		}
+	},
+};

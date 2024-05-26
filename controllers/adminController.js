@@ -39,7 +39,7 @@ const adminLoginPost = async (req, res, next) => {
 			res.redirect("/admin");
 		}
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -63,7 +63,7 @@ const adminHome = async (req, res, next) => {
 			layout: "layouts/adminLayout",
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -101,7 +101,7 @@ const salesReport = async (req, res, next) => {
 		}
 		res.status(200).json({ sales: salesReport });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -477,6 +477,11 @@ const deleteCoupon = async (req, res, next) => {
 };
 
 const userProfile = async (req, res, next) => {
+	try {
+		
+	} catch (error) {
+		
+	}
 	const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(
 		req.params.id
 	);
@@ -498,7 +503,7 @@ const userProfile = async (req, res, next) => {
 			});
 		})
 		.catch((error) => {
-			return next(error);
+			next(error);
 		});
 };
 

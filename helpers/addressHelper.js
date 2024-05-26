@@ -1,76 +1,81 @@
-const addressSchema=require('../models/addressModel');
+const addressModel = require("../models/addressModel");
 
+module.exports = {
+	addAddress: async (addressData) => {
+		try {
+			let address = await new addressModel({
+				first_name: addressData.fname,
+				last_name: addressData.lname,
+				mobile: addressData.mobile,
+				email_id: addressData.email,
+				address: addressData.address,
+				city: addressData.city,
+				state: addressData.state,
+				country: addressData.country,
+				pincode: addressData.pincode,
+				userId: addressData.id,
+			});
 
-module.exports={
+			await address.save();
+			return address;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    addAddress:(addressData)=>{
-        return new Promise(async (resolve,reject)=>{
-            let address = await new addressSchema({
-                first_name:addressData.fname,
-                last_name:addressData.lname,
-                mobile:addressData.mobile,
-                email_id:addressData.email,
-                address:addressData.address,
-                city:addressData.city,
-                state:addressData.state,
-                country:addressData.country,
-                pincode:addressData.pincode,
-                userId:addressData.id
-            })
+	getAnAddress: async (addressId) => {
+		try {
+			const address = await addressModel.findById(addressId);
+			console.log("inside helper");
+			return address;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-            await address.save();
-            resolve(address)
-        })
-    },
+	findAddresses: async (userId) => {
+		try {
+			const address = await addressModel.find({ userId });
+			return address;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    getAnAddress:(addressId)=>{
-        return new Promise(async(resolve,reject)=>{
-            await addressSchema.findById(addressId)
-            .then((result)=>{
-                console.log("inside helper");
-                resolve(result)
-            })
-        })
-    },
+	editAnAddress: async (editedAddress) => {
+		console.log("edit address post inside helper", editedAddress);
 
-    findAddresses:(userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            await addressSchema.find({userId: userId})
-            .then((result)=>{
-                resolve(result)
-            })
-        })
-    },
+		try {
+			let address = await addressModel.findById(editedAddress.addressId);
 
-    editAnAddress:(editedAddress)=>{
-        return new Promise(async (resolve,reject)=>{
-            console.log("edit address post inside helper",editedAddress);
-            let address=await addressSchema.findById(editedAddress.addressId)
-            console.log("edit address post inside helper address=",address);
-            
-            address.first_name=editedAddress.fname;
-            address.last_name=editedAddress.lname;
-            address.mobile=editedAddress.mobile;
-            address.email_id=editedAddress.email;
-            address.address=editedAddress.address;
-            address.country=editedAddress.country;
-            address.state=editedAddress.state;
-            address.city=editedAddress.city;
-            address.pincode=editedAddress.pincode;
+			console.log(
+				"edit address post inside helper address try=",
+				address
+			);
 
-            await address.save();
-            resolve(address);
-        })
-    },
+			address.first_name = editedAddress.fname;
+			address.last_name = editedAddress.lname;
+			address.mobile = editedAddress.mobile;
+			address.email_id = editedAddress.email;
+			address.address = editedAddress.address;
+			address.country = editedAddress.country;
+			address.state = editedAddress.state;
+			address.city = editedAddress.city;
+			address.pincode = editedAddress.pincode;
 
-    deleteAnAddress:(addressId)=>{
-        return new Promise(async (resolve,reject)=>{
-            await addressSchema.findByIdAndDelete(addressId)
-            .then((response)=>{
-                console.log(response);
-                resolve();
-            })
-        })
-    }
+			await address.save();
+			return address;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-}
+	deleteAnAddress: async (addressId) => {
+		try {
+			const deleted = await addressModel.findByIdAndDelete(addressId);
+			return deleted;
+		} catch (error) {
+			throw error;
+		}
+	},
+};

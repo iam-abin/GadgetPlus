@@ -1,107 +1,106 @@
-const couponSchema = require('../models/couponModel')
-const cartSchema = require('../models/cartModel')
+const couponModel = require("../models/couponModel");
+const cartModel = require("../models/cartModel");
 
-const voucherCode=require('voucher-code-generator')
-
+const voucherCode = require("voucher-code-generator");
 
 module.exports = {
+	addCouponToDb: async (couponData) => {
+		try {
+			const dateString = couponData.couponExpiry;
+			const [day, month, year] = dateString.split(/[-/]/);
+			const date = new Date(`${year}-${month}-${day}`);
+			const convertedDate = date.toISOString();
 
-    addCouponToDb: (couponData) => {
-        return new Promise(async (resolve, reject) => {
-            
-            const dateString = couponData.couponExpiry;
-            const [day, month, year] = dateString.split(/[-/]/);
-            const date = new Date(`${year}-${month}-${day}`);
-            const convertedDate = date.toISOString();
+			let couponCode = voucherCode.generate({
+				length: 6,
+				count: 1,
+				charset: voucherCode.charset("alphabetic"),
+			});
 
-            let couponCode=voucherCode.generate({
-                length: 6,
-                count: 1,
-                charset: voucherCode.charset("alphabetic")
-            });
+			const coupon = await new couponModel({
+				couponName: couponData.couponName,
+				code: couponCode[0],
+				discount: couponData.couponAmount,
+				expiryDate: convertedDate,
+			});
 
-            const coupon = await new couponSchema({
-                couponName: couponData.couponName,
-                code: couponCode[0],
-                discount: couponData.couponAmount,
-                expiryDate: convertedDate
-            })
+			await coupon.save();
+			return coupon._id;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-            await coupon.save()
-                .then(() => {
-                    resolve(coupon._id);
-                })
-                .catch((error) => {
-                    reject(error);
-                })
-        })
-    },
+	getAllCoupons: async () => {
+		try {
+			const coupons = await couponModel.find().lean();
+			return coupons;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	getACoupenData: async (couponId) => {
+		try {
+			const coupon = await couponModel.findOne({ _id: couponId });
+			return coupon;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    getAllCoupons: () => {
-        return new Promise(async (resolve, reject) => {
-            await couponSchema.find().lean()
-                .then((result) => {
-                    resolve(result);
-                })
-        })
-    },
+	editCoupon: async (couponAfterEdit) => {
+		try {
+			let coupon = await couponModel.findById(couponAfterEdit.couponId);
+			coupon.couponName = couponAfterEdit.couponName;
+			coupon.discount = couponAfterEdit.couponAmount;
+			coupon.expiryDate = couponAfterEdit.couponExpiry;
 
+			await coupon.save();
+			return coupon;
+		} catch (error) {
+			throw error;
+		}
+	},
 
-    getACoupenData: (couponId)=>{
-        return new Promise(async(resolve,reject)=>{
-            await couponSchema.findOne({_id:couponId})
-            .then((result)=>{
-                resolve(result);
-            })
-        })
-    },
+	deleteACoupon: async (couponId) => {
+		try {
+			let result = await couponModel.findOneAndDelete({ _id: couponId });
+			return result;
+		} catch (error) {
+			throw error;
+		}
+	},
 
+	applyCoupon: async (userId, couponCode, totalAmount) => {
+		try {
+			let coupon = await couponModel.findOne({ code: couponCode });
+			if (!coupon) throw new Error("Coupon not found");
+			if (coupon.isActive !== "Active")
+				return { status: false, message: "invalid Coupon code" };
+			if (coupon.usedBy.includes(userId))
+				return {
+					status: false,
+					message: "Coupon code already used",
+				};
+			// if coupon not used
+			let cart = await cartModel.findOne({ user: userId });
+			const discount = coupon.discount;
 
-    editCoupon:(couponAfterEdit)=>{
-        return new Promise(async (resolve,reject)=>{
-            let coupon=await couponSchema.findById({_id:couponAfterEdit.couponId});
-            coupon.couponName=couponAfterEdit.couponName;
-            coupon.discount=couponAfterEdit.couponAmount;
-            coupon.expiryDate=couponAfterEdit.couponExpiry;
+			cart.totalAmount = cart.totalAmount - coupon.discount;
+			cart.coupon = couponCode;
+			await cart.save();
 
-            await coupon.save();
-            resolve(coupon);
-        })
-    },
-
-
-    deleteACoupon:(couponId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let result = await couponSchema.findOneAndDelete({_id:couponId});
-             resolve(result);
-        })
-    },
-
-
-    applyCoupon: (userId, couponCode, totalAmount) => {
-        return new Promise(async (resolve, reject) => {
-            let coupon = await couponSchema.findOne({ code: couponCode });
-   
-            if (coupon && coupon.isActive == 'Active') {
-                if (!coupon.usedBy.includes(userId)) {
-                    let cart = await cartSchema.findOne({ user: userId });
-                    const discount=coupon.discount;
-
-                    cart.totalAmount = cart.totalAmount - coupon.discount;
-                    cart.coupon=couponCode;
-                    await cart.save();
-
-                    coupon.usedBy.push(userId);
-                    await coupon.save();
-                    resolve({discount, cart, status: true, message: "coupn added successfully" });
-                } else {
-                    resolve({ status: false, message: "Coupon code already used" });
-                }
-            } else {
-                resolve({ status: false, message: "invalid Coupon code" });
-            }
-        })
-    },
-
-}
+			coupon.usedBy.push(userId);
+			await coupon.save();
+			return {
+				discount,
+				cart,
+				status: true,
+				message: "coupn added successfully",
+			};
+		} catch (error) {
+			throw error;
+		}
+	},
+};

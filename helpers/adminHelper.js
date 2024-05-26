@@ -1,63 +1,58 @@
-const userSchema = require("../models/userModel");
-const productSchema = require("../models/productModel");
-const orderSchema = require("../models/orderModel");
-const categorySchema = require("../models/category");
-const adminSchema = require("../models/adminModel");
+const userModel = require("../models/userModel");
+const productModel = require("../models/productModel");
+const orderModel = require("../models/orderModel");
+const categoryModel = require("../models/category");
+const adminModel = require("../models/adminModel");
 
 module.exports = {
-	isAdminExists: (adminName, adminPassword) => {
-		return new Promise(async (resolve, reject) => {
-			const isAdminExist = await adminSchema.findOne({
+	isAdminExists: async (adminName, adminPassword) => {
+		try {
+			const isAdminExist = await adminModel.findOne({
 				$and: [{ email: adminName }, { password: adminPassword }],
 			});
-			resolve(isAdminExist);
-		});
+			return isAdminExist;
+		} catch (error) {
+			throw error;
+		}
 	},
 
-	findUsers: () => {
-		return new Promise(async (resolve, reject) => {
-			await userSchema
-				.find()
-				.then((response) => {
-					resolve(response);
-				})
-				.catch((error) => {
-					console.log(error);
-					reject(error);
-				});
-		});
+	findUsers: async () => {
+		try {
+			const users = await userModel.find();
+			return users;
+		} catch (error) {
+			throw error;
+		}
 	},
 
-	blockOrUnBlockUser: (userId) => {
-		return new Promise(async (resolve, reject) => {
-			const user = await userSchema.findById(userId);
-            if(!user) return reject("No such user!!!")
+	blockOrUnBlockUser: async (userId) => {
+		try {
+			const user = await userModel.findById(userId);
+			if (!user) throw new Error("No such user!!!");
 			user.isActive = !user.isActive;
 			await user.save();
-			resolve(user);
-		});
+			return user;
+		} catch (error) {
+			throw error;
+		}
 	},
 
-	findAUser: (userId) => {
-		return new Promise(async (resolve, reject) => {
-			await userSchema
-				.findById({ _id: userId })
-				.then((result) => {
-					resolve(result);
-				})
-				.catch((error) => {
-					console.log(error);
-					reject(error);
-				});
-		});
+	findAUser: async (userId) => {
+		try {
+			const user = await userModel.findById(userId);
+			return user;
+		} catch (error) {
+			throw error;
+		}
 	},
 
-	getDashboardDetails: () => {
-		return new Promise(async (resolve, reject) => {
-			let response = {};
-			let totalRevenue, monthlyRevenue, totalProducts;
+	getDashboardDetails: async () => {
+		let response = {};
+		let totalRevenue, monthlyRevenue, totalProducts;
 
-			totalRevenue = await orderSchema.aggregate([
+		try {
+			// Total revenue
+			totalRevenue = await orderModel.aggregate([
 				{
 					$match: { orderStatus: "delivered" },
 				},
@@ -73,7 +68,8 @@ module.exports = {
 				? (response.totalRevenue = 0)
 				: (response.totalRevenue = totalRevenue[0]?.revenue);
 
-			monthlyRevenue = await orderSchema.aggregate([
+			// Monthly revenue
+			monthlyRevenue = await orderModel.aggregate([
 				{
 					$match: {
 						orderStatus: "delivered",
@@ -94,11 +90,12 @@ module.exports = {
 				},
 			]);
 
-            !monthlyRevenue.length
+			!monthlyRevenue.length
 				? (response.monthlyRevenue = 0)
 				: (response.monthlyRevenue = monthlyRevenue[0]?.revenue);
 
-			totalProducts = await productSchema.aggregate([
+			// Total products
+			totalProducts = await productModel.aggregate([
 				{
 					$group: {
 						_id: null,
@@ -107,25 +104,27 @@ module.exports = {
 				},
 			]);
 
-            !totalProducts.length
-            ? (response.totalProducts = 0)
-            : (response.totalProducts = totalProducts[0]?.total);
+			!totalProducts.length
+				? (response.totalProducts = 0)
+				: (response.totalProducts = totalProducts[0]?.total);
 
-			response.totalOrders = await orderSchema
+			response.totalOrders = await orderModel
 				.find({ orderStatus: "confirmed" })
 				.count();
 
-			response.numberOfCategories = await categorySchema
+			response.numberOfCategories = await categoryModel
 				.find({ status: true })
 				.count();
 
-			resolve(response);
-		});
+			return response;
+		} catch (error) {
+			throw error;
+		}
 	},
 
-	getChartDetails: () => {
-		return new Promise(async (resolve, reject) => {
-			const orders = await orderSchema.aggregate([
+	getChartDetails: async () => {
+		try {
+			const orders = await orderModel.aggregate([
 				{
 					$match: { orderStatus: "delivered" },
 				},
@@ -213,7 +212,9 @@ module.exports = {
 				}
 			}
 
-			resolve({ monthlyData: monthlyData, dailyData: dailyData });
-		});
+			return { monthlyData: monthlyData, dailyData: dailyData };
+		} catch (error) {
+			throw error;
+		}
 	},
 };
