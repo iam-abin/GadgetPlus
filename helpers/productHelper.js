@@ -95,6 +95,14 @@ module.exports = {
 				{
 					$sample: { size: 4 }, //to get 4 random products
 				},
+				{
+					$lookup: {
+						from: "categories",
+						localField: "product_category",
+						foreignField: "_id",
+						as: "category",
+					},
+				},
 			]);
 			return featuredProducts;
 		} catch (error) {
@@ -103,6 +111,7 @@ module.exports = {
 	},
 
 	getAProduct: async (slug) => {
+		console.log("Inside get a Product");
 		try {
 			const product = await productModel.findOne({ slug: slug }).lean();
 			return product;
@@ -208,8 +217,9 @@ module.exports = {
 		}
 	},
 
-	isOutOfStock: async (productSlug, newQuantity = false) => {
+	isOutOfStock: async function(productSlug, newQuantity = false) {
 		// newQuantity for cart product quantity increase
+		console.log(this);
 		try {
 			let product = await this.getAProduct(productSlug);
 			let stock = product.product_quantity;
@@ -225,6 +235,7 @@ module.exports = {
 				return true;
 			}
 		} catch (error) {
+			console.log(error);
 			throw error;
 		}
 	},

@@ -42,7 +42,7 @@ module.exports = {
 
 	getACoupenData: async (couponId) => {
 		try {
-			const coupon = await couponModel.findOne({ _id: couponId });
+			const coupon = await couponModel.findById( couponId);
 			return coupon;
 		} catch (error) {
 			throw error;

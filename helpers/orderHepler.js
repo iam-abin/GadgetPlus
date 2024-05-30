@@ -5,20 +5,16 @@ const walletHelper = require("./walletHelper");
 
 const ObjectId = require("mongoose").Types.ObjectId;
 
-function orderStatusCount(orderStatuses) {
+const transformOrderStatusStructure = (orderStatuses) => {
 	//to display on doughnut chart
-	let counts = {};
+	let transformedData = {};
 
-	orderStatuses.forEach((oneStatus) => {
-		let status = oneStatus.orderStatus;
-		if (counts[status]) {
-			counts[status]++;
-		} else {
-			counts[status] = 1;
-		}
+	orderStatuses.forEach((item) => {
+		transformedData[item._id] = item.count;
 	});
-	return counts;
-}
+
+	return transformedData;
+};
 
 module.exports = {
 	orderPlacing: async (order, totalAmount, cartItems) => {
@@ -113,11 +109,12 @@ module.exports = {
 
 	getAllOrderStatusesCount: async () => {
 		try {
-			const orderStatuses = await orderModel
-				.find()
-				.select({ _id: 0, orderStatus: 1 });
-			// const orderStatuses = await orderModel.find().select({ _id: 0, orderStatus: 1 }).count()
-			const eachOrderStatusCount = orderStatusCount(orderStatuses);
+			const orderStatuses = await orderModel.aggregate([
+				{ $group: { _id: "$orderStatus", count: { $sum: 1 } } },
+			]);
+
+			const eachOrderStatusCount =
+				transformOrderStatusStructure(orderStatuses);
 
 			return eachOrderStatusCount;
 		} catch (error) {
@@ -258,7 +255,7 @@ module.exports = {
 
 			if (order.orderStatus == "delivered")
 				order.orderStatus = "return pending";
-            
+
 			if (order.orderStatus == "return pending")
 				order.orderStatus = "returned";
 

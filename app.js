@@ -3,37 +3,38 @@ const express = require("express");
 const logger = require("morgan");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
-const createError = require('http-errors')
-const cors = require('cors')
+const createError = require("http-errors");
+const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const nocache = require("nocache");
-const methodOverride = require('method-override');
+const methodOverride = require("method-override");
 
 const connectDb = require("./config/db");
+const errorHandler = require("./middlewares/errorHandiling");
 
 const userRoute = require("./routes/userRoute");
 const adminRoute = require("./routes/adminRoute");
 
+const { USER_LAYOUT } = require("./config/constants");
 
 const app = express();
 
 // view engine setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.set("layout", "layouts/userLayout"); // set default layout for user pages
+app.set("layout", USER_LAYOUT); // set default layout for user pages
 app.use(expressLayouts); //middleware that helps to create reusable layouts for your views
-
 
 // db connection
 connectDb();
 
 // Middlewares
-app.use(cors())
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json()); //for parsing json
 app.use(express.urlencoded({ extended: false })); //for parsing form data
-app.use(methodOverride('_method'));
+app.use(methodOverride("_method"));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
@@ -43,15 +44,15 @@ app.use(nocache());
 
 // Session middleware
 app.use(
-  session({
-    key: 'user_sid',
-    secret: 'thisisthekeyforuser',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 6000000,
-    },
-  })
+	session({
+		key: "user_sid",
+		secret: "thisisthekeyforuser",
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			maxAge: 6000000,
+		},
+	})
 );
 
 // Routes
@@ -60,22 +61,18 @@ app.use("/admin", adminRoute);
 
 // 404 error handler
 app.use((req, res, next) => {
-  return next(createError(404, "Page Not Found"))
-})
+	return next(createError(404, "Page Not Found"));
+});
 
 // General error handler
-app.use((error, req, res, next) => {
-  res.locals.message = error.message;
-  const status = error.status || 500;
-  res.locals.status = status;
+app.use(errorHandler);
 
-  res.status(status).render("error", { headerFooter: true })
-})
+console.clear();
 
 // Start the server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT,'0.0.0.0', () => {
-  console.log(`Server startes on http://localhost:${PORT}`);
-  console.log("access using  https://gadgetplus.abi");
+app.listen(PORT, "localhost", () => {
+	// app.listen(PORT,'0.0.0.0', () => {
+	console.log(`Server startes on http://localhost:${PORT}`);
+	console.log("access using  https://gadgetplus.abi");
 });
-

@@ -1,5 +1,4 @@
-const { getAllcategory } = require('../helpers/categoryHelper');
-
+const { getAllcategory } = require("../helpers/categoryHelper");
 
 const categorySupply = async (req, res, next) => {
     try {
@@ -11,6 +10,5 @@ const categorySupply = async (req, res, next) => {
         next(error)
     }
 }
-
 
 module.exports = categorySupply;

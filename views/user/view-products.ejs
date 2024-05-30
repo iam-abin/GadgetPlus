@@ -59,7 +59,7 @@
 
 												<div class="product-action-vertical">
 													<% if (!product[i].isInWishList) { %>
-														<a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
+														<a class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist"
 															data-value="<%= product[i]._id%>"
 															title="Add to wishlist"><span>add to wishlist</span>
 														</a>
@@ -81,7 +81,7 @@
 													<% if (loginStatus) { %>
 														<div class="product-action">
 															<a href="#" data-value="<%= product[i]._id %>"
-																class="add-product btn-product btn-cart"><span>add to
+																class="add-to-cart btn-product btn-cart"><span>add to
 																	cart</span></a>
 														</div><!-- End .product-action -->
 														<% } else {%>
@@ -332,7 +332,7 @@
 											</a>
 											<div class="product-action-vertical">
 												<a href="#" data-value="${product[i]._id}"
-													class="add-produtToWishlist btn-product-icon btn-wishlist btn-expandable">
+													class="add-to-Wishlist btn-product-icon btn-wishlist btn-expandable">
 													<span>add to wishlist</span>
 												</a>
 											</div><!-- End .product-action-vertical -->
@@ -343,7 +343,7 @@
 
 										<div class="product-action">
 											<a href="#" data-value="${product[i]._id}"
-												class="add-product btn-product btn-cart">
+												class="add-to-cart btn-product btn-cart">
 												<span>add to cart</span>
 											</a>
 										</div><!-- End .product-action -->
@@ -438,56 +438,4 @@
 
 </script>
 
-<script>
-
-	$(document).ready(function () {
-		$('.add-product').click(function (e) {
-			e.preventDefault()
-			const prodId = $(this).data('value')
-			console.log('clicked', prodId)
-			$.ajax({
-				url: '/add-to-cart/' + prodId,
-				type: 'get'
-			})
-				.done((res) => {
-					console.log(res);
-					console.log("abi");
-					swal("successfull", `${res.message}`, "success")
-						.then(() => {
-							location.reload()
-						})
-				})
-				.fail((err) => {
-					console.log(err);
-				})
-		})
-	})
-
-
-	$(document).ready(function () {
-		$('.add-produtToWishlist').click(function (e) {
-			e.preventDefault();
-			const productId = $(this).data('value');
-			console.log("clicked");
-			console.log("hjjjjjjjjjj", productId);
-			$.ajax({
-				url: '/add-to-wishList',
-				type: 'post',
-				data: { productId: productId }
-			})
-				.done((res) => {
-					console.log(res.message);
-					swal("successfull", `${res.message}`, "success")
-						.then(() => {
-							location.reload()
-						})
-				})
-				.fail((err) => {
-					console.log(err);
-				})
-		})
-	})
-
-
-
-</script>
+<script src="/user/assets/js/userJs/product.js"></script>
