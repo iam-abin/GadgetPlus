@@ -6,17 +6,18 @@ const coupenHelper = require("../helpers/coupenHelper");
 const orderHepler = require("../helpers/orderHepler");
 const walletHelper = require("../helpers/walletHelper");
 
-var easyinvoice = require("easyinvoice");
-const csvParser = require("json-2-csv");
+// var easyinvoice = require("easyinvoice");
+// const csvParser = require("json-2-csv");
 
 const { formatDate } = require("../utils/date-format");
 const { currencyFormatWithoutDecimal } = require("../utils/currency-format");
 
+const { ADMIN_LAYOUT } = require("../config/constants");
 
 const adminLogin = async (req, res, next) => {
 	try {
 		res.render("admin/adminLogin", {
-			layout: "layouts/adminLayout",
+			layout: ADMIN_LAYOUT,
 			admin: true,
 		});
 	} catch (error) {
@@ -34,10 +35,9 @@ const adminLoginPost = async (req, res, next) => {
 		);
 		if (adminDetails) {
 			req.session.admin = adminDetails;
-			res.redirect("/admin");
-		} else {
-			res.redirect("/admin");
 		}
+		// If admin details are correct the go to admin home page else will go to login page.
+		res.redirect("/admin");
 	} catch (error) {
 		next(error);
 	}
@@ -48,7 +48,7 @@ const adminHome = async (req, res, next) => {
 		const orderStatus = await orderHelper.getAllOrderStatusesCount();
 		const chartData = await adminHelper.getChartDetails();
 		const dashboardDetails = await adminHelper.getDashboardDetails();
-		console.log(dashboardDetails, "dashboardDetails");
+
 		dashboardDetails.totalRevenue = dashboardDetails.totalRevenue
 			? currencyFormatWithoutDecimal(dashboardDetails.totalRevenue)
 			: 0;
@@ -60,7 +60,7 @@ const adminHome = async (req, res, next) => {
 			orderStatus,
 			chartData,
 			dashboardDetails,
-			layout: "layouts/adminLayout",
+			layout: ADMIN_LAYOUT,
 		});
 	} catch (error) {
 		next(error);
@@ -75,7 +75,7 @@ const salesReportPage = async (req, res, next) => {
 		});
 		res.render("admin/sales-report", {
 			sales,
-			layout: "layouts/adminLayout",
+			layout: ADMIN_LAYOUT,
 		});
 	} catch (error) {
 		next(error);
@@ -110,7 +110,7 @@ const usersList = async (req, res, next) => {
 		.findUsers()
 		.then((response) => {
 			res.status(200).render("admin/users-list", {
-				layout: "layouts/adminLayout",
+				layout: ADMIN_LAYOUT,
 				users: response,
 			});
 		})
@@ -153,13 +153,14 @@ const productList = (req, res, next) => {
 				responseProduct[i].product_price = currencyFormatWithoutDecimal(
 					responseProduct[i].product_price
 				);
-				responseProduct[i].product_discount = currencyFormatWithoutDecimal(
-					responseProduct[i].product_discount
-				);
+				responseProduct[i].product_discount =
+					currencyFormatWithoutDecimal(
+						responseProduct[i].product_discount
+					);
 			}
 
 			res.render("admin/products-list", {
-				layout: "layouts/adminLayout",
+				layout: ADMIN_LAYOUT,
 				products: responseProduct,
 			});
 		})
@@ -170,33 +171,31 @@ const productList = (req, res, next) => {
 
 // To get add product list and product page.
 const addProduct = async (req, res, next) => {
-	categoryHelper
-		.getAllcategory()
-		.then((response) => {
-			res.render("admin/add-product", {
-				layout: "layouts/adminLayout",
-				category: response,
-			});
-		})
-		.catch((error) => {
-			return next(error);
+	try {
+		const product = await categoryHelper.getAllcategory();
+
+		res.render("admin/add-product", {
+			layout: ADMIN_LAYOUT,
+			category: product,
 		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 const postAddProduct = async (req, res, next) => {
-	const categories = await categoryHelper.getAllcategory();
-	if (!categories) {
-		return next("Add atleast one category");
-	}
+	const category = await categoryHelper.getAcategory(
+		req.body.product_category
+	);
+	if (!category) throw new Error("Given category is not Present");
 
-	productHelper
-		.addProductToDb(req.body, req.files)
-		.then((response) => {
-			res.status(201).redirect("/admin/product");
-		})
-		.catch((error) => {
-			return next(error);
-		});
+	try {
+		await productHelper.addProductToDb(req.body, req.files);
+
+		res.status(201).redirect("/admin/product");
+	} catch (error) {
+		next(error);
+	}
 };
 
 const editProduct = async (req, res, next) => {
@@ -210,7 +209,7 @@ const editProduct = async (req, res, next) => {
 			res.status(200).render("admin/edit-product", {
 				product,
 				categories,
-				layout: "layouts/adminLayout",
+				layout: ADMIN_LAYOUT,
 			});
 		}
 	} catch (error) {
@@ -218,88 +217,78 @@ const editProduct = async (req, res, next) => {
 	}
 };
 
-const postEditProduct = (req, res, next) => {
-	productHelper
-		.postEditAProduct(req.body, req.params.slug, req.file)
-		.then((response) => {
-			res.status(200).redirect("/admin/product");
-		})
-		.catch((error) => {
-			return next(error);
-		});
+const postEditProduct = async (req, res, next) => {
+	try {
+		await productHelper.postEditAProduct(
+			req.body,
+			req.params.slug,
+			req.file
+		);
+
+		res.status(200).redirect("/admin/product");
+	} catch (error) {
+		next(error);
+	}
 };
 
-const deleteProduct = (req, res, next) => {
-	productHelper
-		.softDeleteProduct(req.params.slug)
-		.then((result) => {
-			if (result) {
-				if (result.product_status) {
-					res.status(200).json({
-						error: false,
-						message: "product unblocked ",
-						product: result,
-					});
-				} else {
-					res.status(200).json({
-						error: false,
-						message: "product deleted",
-						product: result,
-					});
-				}
-			} else {
-				res.status(401).json({
-					error: false,
-					message: "error occurerd",
-				});
-			}
-		})
-		.catch((error) => {
-			return next(error);
-		});
-};
+// List and unlist product
+const deleteProduct = async (req, res, next) => {
+	try {
+		const result = await productHelper.softDeleteProduct(req.params.slug);
 
-const productCategory = (req, res, next) => {
-	categoryHelper
-		.getAllcategory()
-		.then((category) => {
-			res.render("admin/product-categories", {
-				layout: "layouts/adminLayout",
-				categories: category,
+		if (result.product_status) {
+			res.status(200).json({
+				error: false,
+				message: "product unblocked ",
+				product: result,
 			});
-		})
-		.catch((error) => {
-			return next(error);
-		});
+		} else {
+			res.status(200).json({
+				error: false,
+				message: "product deleted",
+				product: result,
+			});
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
-const postAddProductCategory = (req, res) => {
-	categoryHelper
-		.addCategoryTooDb(req.body)
-		.then((category) => {
-			res.status(200).redirect("/admin/product-categories");
-		})
-		.catch((error) => {
-			if (error.code === 11000) {
-				res.status(200).json({
-					error: true,
-					message: "Category already Exist!!!",
-				});
-			} else {
-				res.status(500).redirect("/error");
-			}
+const productCategory = async (req, res, next) => {
+	try {
+		const category = await categoryHelper.getAllcategory();
+		res.render("admin/product-categories", {
+			layout: ADMIN_LAYOUT,
+			categories: category,
 		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-const editProductCategory = (req, res, next) => {
-	categoryHelper
-		.getAcategory(req.params.id)
-		.then((response) => {
-			res.status(200).json({ category: response });
-		})
-		.catch((error) => {
-			return next(error);
-		});
+const postAddProductCategory = async (req, res) => {
+	try {
+		await categoryHelper.addCategoryTooDb(req.body);
+		res.status(200).redirect("/admin/product-categories");
+	} catch (error) {
+		if (error.code === 11000) {
+			res.status(200).json({
+				error: true,
+				message: "Category already Exist!!!",
+			});
+		} else {
+			res.status(500).redirect("/error");
+		}
+	}
+};
+
+const editProductCategory = async (req, res, next) => {
+	try {
+		const editedCatrgory = await categoryHelper.getAcategory(req.params.id);
+		res.status(200).json({ category: editedCatrgory });
+	} catch (error) {
+		next(error);
+	}
 };
 
 const editProductCategoryPost = (req, res) => {
@@ -339,7 +328,7 @@ const deleteProductCategory = (req, res, next) => {
 			}
 		})
 		.catch((error) => {
-			return next(error);
+			next(error);
 		});
 };
 
@@ -347,10 +336,12 @@ const productOrders = async (req, res, next) => {
 	try {
 		let orders = await orderHelper.getAllOrders();
 		for (let i = 0; i < orders.length; i++) {
-			orders[i].totalAmount = currencyFormatWithoutDecimal(orders[i].totalAmount);
+			orders[i].totalAmount = currencyFormatWithoutDecimal(
+				orders[i].totalAmount
+			);
 			orders[i].orderDate = formatDate(orders[i].orderDate);
 		}
-		res.render("admin/orders", { layout: "layouts/adminLayout", orders });
+		res.render("admin/orders", { layout: ADMIN_LAYOUT, orders });
 	} catch (error) {
 		next(error);
 	}
@@ -376,7 +367,7 @@ const changeProductOrderStatus = async (req, res, next) => {
 			status: response.orderStatus,
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -391,7 +382,9 @@ const productOrderDetails = async (req, res, next) => {
 		); //got ordered products details
 
 		for (let i = 0; i < orderdetails.length; i++) {
-			orderdetails[i].discount = currencyFormatWithoutDecimal(orderdetails[i].discount);
+			orderdetails[i].discount = currencyFormatWithoutDecimal(
+				orderdetails[i].discount
+			);
 		}
 
 		for (let i = 0; i < productDetails.length; i++) {
@@ -400,24 +393,27 @@ const productOrderDetails = async (req, res, next) => {
 					productDetails[i].orderedProduct.product_price *
 						productDetails[i].orderedItems.quantity
 				);
-			productDetails[i].orderedProduct.product_price = currencyFormatWithoutDecimal(
-				productDetails[i].orderedProduct.product_price
-			);
+			productDetails[i].orderedProduct.product_price =
+				currencyFormatWithoutDecimal(
+					productDetails[i].orderedProduct.product_price
+				);
 		}
 
-		orderdetails.totalAmount = currencyFormatWithoutDecimal(orderdetails.totalAmount);
+		orderdetails.totalAmount = currencyFormatWithoutDecimal(
+			orderdetails.totalAmount
+		);
 		res.render("admin/order-details", {
 			orderdetails,
 			productDetails,
-			layout: "layouts/adminLayout",
+			layout: ADMIN_LAYOUT,
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
 const banners = (req, res) => {
-	res.render("admin/banner", { layout: "layouts/adminLayout" });
+	res.render("admin/banner", { layout: ADMIN_LAYOUT });
 };
 
 const coupons = async (req, res, next) => {
@@ -425,86 +421,81 @@ const coupons = async (req, res, next) => {
 		let allCoupons = await coupenHelper.getAllCoupons();
 
 		for (let i = 0; i < allCoupons.length; i++) {
-			allCoupons[i].discount = currencyFormatWithoutDecimal(allCoupons[i].discount);
+			allCoupons[i].discount = currencyFormatWithoutDecimal(
+				allCoupons[i].discount
+			);
 			allCoupons[i].expiryDate = formatDate(allCoupons[i].expiryDate);
 		}
 		res.render("admin/coupon", {
 			coupons: allCoupons,
-			layout: "layouts/adminLayout",
+			layout: ADMIN_LAYOUT,
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
 const postAddCoupon = async (req, res, next) => {
-	coupenHelper
-		.addCouponToDb(req.body)
-		.then((coupon) => {
-			res.status(202).redirect("/admin/coupon");
-		})
-		.catch((error) => {
-			return next(error);
-		});
+	try {
+		await coupenHelper.addCouponToDb(req.body);
+		res.status(201).redirect("/admin/coupon");
+	} catch (error) {
+		next(error);
+	}
 };
 
+// To show the coupon data to edit
 const editCoupon = async (req, res, next) => {
 	try {
 		const couponData = await coupenHelper.getACoupenData(req.params.id);
 		res.status(200).json({ couponData });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
-const editCouponPost = (req, res, next) => {
+// To update coupon changes
+const editCouponPost = async (req, res, next) => {
 	try {
-		coupenHelper.editCoupon(req.body);
-		res.redirect("/admin/coupon");
+		await coupenHelper.editCoupon(req.body);
+		res.status(201).redirect("/admin/coupon");
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
 const deleteCoupon = async (req, res, next) => {
 	try {
-		await coupenHelper.deleteACoupon(req.params.id).then((res) => {
-			res.json({ message: "coupon deleted successfully" });
-		});
+		await coupenHelper.deleteACoupon(req.params.id);
+		res.status(200).json({ message: "coupon deleted successfully" });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
 const userProfile = async (req, res, next) => {
 	try {
-		
-	} catch (error) {
-		
-	}
-	const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(
-		req.params.id
-	);
-	for (let i = 0; i < userOrderDetails.length; i++) {
-		userOrderDetails[i].totalAmount = currencyFormatWithoutDecimal(
-			userOrderDetails[i].totalAmount
+		const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(
+			req.params.id
 		);
-		userOrderDetails[i].orderDate = formatDate(
-			userOrderDetails[i].orderDate
-		);
-	}
-	await adminHelper
-		.findAUser(req.params.id)
-		.then((response) => {
+		for (let i = 0; i < userOrderDetails.length; i++) {
+			userOrderDetails[i].totalAmount = currencyFormatWithoutDecimal(
+				userOrderDetails[i].totalAmount
+			);
+			userOrderDetails[i].orderDate = formatDate(
+				userOrderDetails[i].orderDate
+			);
+		}
+		await adminHelper.findAUser(req.params.id).then((response) => {
 			res.render("admin/user-profile", {
-				layout: "layouts/adminLayout",
+				layout: ADMIN_LAYOUT,
 				user: response,
 				userOrderDetails,
 			});
-		})
-		.catch((error) => {
-			next(error);
 		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 const adminLogout = (req, res) => {

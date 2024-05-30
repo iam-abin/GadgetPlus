@@ -47,8 +47,8 @@
 
         let orderStatus = JSON.parse(document.getElementById('orderStatus').value)
 
-        console.log(orderStatus);
-        console.log(orderStatus.pending);
+        
+        console.log(orderStatus,"hiiiiiiiiiiiiiiii");
 
         var myChart = new Chart(ctx, {
             type: 'doughnut',

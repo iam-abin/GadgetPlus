@@ -1,11 +1,3 @@
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
-
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" /> -->
-  
-
-
-
-
 <section class="content-main">
     <div class="content-header">
         <h2 class="content-title">Users</h2>
@@ -83,41 +75,5 @@
 </section> <!-- content-main end// -->
 
 
-<script>
-    function changeUserStatus(userId) {
-        console.log('clicked', userId)
+<script src="/admin/assets/js/adminJs/adminScripts.js"></script>
 
-        swal("Are you sure you want to do this?", {
-            buttons: ["No!", "Yes!"],
-        }).then((res) => {
-            if (res) {
-                $.ajax({
-                    url: '/admin/block-unBlock-user/' + userId,
-                    type: 'get'
-                }).done(res => {
-                    swal("Successfull", `${res.message}`, "success").then(() => {
-                        location.reload();
-                    })
-                    // const status=res.user.isActive
-                    // console.log("------------------");
-                    // console.log(status);
-                    // console.log("------------------");
-
-                    // if (status) {
-                    //     document.getElementById(`user-status-${userId}`).innerHTML = 'Active'
-                    // } else {
-                    //     document.getElementById(`user-status-${userId}`).innerHTML = 'Blocked'
-                    // }
-                }).fail((err) => {
-                    swal("Successfull", `${err.responseJSON.message}`, "success").then(() => {
-                        location.reload();
-                    })
-                })
-            }
-        })
-    }
-</script>
-
-
-
-<!-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script> -->

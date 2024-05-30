@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema(
 			required: true,
 		},
 		product_discount: {
-			type: String,
+			type: Number,
 			required: true,
 		},
 		image: {
