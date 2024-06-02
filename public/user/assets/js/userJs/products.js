@@ -1,6 +1,12 @@
 $(document).ready(function () {
+
+    let submitButton = document.getElementsByClassName('add-to-cart')
+    console.log(submitButton, "add-to-cart submitButton");
     $('.add-to-cart').click(function (e) {
         e.preventDefault()
+        // Disable the submit button
+        // $('.add-to-cart').prop('disabled', true);
+        submitButton.disabled = true;
         const prodId = $(this).data('value')
         console.log('clicked', prodId)
         $.ajax({
@@ -14,6 +20,7 @@ $(document).ready(function () {
                     .then(() => {
                         location.reload()
                     })
+                    // $('.add-to-cart').prop('disabled', false);
             })
             .fail((err) => {
                 console.log(err);

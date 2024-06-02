@@ -8,7 +8,6 @@ const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const nocache = require("nocache");
-const methodOverride = require("method-override");
 
 const connectDb = require("./config/db");
 const errorHandler = require("./middlewares/errorHandiling");
@@ -34,7 +33,6 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(express.json()); //for parsing json
 app.use(express.urlencoded({ extended: false })); //for parsing form data
-app.use(methodOverride("_method"));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
@@ -55,6 +53,9 @@ app.use(
 	})
 );
 
+// throw new Error("hiiiii")
+
+
 // Routes
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
@@ -68,6 +69,7 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 console.clear();
+
 
 // Start the server
 const PORT = process.env.PORT || 8080;

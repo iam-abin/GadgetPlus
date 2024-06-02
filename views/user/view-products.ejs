@@ -20,22 +20,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-9">
-					<div class="toolbox">
-
-						<div class="toolbox-right">
-							<div class="toolbox-sort">
-								<label for="sortby">Sort by:</label>
-								<div class="select-custom">
-									<select name="sortby" id="sortby" class="form-control">
-										<option value="popularity" selected="selected">Most Popular</option>
-										<option value="rating">Most Rated</option>
-										<option value="date">Date</option>
-									</select>
-								</div>
-							</div><!-- End .toolbox-sort -->
-
-						</div><!-- End .toolbox-right -->
-					</div><!-- End .toolbox -->
+					
 
 					<div class="products mb-3">
 						<div class="row" id="products-row">
@@ -257,8 +242,8 @@
 		rangeSlider.noUiSlider.on('update', function (values) {
 			sliderValue1.value = Math.floor(values[0]);
 			sliderValue2.value = Math.floor(values[1]);
-			fromSpan.innerHTML =Number( Math.floor(values[0])).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
-			toSpan.innerHTML = Number( Math.floor(values[1])).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
+			fromSpan.innerHTML = Number(Math.floor(values[0])).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
+			toSpan.innerHTML = Number(Math.floor(values[1])).toLocaleString('en-in', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })
 		});
 	});
 
@@ -291,15 +276,15 @@
 		console.log(min);
 		console.log(max);
 		console.log(typeof selectedCategories, "selectedCategories");
-		filterData(selectedCategories,min,max);
+		filterData(selectedCategories, min, max);
 	})
 
-	function filterData(selectedCategories,min,max) {
-		
-		let data={
-			selectedCategories:selectedCategories,
-			min:min,
-			max:max
+	function filterData(selectedCategories, min, max) {
+
+		let data = {
+			selectedCategories: selectedCategories,
+			min: min,
+			max: max
 		}
 		data = JSON.stringify(data)
 		let html = ``;
@@ -307,7 +292,7 @@
 		$.ajax({
 			url: '/viewProducts?filterData=' + data,
 			type: 'get',
-			
+
 		})
 			.done((res) => {
 				console.log(res);
@@ -438,4 +423,4 @@
 
 </script>
 
-<script src="/user/assets/js/userJs/product.js"></script>
+<script src="/user/assets/js/userJs/products.js"></script>

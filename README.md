@@ -1,4 +1,5 @@
-### GadgetPlus
+# GadgetPlus
+GadgetPlus is an e-commerce application. It allows users to browse and purchase gadgets online.
 
 ## Technologies Used
 
@@ -7,24 +8,66 @@
 - MongoDB
 - EJS, HTML5, CSS3
 
+---
+
+
+### User-Facing Features
+
+- **User Authentication**: Create user accounts, log in, and manage personal information securely.
+- **Product Search**: Utilize the search functionality to quickly locate specific products by name, keywords, or attributes.
+- **Product Filters**: Narrow down product results using filters such as product category, price range.
+- **Product List**: Explore a vast catalog of products, making it easy to find desired items.
+- **Product Zoom**: Utilize the magic zoom function to get a closer look at product images.
+- **Shopping Cart**: Add products to the shopping cart for easy management and seamless checkout.
+- **Wishlist**: Save desired products to a wishlist for future reference or purchase.
+- **Mobile OTP Login**: Verify user mobile numbers using OTP to login.
+- **Payment Methods**: Choose from various payment methods, including Razor Pay,wallet and cash on delivery.
+- **Return and Cancel**: Easily initiate returns or cancel orders as per the return policy.
+- **Coupon Code**: Apply coupon codes for discounts during checkout.
+- **Address Management**: Add, edit, and delete user addresses for accurate and convenient delivery.
+- **Profile Management**: Edit merchant profile information and upload profile images.
+- **Order Management**: View and manage orders, including different order statuses such as pending, processing, shipped, outForDelivery,delivered, candelPending, canceled, etc.
+- **Invoice download**: Generate invoid for delivered products and can download them in PDF format.
+
+
+### Admin-Facing Features
+
+- **Admin Authentication**: To Authenticate admins for added security. Admin login and logout.
+- **User Management**: Handle user accounts, including blocking, unblocking, and managing user data.
+- **Product Management**: Handle Products, including adding, editing, blocking, and managing product data.
+- **Coupon Management**: Add, edit, delete, and update coupon codes for discounts.
+- **Category Management**: Manage categories such as for each products, including adding, editing, and deleting categories.
+- **Sales Reports**: Generate sales reports for order on a daily, weekly, monthly, and yearly basis and download them in CSV or PDF format.
+- **Dashboard**: Display statistics of sales such as profit, products etc., with graphs for monthly, daily insights.
+
+---
+
 ## Setup
 
 1. Clone the repository
+
 ```
 git clone https://github.com/iam-abin/GadgetPlus.git
 ```
-Then,
+2. Install the required dependencies:
+
 ```
 cd GadgetPlus
 ```
 ```
 npm install
 ```
+3. Configure the environment variables. Rename the `.env.example` file to `.env` and update the necessary variables with your specific configurations.
+
+4. Start the application:
+
 ```
 npm start
 ```
 
+5. Open your browser and navigate to `http://localhost:3000` to access gadgetPlus.
 
+---
 
 
 ### Docker commands

@@ -91,9 +91,9 @@
                 				</div><!-- End .row -->
 
                                 <label for="cmessage" class="sr-only">Message</label>
-                				<textarea class="form-control" cols="30" rows="4" name="message" id="cmessage" required placeholder="Message *"></textarea>
+                				<textarea class="form-control" cols="30" rows="4" name="message" id="cmessage" required placeholder="Message *" ></textarea>
 
-                				<button type="submit" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                				<button type="submit" id="submit-btnn" class="btn btn-outline-primary-2 btn-minwidth-sm">
                 					<span>SUBMIT</span>
             						<i class="icon-long-arrow-right"></i>
                 				</button>
@@ -113,16 +113,20 @@
 
         
 		<script>
+			// column name in the google sheet are creating based on the name attribute of the input fields.
 			$("#submit-form").submit((e)=>{
+				let submitButton = document.getElementById('submit-btnn')
+				submitButton.disabled = true;
 				e.preventDefault()
 				$.ajax({
-					url:"https://script.google.com/macros/s/AKfycbyXxXKsvaisAhZhRHHnlkf9y_lWfTJsX3s5XOtpY-dseiJjVPbYWRr3ZL7rju3z5_pO/exec",
+					url:"https://script.google.com/macros/s/AKfycbwTeIwaeA2Z5VKtTnY5npIX3EpWgDKo-cn58lJMQuSfJXGEn-Gzz6yxuGooXOlIbuAP/exec",
 					data:$("#submit-form").serialize(),
 					method:"post",
 					success:function (response){
 						swal("successfull", "Form submitted successfully", "success")
 						.then(() => {
 							location.reload()
+							submitButton.disabled = false;
 						})
 					},
 					error:function (err){
