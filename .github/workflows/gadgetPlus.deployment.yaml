@@ -11,9 +11,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        # Use Node.js 20 for the checkout action
-        node-version: '20'
 
     - name: Setup node
       uses: actions/setup-node@v3
@@ -43,7 +40,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         script: |
           echo "Connected to AWS EC2 instance"
-          # cd ~/home/danielwetan/apps/node1
+          cd ~/home/danielwetan/apps/node1
           git pull origin master
           git status
           npm install
