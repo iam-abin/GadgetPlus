@@ -24,7 +24,7 @@ jobs:
       run: ls -la
 
     - name: Install dependencies
-      run: cd GadgetPlus && npm install
+      run: npm install
 
     - name: Start Application
       run: npm start

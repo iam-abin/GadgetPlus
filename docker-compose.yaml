@@ -1,0 +1,85 @@
+# version: "3.8"
+# services:
+#   client:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     image: abinv/gadgetPlusApp:latest
+#     container_name: gadgetPlusApp
+#     env_file:
+#       - ./client/.env
+#     volumes:
+#       - ./client/build:/usr/share/nginx/html
+#     depends_on:
+#       - server
+#     networks:
+#       - gadgetPlus_connection_network
+#     deploy:
+#       resources:
+#         limits:
+#           memory: 1G
+#         reservations:
+#           memory: 512M
+
+#   server:
+#     build:
+#       context: ./server
+#       dockerfile: Dockerfile
+#     image: abinv/gadgetPlus_server:latest
+#     env_file:
+#       - ./server/.env
+#     depends_on:
+#       - redis
+#     networks:
+#       - gadgetPlus_connection_network
+#     restart: always
+#     #healthcheck:
+#     #test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+#       # interval: 30s
+#       # timeout: 10s
+#       # retries: 5
+      
+#   redis:
+#     image: redis:latest
+#     environment:
+#       - ALLOW_EMPTY_PASSWORD=yes
+#       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+#     ports:
+#       - "6379:6379"
+#     volumes:
+#       - ./.db:/data
+#     restart: always
+#     networks:
+#       - gadgetPlus_connection_network
+
+#   nginx:
+#     image: nginx:alpine
+#     volumes:
+#       - ./conf.d:/etc/nginx/conf.d:ro
+#       - ./client/build:/usr/share/nginx/html
+#       - ./letsencrypt:/etc/letsencrypt
+#     depends_on:
+#       - server
+#       - client
+#     ports:
+#       - "80:80"
+#       - "443:443"
+#     networks:
+#       - gadgetPlus_connection_network
+#     restart: always
+
+#   certbot:
+#     image: certbot/certbot
+#     volumes:
+#       - ./letsencrypt:/etc/letsencrypt
+#       - ./certbot-config:/etc/letsencrypt
+#       - ./client/build:/usr/share/nginx/html
+#     depends_on:
+#       - nginx
+#     command: certonly --webroot --webroot-path=/usr/share/nginx/html --email helicopeter1100@gmail.com --agree-tos --no-eff-email -d gadgetPlus.online --force-renewal
+#     networks:
+#       - gadgetPlus_connection_network
+
+# networks:
+#   gadgetPlus_connection_network:
+#     driver: bridge
