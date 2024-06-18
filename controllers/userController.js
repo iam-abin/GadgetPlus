@@ -6,7 +6,7 @@ const userHelper = require("../helpers/userHelper");
 const productHelper = require("../helpers/productHelper");
 const cartHelper = require("../helpers/cartHelper");
 const addressHelper = require("../helpers/addressHelper");
-const orderHepler = require("../helpers/orderHepler");
+const orderHelper = require("../helpers/orderHelper");
 const couponHelper = require("../helpers/coupenHelper");
 const wishListHelper = require("../helpers/wishListHelper");
 const walletHelper = require("../helpers/walletHelper");
@@ -410,8 +410,8 @@ const addToWishList = async (req, res, next) => {
 };
 
 const removeFromWishList = async (req, res, next) => {
-    let userId = req.session.user._id;
-    let productId = req.body.productId;
+	let userId = req.session.user._id;
+	let productId = req.body.productId;
 	try {
 		await wishListHelper.removeAnItemFromWishList(userId, productId);
 		wishListCount = await wishListHelper.getWishListCount(userId);
@@ -484,8 +484,8 @@ const incDecQuantity = async (req, res, next) => {
 		let cartItems = await cartHelper.getAllCartItems(user._id);
 		obj.totalAmount = await cartHelper.totalSubtotal(user._id, cartItems);
 
-		obj.totalAmount = formatCurrency(obj.totalAmount)
-        
+		obj.totalAmount = formatCurrency(obj.totalAmount);
+
 		if (response.isOutOfStock) {
 			res.status(202).json({ OutOfStock: true, message: obj });
 		} else {
@@ -505,7 +505,7 @@ const removeFromCart = async (req, res, next) => {
 
 		let cartItems = await cartHelper.getAllCartItems(userId);
 		let totalAmount = await cartHelper.totalSubtotal(userId, cartItems);
-		totalAmount = formatCurrency(totalAmount)
+		totalAmount = formatCurrency(totalAmount);
 
 		let cartCount = await cartHelper.getCartCount(userId);
 		wishListCount = await wishListHelper.getWishListCount(userId);
@@ -610,119 +610,84 @@ const applyCoupon = async (req, res, next) => {
 };
 
 const placeOrder = async (req, res, next) => {
-	try {
-		let userId = req.body.userId;
-		let cartItems = await cartHelper.getAllCartItems(userId);
-		let coupon = await couponSchema.find({ user: userId });
+    try {
+        let userId = req.body.userId;
+        let paymentType = req.body.payment;
+        let cartItems = await cartHelper.getAllCartItems(userId);
+        let coupon = await couponSchema.find({ user: userId });
 
-		if (!cartItems.length) {
-			return res.json({
-				error: true,
-				message: "Please add items to cart before checkout",
-			});
-		}
+        if (!cartItems.length)
+            return res.json({
+                error: true,
+                message: "Please add items to cart before checkout",
+            });
 
-		if (req.body.addressSelected == undefined) {
-			return res.json({ error: true, message: "Please Choose Address" });
-		}
+        if (req.body.addressSelected == undefined)
+            return res
+                .status(400)
+                .json({ error: true, message: "Please Choose Address" });
 
-		if (req.body.payment == undefined) {
-			return res.json({
-				error: true,
-				message: "Please Choose A Payment Method",
-			});
-		}
+        if (paymentType == undefined)
+            return res.status(400).json({
+                error: true,
+                message: "Please Choose A Payment Method",
+            });
 
-		const totalAmount = await cartHelper.totalAmount(userId); // instead find cart using user id and take total amound from that
+        const totalAmount = await cartHelper.totalAmount(userId);
 
-		if (req.body.payment == "COD") {
-			await orderHepler
-				.orderPlacing(req.body, totalAmount, cartItems)
-				.then(async (orderDetails) => {
-					await productHelper.decreaseStock(cartItems);
-					await cartHelper.clearCart(userId);
-					res.status(202).json({
-						paymentMethod: "COD",
-						message: "Purchase Done",
-					});
-				});
-		} else if (req.body.payment == "razorpay") {
-			await orderHepler
-				.orderPlacing(req.body, totalAmount, cartItems)
-				.then(async (orderDetails) => {
-					await razorpay
-						.razorpayOrderCreate(
-							orderDetails._id,
-							orderDetails.totalAmount
-						)
-						.then(async (razorpayOrderDetails) => {
-							await orderHepler.changeOrderStatus(
-								orderDetails._id,
-								"confirmed"
-							);
-							await productHelper.decreaseStock(cartItems);
-							await cartHelper.clearCart(userId);
-							res.json({
-								paymentMethod: "razorpay",
-								orderDetails,
-								razorpayOrderDetails,
-								razorpaykeyId: process.env.RAZORPAY_KEY_ID,
-							});
-						});
-				});
-		} else if (req.body.payment == "paypal") {
-			await orderHepler
-				.orderPlacing(req.body, totalAmount, cartItems)
-				.then(async (orderDetails) => {
-					await paypal
-						.paypayPay()
-						.then(async (paypalOrderDetails) => {
-							await orderHepler.changeOrderStatus(
-								orderDetails._id,
-								"confirmed"
-							);
-							await productHelper.decreaseStock(cartItems);
-							await cartHelper.clearCart(userId);
-							res.json({
-								paymentMethod: "paypal",
-								orderDetails,
-								paypalOrderDetails,
-							});
-						});
-				});
-		} else if (req.body.payment == "wallet") {
-			let isPaymentDone = await walletHelper.payUsingWallet(
-				userId,
-				totalAmount
-			);
-			if (isPaymentDone) {
-				await orderHepler
-					.orderPlacing(req.body, totalAmount, cartItems)
-					.then(async (orderDetails) => {
-						await orderHepler.changeOrderStatus(
-							orderDetails._id,
-							"confirmed"
-						);
-						await productHelper.decreaseStock(cartItems);
-						await cartHelper.clearCart(userId);
-						res.status(202).json({
-							paymentMethod: "wallet",
-							error: false,
-							message: "Purchase Done",
-						});
-					});
-			} else {
-				res.status(200).json({
-					paymentMethod: "wallet",
-					error: true,
-					message: "Insufficient Balance in wallet",
-				});
-			}
-		}
-	} catch (error) {
-		return next(error);
-	}
+        switch (paymentType) {
+            case "COD":
+                const orderDetailsCOD = await orderHelper.orderPlacing(req.body, totalAmount, cartItems);
+                await productHelper.decreaseStock(cartItems);
+                await cartHelper.clearCart(userId);
+                res.status(202).json({
+                    paymentMethod: "COD",
+                    message: "Purchase Done",
+                });
+                break;
+            case "razorpay":
+                const orderDetailsRazorpay = await orderHelper.orderPlacing(req.body, totalAmount, cartItems);
+                const razorpayOrderDetails = await razorpay.razorpayOrderCreate(orderDetailsRazorpay._id, orderDetailsRazorpay.totalAmount);
+                await orderHelper.changeOrderStatus(orderDetailsRazorpay._id, "confirmed");
+                await productHelper.decreaseStock(cartItems);
+                await cartHelper.clearCart(userId);
+                res.json({
+                    paymentMethod: "razorpay",
+                    orderDetails: orderDetailsRazorpay,
+                    razorpayOrderDetails,
+                    razorpaykeyId: process.env.RAZORPAY_KEY_ID,
+                });
+                break;
+            case "wallet":
+                let isPaymentDone = await walletHelper.payUsingWallet(userId, totalAmount);
+                if (isPaymentDone) {
+                    const orderDetailsWallet = await orderHelper.orderPlacing(req.body, totalAmount, cartItems);
+                    await orderHelper.changeOrderStatus(orderDetailsWallet._id, "confirmed");
+                    await productHelper.decreaseStock(cartItems);
+                    await cartHelper.clearCart(userId);
+                    res.status(202).json({
+                        paymentMethod: "wallet",
+                        error: false,
+                        message: "Purchase Done",
+                    });
+                } else {
+                    res.status(200).json({
+                        paymentMethod: "wallet",
+                        error: true,
+                        message: "Insufficient Balance in wallet",
+                    });
+                }
+                break;
+            default:
+                // Handle default case if needed
+                break;
+        }
+    } catch (error) {
+        console.error("Error processing payment:", error);
+        next(error);
+    }
 };
+
 
 //razorpay payment verification
 const verifyPayment = async (req, res, next) => {
@@ -730,7 +695,7 @@ const verifyPayment = async (req, res, next) => {
 	try {
 		const response = await razorpay.verifyPaymentSignature(req.body);
 		if (response.signatureIsValid) {
-			await orderHepler.changeOrderStatus(
+			await orderHelper.changeOrderStatus(
 				req.body["orderDetails[_id]"],
 				"confirmed"
 			);
@@ -759,7 +724,7 @@ const orderSuccess = (req, res, next) => {
 const orders = async (req, res, next) => {
 	try {
 		const user = req.session.user;
-		const userOrderDetails = await orderHepler.getAllOrderDetailsOfAUser(
+		const userOrderDetails = await orderHelper.getAllOrderDetailsOfAUser(
 			user._id
 		);
 		for (let i = 0; i < userOrderDetails.length; i++) {
@@ -784,10 +749,10 @@ const orders = async (req, res, next) => {
 const productOrderDetails = async (req, res, next) => {
 	try {
 		const orderId = req.params.id;
-		let orderDetails = await orderHepler.getOrderedUserDetailsAndAddress(
+		let orderDetails = await orderHelper.getOrderedUserDetailsAndAddress(
 			orderId
 		); //got user details
-		let productDetails = await orderHepler.getOrderedProductsDetails(
+		let productDetails = await orderHelper.getOrderedProductsDetails(
 			orderId
 		); //got ordered products details
 		res.render("user/order-details-user", {
@@ -807,7 +772,7 @@ const cancelOrder = async (req, res, next) => {
 	const userId = req.body.userId;
 	const orderId = req.body.orderId;
 	try {
-		await orderHepler.cancelOrder(userId, orderId);
+		await orderHelper.cancelOrder(userId, orderId);
 		res.status(200).json({
 			isCancelled: true,
 			message: "order canceled successfully",
@@ -821,7 +786,7 @@ const returnOrder = async (req, res, next) => {
 	const userId = req.body.userId;
 	const orderId = req.body.orderId;
 	try {
-		await orderHepler.returnOrder(userId, orderId);
+		await orderHelper.returnOrder(userId, orderId);
 		res.status(200).json({
 			isreturned: "return pending",
 			message: "order returned Process Started",

@@ -1,9 +1,9 @@
 const adminHelper = require("../helpers/adminHelper");
 const productHelper = require("../helpers/productHelper");
 const categoryHelper = require("../helpers/categoryHelper");
-const orderHelper = require("../helpers/orderHepler");
+const orderHelper = require("../helpers/orderHelper");
 const coupenHelper = require("../helpers/coupenHelper");
-const orderHepler = require("../helpers/orderHepler");
+const orderHelper = require("../helpers/orderHelper");
 const walletHelper = require("../helpers/walletHelper");
 
 // var easyinvoice = require("easyinvoice");
@@ -70,7 +70,6 @@ const adminHome = async (req, res, next) => {
 const salesReportPage = async (req, res, next) => {
 	try {
 		const sales = await orderHelper.getAllDeliveredOrders();
-		console.log(sales," ]]]]");
 		sales.forEach((order) => {
 			order.orderDate = formatDate(order.orderDate);
 			order.totalAmount = formatCurrency(order.totalAmount);
@@ -351,7 +350,7 @@ const productOrders = async (req, res, next) => {
 
 const changeProductOrderStatus = async (req, res, next) => {
 	try {
-		const response = await orderHepler.changeOrderStatus(
+		const response = await orderHelper.changeOrderStatus(
 			req.body.orderId,
 			req.body.status
 		);
