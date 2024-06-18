@@ -24,24 +24,21 @@ jobs:
       run: ls -la
 
     - name: Install dependencies
-      run: npm install
-      
-    - name: Build 
-      run: npm run build
+      run: cd GadgetPlus && npm install
 
-    - name: Start 
+    - name: Start Application
       run: npm start
 
-    - name: Deploy to AWS EC2 using ssh
-      uses: appleboy/ssh-action@v0.1.4
-      with:
-        host: ${{ secrets.EC2_PUBLIC_IP }}
-        username: ubuntu
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        script: |
-          echo "Connected to AWS EC2 instance"
-          cd ~/home/danielwetan/apps/node1
-          git pull origin master
-          git status
-          npm install
-          pm2 start app.js
+    # - name: Deploy to AWS EC2 using ssh
+    #   uses: appleboy/ssh-action@v0.1.4
+    #   with:
+    #     host: ${{ secrets.EC2_PUBLIC_IP }}
+    #     username: ubuntu
+    #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+    #     script: |
+    #       echo "Connected to AWS EC2 instance"
+    #       cd ~/home/danielwetan/apps/node1
+    #       git pull origin master
+    #       git status
+    #       npm install
+    #       pm2 start app.js

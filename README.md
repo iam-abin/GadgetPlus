@@ -11,6 +11,8 @@ GadgetPlus is an e-commerce application. It allows users to browse and purchase 
 ---
 
 
+Node version: Welcome to Node.js v18.15.0
+
 ### User-Facing Features
 
 - **User Authentication**: Create user accounts, log in, and manage personal information securely.
@@ -42,6 +44,13 @@ GadgetPlus is an e-commerce application. It allows users to browse and purchase 
 
 ---
 
+
+### Prerequisites
+
+Make sure you have the following installed on your system:
+
+-   Node.js: [Download and install Node.js](https://nodejs.org/)
+
 ## Setup
 
 1. Clone the repository
@@ -49,23 +58,28 @@ GadgetPlus is an e-commerce application. It allows users to browse and purchase 
 ```
 git clone https://github.com/iam-abin/GadgetPlus.git
 ```
-2. Install the required dependencies:
 
-```
-cd GadgetPlus
-```
-```
-npm install
-```
-3. Configure the environment variables. Rename the `.env.example` file to `.env` and update the necessary variables with your specific configurations.
+2. Navigate to the project directory
 
-4. Start the application:
+    ```
+    cd GadgetPlus
+    ```
+
+3. Install the dependencies
+
+   ```
+   npm install 
+   ```
+
+4. Configure the environment variables. Rename the `.env.example` file to `.env` and update the necessary variables with your specific configurations.
+
+5. Start the application
 
 ```
 npm start
 ```
 
-5. Open your browser and navigate to `http://localhost:3000` to access gadgetPlus.
+6. Open your browser and navigate to `http://localhost:3000` to access gadgetPlus.
 
 ---
 

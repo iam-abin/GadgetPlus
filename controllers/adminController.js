@@ -10,7 +10,7 @@ const walletHelper = require("../helpers/walletHelper");
 // const csvParser = require("json-2-csv");
 
 const { formatDate } = require("../utils/date-format");
-const { currencyFormatWithoutDecimal } = require("../utils/currency-format");
+const { currencyFormatWithoutDecimal, formatCurrency } = require("../utils/currency-format");
 
 const { ADMIN_LAYOUT } = require("../config/constants");
 
@@ -70,8 +70,10 @@ const adminHome = async (req, res, next) => {
 const salesReportPage = async (req, res, next) => {
 	try {
 		const sales = await orderHelper.getAllDeliveredOrders();
+		console.log(sales," ]]]]");
 		sales.forEach((order) => {
 			order.orderDate = formatDate(order.orderDate);
+			order.totalAmount = formatCurrency(order.totalAmount);
 		});
 		res.render("admin/sales-report", {
 			sales,
