@@ -9,7 +9,10 @@ const walletHelper = require("../helpers/walletHelper");
 // const csvParser = require("json-2-csv");
 
 const { formatDate } = require("../utils/date-format");
-const { currencyFormatWithoutDecimal, formatCurrency } = require("../utils/currency-format");
+const {
+	currencyFormatWithoutDecimal,
+	formatCurrency,
+} = require("../utils/currency-format");
 
 const { ADMIN_LAYOUT } = require("../config/constants");
 
@@ -106,67 +109,61 @@ const salesReport = async (req, res, next) => {
 };
 
 const usersList = async (req, res, next) => {
-	await adminHelper
-		.findUsers()
-		.then((response) => {
-			res.status(200).render("admin/users-list", {
-				layout: ADMIN_LAYOUT,
-				users: response,
-			});
-		})
-		.catch((error) => {
-			return next(error);
+	try {
+		const users = await adminHelper.findUsers();
+		res.status(200).render("admin/users-list", {
+			layout: ADMIN_LAYOUT,
+			users: users,
 		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 const blockUnBlockUser = async (req, res, next) => {
 	const userId = req.params.id;
-	await adminHelper
-		.blockOrUnBlockUser(userId)
-		.then((result) => {
-			if (result.isActive) {
-				res.status(200).json({
-					error: false,
-					message: "User has been unBlocked",
-					user: result,
-				});
-			} else {
-				req.session.user = false;
+	try {
+		const user = await adminHelper.blockOrUnBlockUser(userId);
 
-				res.status(200).json({
-					error: false,
-					message: "User has been Blocked",
-					user: result,
-				});
-			}
-		})
-		.catch((error) => {
-			return next(error);
-		});
+		if (user.isActive) {
+			res.status(200).json({
+				error: false,
+				message: "User has been unBlocked",
+				user: user,
+			});
+		} else {
+			req.session.user = false;
+
+			res.status(200).json({
+				error: false,
+				message: "User has been Blocked",
+				user: user,
+			});
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
-const productList = (req, res, next) => {
-	productHelper
-		.getAllProductsWithLookup()
-		.then((responseProduct) => {
-			for (let i = 0; i < responseProduct.length; i++) {
-				responseProduct[i].product_price = currencyFormatWithoutDecimal(
-					responseProduct[i].product_price
-				);
-				responseProduct[i].product_discount =
-					currencyFormatWithoutDecimal(
-						responseProduct[i].product_discount
-					);
-			}
+const productList = async (req, res, next) => {
+	try {
+		const responseProduct = await productHelper.getAllProductsWithLookup();
+		for (let i = 0; i < responseProduct.length; i++) {
+			responseProduct[i].product_price = currencyFormatWithoutDecimal(
+				responseProduct[i].product_price
+			);
+			responseProduct[i].product_discount = currencyFormatWithoutDecimal(
+				responseProduct[i].product_discount
+			);
+		}
 
-			res.render("admin/products-list", {
-				layout: ADMIN_LAYOUT,
-				products: responseProduct,
-			});
-		})
-		.catch((error) => {
-			return next(error);
+		res.render("admin/products-list", {
+			layout: ADMIN_LAYOUT,
+			products: responseProduct,
 		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 // To get add product list and product page.
@@ -213,7 +210,7 @@ const editProduct = async (req, res, next) => {
 			});
 		}
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -310,26 +307,27 @@ const editProductCategoryPost = (req, res) => {
 };
 
 const deleteProductCategory = (req, res, next) => {
-	categoryHelper
-		.softDeleteAProductCategory(req.params.id)
-		.then((response) => {
-			if (response.status) {
-				res.status(200).json({
-					error: false,
-					message: "category listed",
-					listed: true,
-				});
-			} else {
-				res.status(200).json({
-					error: false,
-					message: "category unlisted",
-					listed: false,
-				});
-			}
-		})
-		.catch((error) => {
-			next(error);
-		});
+	try {
+		const response = categoryHelper.softDeleteAProductCategory(
+			req.params.id
+		);
+
+		if (response.status) {
+			res.status(200).json({
+				error: false,
+				message: "category listed",
+				listed: true,
+			});
+		} else {
+			res.status(200).json({
+				error: false,
+				message: "category unlisted",
+				listed: false,
+			});
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
 const productOrders = async (req, res, next) => {
@@ -486,12 +484,11 @@ const userProfile = async (req, res, next) => {
 				userOrderDetails[i].orderDate
 			);
 		}
-		await adminHelper.findAUser(req.params.id).then((response) => {
-			res.render("admin/user-profile", {
-				layout: ADMIN_LAYOUT,
-				user: response,
-				userOrderDetails,
-			});
+		const user = await adminHelper.findAUser(req.params.id);
+		res.render("admin/user-profile", {
+			layout: ADMIN_LAYOUT,
+			user: user,
+			userOrderDetails,
 		});
 	} catch (error) {
 		next(error);

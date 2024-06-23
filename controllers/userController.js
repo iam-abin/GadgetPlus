@@ -6,7 +6,7 @@ const userHelper = require("../helpers/userHelper");
 const productHelper = require("../helpers/productHelper");
 const cartHelper = require("../helpers/cartHelper");
 const addressHelper = require("../helpers/addressHelper");
-const orderHelper = require('../helpers/orderHepler')
+const orderHelper = require("../helpers/orderHepler");
 const couponHelper = require("../helpers/coupenHelper");
 const wishListHelper = require("../helpers/wishListHelper");
 const walletHelper = require("../helpers/walletHelper");
@@ -33,7 +33,7 @@ const landingPage = async (req, res, next) => {
 			featuredProducts,
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -89,7 +89,7 @@ const userHome = async (req, res, next) => {
 			featuredProducts,
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -102,18 +102,16 @@ const userSignup = async (req, res) => {
 };
 
 const userSignupPost = async (req, res, next) => {
-	userHelper
-		.doSignup(req.body)
-		.then((response) => {
-			if (!response.userExist) {
-				res.redirect("/user-login");
-			} else {
-				res.redirect("/");
-			}
-		})
-		.catch((error) => {
-			return next(error);
-		});
+	try {
+		const response = userHelper.doSignup(req.body);
+		if (!response.userExist) {
+			res.redirect("/user-login");
+		} else {
+			res.redirect("/");
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
 const userLogin = async (req, res) => {
@@ -124,23 +122,23 @@ const userLogin = async (req, res) => {
 };
 
 const userLoginPost = async (req, res, next) => {
-	await userHelper
-		.doLogin(req.body)
-		.then((response) => {
-			if (response.loggedIn) {
-				req.session.user = response.user;
-				return res
-					.status(202)
-					.json({ error: false, message: response.logginMessage });
-			} else {
-				return res
-					.status(401)
-					.json({ error: false, message: response.logginMessage });
-			}
-		})
-		.catch((error) => {
-			return next(error);
-		});
+	try {
+		const response = await userHelper.doLogin(req.body);
+		if (response.loggedIn) {
+			req.session.user = response.user;
+			res.status(202).json({
+				error: false,
+				message: response.logginMessage,
+			});
+		} else {
+			res.status(401).json({
+				error: false,
+				message: response.logginMessage,
+			});
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
 const forgotPassword = (req, res) => {
@@ -152,39 +150,35 @@ const otpSendingForgot = async (req, res, next) => {
 		const find = req.body;
 
 		req.session.mobile = find.phone;
-		await userSchema
-			.findOne({ phone: find.phone })
-			.then(async (userData) => {
-				if (userData) {
-					await twilio.sentOtp(find.phone);
-					res.render("user/otp-fill-forgotpswd");
-				} else {
-					res.redirect("/user-signup");
-				}
-			})
-			.catch((error) => {
-				res.redirect("/user-signup");
-			});
+		const userWithNumber = await userSchema.findOne({ phone: find.phone });
+		if (userWithNumber) {
+			await twilio.sentOtp(find.phone);
+			res.render("user/otp-fill-forgotpswd");
+		} else {
+			res.redirect("/user-signup");
+		}
+		// .catch((error) => {
+		// 	res.redirect("/user-signup");
+		// });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
 const otpVerifyingForgot = async (req, res, next) => {
 	const phone = req.session.mobile;
 	const otp = req.body.otp;
-	await twilio
-		.verifyOtp(phone, otp)
-		.then((status) => {
-			if (status) {
-				res.render("user/resetPassword");
-			} else {
-				res.redirect("/user-signup");
-			}
-		})
-		.catch((error) => {
-			return next(error);
-		});
+
+	try {
+		const status = await twilio.verifyOtp(phone, otp);
+		if (status) {
+			res.render("user/resetPassword");
+		} else {
+			res.redirect("/user-signup");
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
 const resetPassword = async (req, res, next) => {
@@ -194,7 +188,7 @@ const resetPassword = async (req, res, next) => {
 		await userHelper.changePassword(newPassword, phone);
 		res.redirect("/user-login");
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -204,42 +198,43 @@ const otpUser = (req, res) => {
 };
 
 // otp sending in login process
-const otpSending = async (req, res) => {
+const otpSending = async (req, res, next) => {
 	const find = req.body;
 	req.session.mobile = req.body.phone;
-	await userSchema
-		.findOne({ phone: find.phone })
-		.then(async (userData) => {
-			if (userData) {
-				req.session.tempUser = userData;
-				await twilio.sentOtp(find.phone);
-				res.render("user/otp-fill");
-			} else {
-				res.redirect("/user-signup");
-			}
-		})
-		.catch((error) => {
+	try {
+		const userData = await userSchema.findOne({ phone: find.phone });
+		if (userData) {
+			req.session.tempUser = userData;
+			await twilio.sentOtp(find.phone);
+			res.render("user/otp-fill");
+		} else {
 			res.redirect("/user-signup");
-		});
+		}
+
+		// .catch((error) => {
+		// 	res.redirect("/user-signup");
+		// });
+	} catch (error) {
+		next(error);
+	}
 };
 
 // otp verification process
 const otpVerifying = async (req, res, next) => {
 	const phone = req.session.mobile;
 	const otp = req.body.otp;
-	await twilio
-		.verifyOtp(phone, otp)
-		.then((status) => {
-			if (status) {
-				req.session.user = req.session.tempUser;
-				res.redirect("/");
-			} else {
-				res.redirect("/user-signup");
-			}
-		})
-		.catch((error) => {
-			return next(error);
-		});
+
+	try {
+		const status = await twilio.verifyOtp(phone, otp);
+		if (status) {
+			req.session.user = req.session.tempUser;
+			res.redirect("/");
+		} else {
+			res.redirect("/user-signup");
+		}
+	} catch (error) {
+		next(error);
+	}
 };
 
 const getWallet = async (req, res, next) => {
@@ -249,7 +244,7 @@ const getWallet = async (req, res, next) => {
 		walletDetails = formatCurrency(walletBalance);
 		res.json({ walletDetails });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -258,7 +253,7 @@ const userLogout = async (req, res, next) => {
 		req.session.user = null;
 		res.redirect("/");
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -273,7 +268,7 @@ const profile = async (req, res, next) => {
 			wishListCount,
 		});
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -356,7 +351,7 @@ const viewProducts = async (req, res, next) => {
 			});
 		}
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -543,7 +538,7 @@ const editAddressPost = async (req, res, next) => {
 		await addressHelper.editAnAddress(req.body);
 		res.json({ message: "address updated" });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -552,7 +547,7 @@ const deleteAddressPost = async (req, res, next) => {
 		await addressHelper.deleteAnAddress(req.params.id);
 		res.json({ message: "address Deleted Successfully.." });
 	} catch (error) {
-		return next(error);
+		next(error);
 	}
 };
 
@@ -610,84 +605,107 @@ const applyCoupon = async (req, res, next) => {
 };
 
 const placeOrder = async (req, res, next) => {
-    try {
-        let userId = req.body.userId;
-        let paymentType = req.body.payment;
-        let cartItems = await cartHelper.getAllCartItems(userId);
-        let coupon = await couponSchema.find({ user: userId });
+	try {
+		let userId = req.body.userId;
+		let paymentType = req.body.payment;
+		let cartItems = await cartHelper.getAllCartItems(userId);
+		let coupon = await couponSchema.find({ user: userId });
 
-        if (!cartItems.length)
-            return res.json({
-                error: true,
-                message: "Please add items to cart before checkout",
-            });
+		if (!cartItems.length)
+			return res.json({
+				error: true,
+				message: "Please add items to cart before checkout",
+			});
 
-        if (req.body.addressSelected == undefined)
-            return res
-                .status(400)
-                .json({ error: true, message: "Please Choose Address" });
+		if (req.body.addressSelected == undefined)
+			return res
+				.status(400)
+				.json({ error: true, message: "Please Choose Address" });
 
-        if (paymentType == undefined)
-            return res.status(400).json({
-                error: true,
-                message: "Please Choose A Payment Method",
-            });
+		if (paymentType == undefined)
+			return res.status(400).json({
+				error: true,
+				message: "Please Choose A Payment Method",
+			});
 
-        const totalAmount = await cartHelper.totalAmount(userId);
+		const totalAmount = await cartHelper.totalAmount(userId);
 
-        switch (paymentType) {
-            case "COD":
-                const orderDetailsCOD = await orderHelper.orderPlacing(req.body, totalAmount, cartItems);
-                await productHelper.decreaseStock(cartItems);
-                await cartHelper.clearCart(userId);
-                res.status(202).json({
-                    paymentMethod: "COD",
-                    message: "Purchase Done",
-                });
-                break;
-            case "razorpay":
-                const orderDetailsRazorpay = await orderHelper.orderPlacing(req.body, totalAmount, cartItems);
-                const razorpayOrderDetails = await razorpay.razorpayOrderCreate(orderDetailsRazorpay._id, orderDetailsRazorpay.totalAmount);
-                await orderHelper.changeOrderStatus(orderDetailsRazorpay._id, "confirmed");
-                await productHelper.decreaseStock(cartItems);
-                await cartHelper.clearCart(userId);
-                res.json({
-                    paymentMethod: "razorpay",
-                    orderDetails: orderDetailsRazorpay,
-                    razorpayOrderDetails,
-                    razorpaykeyId: process.env.RAZORPAY_KEY_ID,
-                });
-                break;
-            case "wallet":
-                let isPaymentDone = await walletHelper.payUsingWallet(userId, totalAmount);
-                if (isPaymentDone) {
-                    const orderDetailsWallet = await orderHelper.orderPlacing(req.body, totalAmount, cartItems);
-                    await orderHelper.changeOrderStatus(orderDetailsWallet._id, "confirmed");
-                    await productHelper.decreaseStock(cartItems);
-                    await cartHelper.clearCart(userId);
-                    res.status(202).json({
-                        paymentMethod: "wallet",
-                        error: false,
-                        message: "Purchase Done",
-                    });
-                } else {
-                    res.status(200).json({
-                        paymentMethod: "wallet",
-                        error: true,
-                        message: "Insufficient Balance in wallet",
-                    });
-                }
-                break;
-            default:
-                // Handle default case if needed
-                break;
-        }
-    } catch (error) {
-        console.error("Error processing payment:", error);
-        next(error);
-    }
+		switch (paymentType) {
+			case "COD":
+				const orderDetailsCOD = await orderHelper.orderPlacing(
+					req.body,
+					totalAmount,
+					cartItems
+				);
+				await productHelper.decreaseStock(cartItems);
+				await cartHelper.clearCart(userId);
+				res.status(202).json({
+					paymentMethod: "COD",
+					message: "Purchase Done",
+				});
+				break;
+			case "razorpay":
+				const orderDetailsRazorpay = await orderHelper.orderPlacing(
+					req.body,
+					totalAmount,
+					cartItems
+				);
+				const razorpayOrderDetails = await razorpay.razorpayOrderCreate(
+					orderDetailsRazorpay._id,
+					orderDetailsRazorpay.totalAmount
+				);
+				await orderHelper.changeOrderStatus(
+					orderDetailsRazorpay._id,
+					"confirmed"
+				);
+				await productHelper.decreaseStock(cartItems);
+				await cartHelper.clearCart(userId);
+				res.json({
+					paymentMethod: "razorpay",
+					orderDetails: orderDetailsRazorpay,
+					razorpayOrderDetails,
+					razorpaykeyId: process.env.RAZORPAY_KEY_ID,
+				});
+				break;
+			case "wallet":
+				let isPaymentDone = await walletHelper.payUsingWallet(
+					userId,
+					totalAmount
+				);
+				if (isPaymentDone) {
+					const orderDetailsWallet = await orderHelper.orderPlacing(
+						req.body,
+						totalAmount,
+						cartItems
+					);
+					await orderHelper.changeOrderStatus(
+						orderDetailsWallet._id,
+						"confirmed"
+					);
+					await productHelper.decreaseStock(cartItems);
+					await cartHelper.clearCart(userId);
+					res.status(202).json({
+						paymentMethod: "wallet",
+						error: false,
+						message: "Purchase Done",
+					});
+				} else {
+					res.status(200).json({
+						paymentMethod: "wallet",
+						error: true,
+						message: "Insufficient Balance in wallet",
+					});
+				}
+				break;
+			default:
+				// Handle default case if needed
+				break;
+		}
+	} catch (error) {
+		console.error("Error processing payment:", error);
+		next(error);
+	}
 };
-
 
 //razorpay payment verification
 const verifyPayment = async (req, res, next) => {
