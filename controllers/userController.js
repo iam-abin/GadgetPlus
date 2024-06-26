@@ -27,6 +27,17 @@ const landingPage = async (req, res, next) => {
 	try {
 		let latestProducts = await productHelper.getRecentProducts();
 		let featuredProducts = await productHelper.getFeaturedProducts();
+
+		for (let i = 0; i < latestProducts.length; i++) {
+			latestProducts[i].product_price = formatCurrency(
+				latestProducts[i].product_price
+			);
+
+			featuredProducts[i].product_price = formatCurrency(
+				featuredProducts[i].product_price
+			);
+		}
+
 		res.render("user/index", {
 			loginStatus: req.session.user,
 			latestProducts,

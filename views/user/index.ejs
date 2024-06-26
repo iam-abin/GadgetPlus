@@ -98,73 +98,74 @@
                                     }
                                 }
                             }'>
-                            <% console.log(latestProducts); %>
                     <% for( let i=0; i < featuredProducts.length; i++ ) { %>
 
-                        <div class="product product-2" style="border: 1px solid #e4d7d7; box-shadow: 1px 1px 2px 0px;">
-                            <figure class="product-media">
-                                <a href="/quick-view/<%= featuredProducts[i].slug %>">
-                                    <img src="/product-images/<%= featuredProducts[i].image[0].filename %>"
-                                        alt="Product image" class="product-image">
-                                    <img src="/product-images/<%= featuredProducts[i].image[1].filename %>"
-                                        alt="Product image" class="product-image-hover">
-                                </a>
+                            <div class="product product-2"
+                                style="border: 1px solid #e4d7d7; box-shadow: 1px 1px 2px 0px;">
+                                <figure class="product-media">
+                                    <a href="/quick-view/<%= featuredProducts[i].slug %>">
+                                        <img src="/product-images/<%= featuredProducts[i].image[0].filename %>"
+                                            alt="Product image" class="product-image">
+                                        <img src="/product-images/<%= featuredProducts[i].image[1].filename %>"
+                                            alt="Product image" class="product-image-hover">
+                                    </a>
 
-                                <div class="product-action-vertical">
-                                    <% if (!featuredProducts[i].isInWishList) { %>
-                                        <a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
-                                            data-value="<%= featuredProducts[i]._id%>" title="Add to wishlist"><span>add
-                                                to wishlist</span>
-                                        </a>
-                                        <% } else {%>
-                                            <a href="/quickView"
-                                                class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                    <div class="product-action-vertical">
+                                        <% if (!featuredProducts[i].isInWishList) { %>
+                                            <a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
                                                 data-value="<%= featuredProducts[i]._id%>"
-                                                title="Remove from wishlist"><span>remove from wishlist</span>
+                                                title="Add to wishlist"><span>add
+                                                    to wishlist</span>
                                             </a>
-                                            <% } %>
-                                </div><!-- End .product-action -->
+                                            <% } else {%>
+                                                <a href="/quickView"
+                                                    class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                                    data-value="<%= featuredProducts[i]._id%>"
+                                                    title="Remove from wishlist"><span>remove from wishlist</span>
+                                                </a>
+                                                <% } %>
+                                    </div><!-- End .product-action -->
 
-                                <% if (!featuredProducts[i].isInCart) { %>
-                                    <% if (loginStatus) { %>
-                                        <div class="product-action">
-                                            <a href="#" data-value="<%= featuredProducts[i]._id %>"
-                                                class="add-product btn-product btn-cart"><span>add to
-                                                    cart</span></a>
-                                        </div><!-- End .product-action -->
-                                        <% } else {%>
+                                    <% if (!featuredProducts[i].isInCart) { %>
+                                        <% if (loginStatus) { %>
                                             <div class="product-action">
-                                                <a href="/user-login" class=" btn-product btn-cart"><span>add
-                                                        tocart</span></a>
+                                                <a href="#" data-value="<%= featuredProducts[i]._id %>"
+                                                    class="add-product btn-product btn-cart"><span>add to
+                                                        cart</span></a>
                                             </div><!-- End .product-action -->
-                                            <% } %>
+                                            <% } else {%>
+                                                <div class="product-action">
+                                                    <a href="/user-login" class=" btn-product btn-cart"><span>add
+                                                            tocart</span></a>
+                                                </div><!-- End .product-action -->
+                                                <% } %>
 
-                                                <% } else { %>
-                                                    <div class="product-action">
-                                                        <a href="/cart"
-                                                            class="view-cart-products btn-product btn"><span>View
-                                                                in cart</span></a>
-                                                    </div><!-- End .product-action -->
+                                                    <% } else { %>
+                                                        <div class="product-action">
+                                                            <a href="/cart"
+                                                                class="view-cart-products btn-product btn"><span>View
+                                                                    in cart</span></a>
+                                                        </div><!-- End .product-action -->
 
-                                                    <% } %>
-                            </figure><!-- End .product-media -->
+                                                        <% } %>
+                                </figure><!-- End .product-media -->
 
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Productssssssssssss</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">
-                                        <%= featuredProducts[i].product_name %>
-                                    </a></h3>
-                                <!-- End .product-title -->
-                                <div class="product-price">
-                                    <%= featuredProducts[i].product_price %>
-                                </div><!-- End .product-price -->
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <a href="#"><%= featuredProducts[i]?.category[0]?.name%></a>
+                                    </div><!-- End .product-cat -->
+                                    <h3 class="product-title"><a href="product.html">
+                                            <%= featuredProducts[i].product_name %>
+                                        </a></h3>
+                                    <!-- End .product-title -->
+                                    <div class="product-price">
+                                        <%= featuredProducts[i].product_price %>
+                                    </div><!-- End .product-price -->
 
 
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-                        <% } %>
+                                </div><!-- End .product-body -->
+                            </div><!-- End .product -->
+                            <% } %>
 
 
 
@@ -235,9 +236,9 @@
                                 }
                             }'>
 
-                           
+
                     <% for( let i=0; i < latestProducts.length; i++ ) { %>
-                        
+
                         <div class="product product-2" style="border: 1px solid #e4d7d7; box-shadow: 1px 1px 2px 0px;">
                             <figure class="product-media">
                                 <a href="/quick-view/<%= latestProducts[i].slug %>">
@@ -261,6 +262,7 @@
                                             </a>
                                             <% } %>
                                 </div><!-- End .product-action -->
+                                <% console.log("======================",latestProducts,"======================"); %>
 
                                 <% if (!latestProducts[i].isInCart) { %>
                                     <% if (loginStatus) { %>
@@ -289,14 +291,14 @@
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">Clothing</a>
+                                    <a href="#"><%= latestProducts[i]?.product_category?.name %></a>
                                 </div><!-- End .product-cat -->
                                 <h3 class="product-title"><a href="product.html">
-                                        <%= latestProducts[i].product_name %>
+                                        <%= latestProducts[i]?.product_name %>
                                     </a></h3>
                                 <!-- End .product-title -->
                                 <div class="product-price">
-                                    <%= latestProducts[i].product_price %>
+                                    <%= latestProducts[i]?.product_price %>
                                 </div><!-- End .product-price -->
 
 
@@ -376,7 +378,7 @@
             })
                 .done((res) => {
                     console.log(res);
-                    console.log("abi");
+                    console.log("?????");
                     swal("successfull", `${res.message}`, "success")
                         .then(() => {
                             location.reload()

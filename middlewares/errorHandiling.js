@@ -19,7 +19,9 @@ const errorHandler = (error, req, res, next) => {
 	res.locals.message = error.message || "Internal server Error";
 	const status = error.status || 500;
 	res.locals.status = status;
+	console.log("=============================");
 	console.log("💥", error.stack);
+	console.log("=============================");
 	
 	// winstonLogger.error(error.message, error);
 	// if (process.env.NODE_ENV !== "production") {

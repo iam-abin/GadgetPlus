@@ -80,6 +80,7 @@ module.exports = {
 		try {
 			let products = await productModel
 				.find({})
+				.populate('product_category')
 				.sort({ createdAt: -1 })
 				.limit(8)
 				.lean();
