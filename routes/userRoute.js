@@ -67,7 +67,7 @@ router.post('/remove-from-wishList',userChecking,userController.removeFromWishLi
 // cart routes
 router.get('/cart',userChecking,userController.cart)
 
-router.get('/add-to-cart/:id',userChecking,userController.addToCart)
+router.post('/add-to-cart/:id',userChecking,userController.addToCart)
 
 router.post('/quantity-change',userChecking,userController.incDecQuantity)
 

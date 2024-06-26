@@ -100,72 +100,84 @@
                             }'>
                     <% for( let i=0; i < featuredProducts.length; i++ ) { %>
 
-                            <div class="product product-2"
-                                style="border: 1px solid #e4d7d7; box-shadow: 1px 1px 2px 0px;">
-                                <figure class="product-media">
-                                    <a href="/quick-view/<%= featuredProducts[i].slug %>">
-                                        <img src="/product-images/<%= featuredProducts[i].image[0].filename %>"
-                                            alt="Product image" class="product-image">
-                                        <img src="/product-images/<%= featuredProducts[i].image[1].filename %>"
-                                            alt="Product image" class="product-image-hover">
-                                    </a>
+                        <div class="product product-2" style="border: 1px solid #e4d7d7; box-shadow: 1px 1px 2px 0px;">
+                            <figure class="product-media">
+                                <a href="/quick-view/<%= featuredProducts[i].slug %>">
+                                    <img src="/product-images/<%= featuredProducts[i].image[0].filename %>"
+                                        alt="Product image" class="product-image">
+                                    <img src="/product-images/<%= featuredProducts[i].image[1].filename %>"
+                                        alt="Product image" class="product-image-hover">
+                                </a>
 
-                                    <div class="product-action-vertical">
-                                        <% if (!featuredProducts[i].isInWishList) { %>
-                                            <a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
+                                <div class="product-action-vertical">
+                                    <!--  -->
+                                    <% if (!featuredProducts[i].isInWishList) { %>
+                                        <% if (loginStatus) { %>
+
+                                            <a href="#"
+                                                class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist add-produtToWishlist"
                                                 data-value="<%= featuredProducts[i]._id%>"
                                                 title="Add to wishlist"><span>add
                                                     to wishlist</span>
                                             </a>
                                             <% } else {%>
-                                                <a href="/quickView"
-                                                    class="btn-product-icon btn-wishlist btn-expandable bg-danger"
-                                                    data-value="<%= featuredProducts[i]._id%>"
-                                                    title="Remove from wishlist"><span>remove from wishlist</span>
+                                                <a href="/user-login"
+                                                    class="btn-product-icon btn-wishlist btn-expandable"
+                                                    title="Add to wishlist"><span>add to
+                                                        wishlist</span>
+                                                    <% } %>
                                                 </a>
-                                                <% } %>
-                                    </div><!-- End .product-action -->
+                                                <% } else {%>
+                                                    <a href="/wishlist"
+                                                        class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                                        data-value="<%= featuredProducts[i]._id%>"
+                                                        title="Remove from wishlist"><span>remove from wishlist</span>
+                                                    </a>
+                                                    <% } %>
+                                </div><!-- End .product-action -->
 
-                                    <% if (!featuredProducts[i].isInCart) { %>
-                                        <% if (loginStatus) { %>
+                                <% if (!featuredProducts[i].isInCart) { %>
+                                    <% if (loginStatus) { %>
+                                        <div class="product-action">
+                                            <a href="#" data-value="<%= featuredProducts[i]._id %>"
+                                                class="add-product btn-product btn-cart"><span>add to
+                                                    cart</span></a>
+                                        </div><!-- End .product-action -->
+                                        <% } else {%>
                                             <div class="product-action">
-                                                <a href="#" data-value="<%= featuredProducts[i]._id %>"
-                                                    class="add-product btn-product btn-cart"><span>add to
-                                                        cart</span></a>
+                                                <a href="/user-login" class=" btn-product btn-cart"><span>add
+                                                        tocart</span></a>
                                             </div><!-- End .product-action -->
-                                            <% } else {%>
-                                                <div class="product-action">
-                                                    <a href="/user-login" class=" btn-product btn-cart"><span>add
-                                                            tocart</span></a>
-                                                </div><!-- End .product-action -->
-                                                <% } %>
+                                            <% } %>
 
-                                                    <% } else { %>
-                                                        <div class="product-action">
-                                                            <a href="/cart"
-                                                                class="view-cart-products btn-product btn"><span>View
-                                                                    in cart</span></a>
-                                                        </div><!-- End .product-action -->
+                                                <% } else { %>
+                                                    <div class="product-action">
+                                                        <a href="/cart"
+                                                            class="view-cart-products btn-product btn"><span>View
+                                                                in cart</span></a>
+                                                    </div><!-- End .product-action -->
 
-                                                        <% } %>
-                                </figure><!-- End .product-media -->
+                                                    <% } %>
+                            </figure><!-- End .product-media -->
 
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#"><%= featuredProducts[i]?.category[0]?.name%></a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">
-                                            <%= featuredProducts[i].product_name %>
-                                        </a></h3>
-                                    <!-- End .product-title -->
-                                    <div class="product-price">
-                                        <%= featuredProducts[i].product_price %>
-                                    </div><!-- End .product-price -->
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">
+                                        <%= featuredProducts[i]?.category[0]?.name%>
+                                    </a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="product.html">
+                                        <%= featuredProducts[i].product_name %>
+                                    </a></h3>
+                                <!-- End .product-title -->
+                                <div class="product-price">
+                                    <%= featuredProducts[i].product_price %>
+                                </div><!-- End .product-price -->
 
 
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                            <% } %>
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                        <% } %>
 
 
 
@@ -250,69 +262,84 @@
 
                                 <div class="product-action-vertical">
                                     <% if (!latestProducts[i].isInWishList) { %>
-                                        <a class="btn-product-icon btn-wishlist btn-expandable add-produtToWishlist"
-                                            data-value="<%= latestProducts[i]._id%>" title="Add to wishlist"><span>add
-                                                to wishlist</span>
-                                        </a>
-                                        <% } else {%>
-                                            <a href="/quickView"
-                                                class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                        <% if (loginStatus) { %>
+
+                                            <a href="#"
+                                                class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist add-produtToWishlist"
                                                 data-value="<%= latestProducts[i]._id%>"
-                                                title="Remove from wishlist"><span>remove from wishlist</span>
+                                                title="Add to wishlist"><span>add
+                                                    to wishlist</span>
                                             </a>
-                                            <% } %>
+                                            <% } else {%>
+                                                <a href="/user-login"
+                                                    class="btn-product-icon btn-wishlist btn-expandable "
+                                                    title="Add to wishlist"><span>add
+                                                        to wishlist</span>
+                                                </a>
+                                                <% } %>
+                                                    </a>
+                                                    <% } else {%>
+                                                        <a href="/wishlist"
+                                                            class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+                                                            data-value="<%= latestProducts[i]._id%>"
+                                                            title="Remove from wishlist"><span>remove from
+                                                                wishlist</span>
+                                                        </a>
+                                                        <% } %>
+
                                 </div><!-- End .product-action -->
                                 <% console.log("======================",latestProducts,"======================"); %>
 
                                 <% if (!latestProducts[i].isInCart) { %>
                                     <% if (loginStatus) { %>
-                                        <div class="product-action">
-                                            <a href="#" data-value="<%= latestProducts[i]._id %>"
-                                                class="add-product btn-product btn-cart"><span>add to
-                                                    cart</span></a>
-                                        </div><!-- End .product-action -->
-                                        <% } else {%>
-                                            <div class="product-action">
-                                                <a href="/user-login" class=" btn-product btn-cart"><span>add
-                                                        tocart</span></a>
-                                            </div><!-- End .product-action -->
-                                            <% } %>
+                                        <div class=" product-action">
+                                    <a href="#" data-value="<%= latestProducts[i]._id %>"
+                                        class="add-product btn-product btn-cart"><span>add to
+                                            cart</span></a>
+                        </div><!-- End .product-action -->
+                        <% } else {%>
+                            <div class="product-action">
+                                <a href="/user-login" class=" btn-product btn-cart"><span>add
+                                        tocart</span></a>
+                            </div><!-- End .product-action -->
+                            <% } %>
 
-                                                <% } else { %>
-                                                    <div class="product-action">
-                                                        <a href="/cart"
-                                                            class="view-cart-products btn-product btn"><span>View
-                                                                in cart</span></a>
-                                                    </div><!-- End .product-action -->
+                                <% } else { %>
+                                    <div class="product-action">
+                                        <a href="/cart" class="view-cart-products btn-product btn"><span>View
+                                                in cart</span></a>
+                                    </div><!-- End .product-action -->
 
-                                                    <% } %>
+                                    <% } %>
 
-                            </figure><!-- End .product-media -->
+                                        </figure><!-- End .product-media -->
 
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#"><%= latestProducts[i]?.product_category?.name %></a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">
-                                        <%= latestProducts[i]?.product_name %>
-                                    </a></h3>
-                                <!-- End .product-title -->
-                                <div class="product-price">
-                                    <%= latestProducts[i]?.product_price %>
-                                </div><!-- End .product-price -->
-
-
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-                        <% } %>
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#">
+                                                    <%= latestProducts[i]?.product_category?.name %>
+                                                </a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html">
+                                                    <%= latestProducts[i]?.product_name %>
+                                                </a></h3>
+                                            <!-- End .product-title -->
+                                            <div class="product-price">
+                                                <%= latestProducts[i]?.product_price %>
+                                            </div><!-- End .product-price -->
 
 
+                                        </div><!-- End .product-body -->
+                </div><!-- End .product -->
+                <% } %>
 
-                </div><!-- End .owl-carousel -->
-            </div><!-- .End .tab-pane -->
 
 
-        </div><!-- End .tab-content -->
+            </div><!-- End .owl-carousel -->
+        </div><!-- .End .tab-pane -->
+
+
+    </div><!-- End .tab-content -->
     </div><!-- End .container -->
     </div><!-- .End .tab-pane -->
     </div><!-- End .tab-content -->
@@ -367,6 +394,7 @@
 </main><!-- End .main -->
 
 <script>
+    // To add product to cart
     $(document).ready(function () {
         $('.add-product').click(function (e) {
             e.preventDefault()
@@ -374,7 +402,7 @@
             console.log('clicked', prodId)
             $.ajax({
                 url: '/add-to-cart/' + prodId,
-                type: 'get'
+                type: 'post'
             })
                 .done((res) => {
                     console.log(res);
@@ -391,6 +419,7 @@
     })
 
 
+    // To add product to wish list
     $(document).ready(function () {
         $('.add-produtToWishlist').click(function (e) {
             e.preventDefault();

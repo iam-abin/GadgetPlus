@@ -20,7 +20,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-9">
-					
+
 
 					<div class="products mb-3">
 						<div class="row" id="products-row">
@@ -44,18 +44,27 @@
 
 												<div class="product-action-vertical">
 													<% if (!product[i].isInWishList) { %>
-														<a class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist"
-															data-value="<%= product[i]._id%>"
-															title="Add to wishlist"><span>add to wishlist</span>
-														</a>
-														<% } else {%>
-															<a href="/quickView"
-																class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+														<% if (loginStatus) { %>
+															<a href="#"
+																class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist"
 																data-value="<%= product[i]._id%>"
-																title="Remove from wishlist"><span>remove from
-																	wishlist</span>
-															</a>
-															<% } %>
+																title="Add to wishlist"><span>add to wishlist</span>
+																<% } else {%>
+																	<a href="/user-login"
+																		class="btn-product-icon btn-wishlist btn-expandable"
+																		title="Add to wishlist"><span>add to
+																			wishlist</span>
+																		<% } %>
+																	</a>
+																	<% } else {%>
+																		<a href="/wishlist"
+																			class="btn-product-icon btn-wishlist btn-expandable bg-danger"
+																			data-value="<%= product[i]._id%>"
+																			title="Remove from wishlist"><span>remove
+																				from
+																				wishlist</span>
+																		</a>
+																		<% } %>
 
 
 

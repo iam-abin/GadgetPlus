@@ -458,6 +458,9 @@ const addToCart = async (req, res, next) => {
 	try {
 		let productId = req.params.id;
 		let user = req.session.user;
+		console.log("/////////////////////");
+		console.log(user);
+		console.log("/////////////////////");
 		let response = await cartHelper.addToUserCart(user._id, productId);
 		if (response) {
 			cartCount = await cartHelper.getCartCount(user._id);

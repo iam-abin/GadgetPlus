@@ -11,7 +11,7 @@ $(document).ready(function () {
         console.log('clicked', prodId)
         $.ajax({
             url: '/add-to-cart/' + prodId,
-            type: 'get'
+            type: 'post'
         })
             .done((res) => {
                 console.log(res);
