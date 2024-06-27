@@ -19,7 +19,9 @@ const errorHandler = (error, req, res, next) => {
 	res.locals.message = error.message || "Internal server Error";
 	const status = error.status || 500;
 	res.locals.status = status;
+	console.log("=============================");
 	console.log("💥", error.stack);
+	console.log("=============================");
 	
 	// winstonLogger.error(error.message, error);
 	// if (process.env.NODE_ENV !== "production") {
@@ -30,8 +32,9 @@ const errorHandler = (error, req, res, next) => {
 	// 	);
 	// }
 
-	res.status(status).render("error", { headerFooter: true });
-	// return res.status(500).json({errors: "something went wrong" });
+	// res.status(status).render("error", { headerFooter: true });
+	return res.status(500).send({error: true,
+				message: error.message||"something went wrong" });
 };
 
 module.exports = errorHandler;

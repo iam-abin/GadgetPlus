@@ -1,5 +1,3 @@
-
-
 <div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
 	<div class="container">
 		<h1 class="page-title">Your Wishlist</h1>
@@ -11,33 +9,66 @@
 
 		<div class="row justify-content-center mb-3 ">
 			<div class="col-md-12 col-xl-10">
+				<% console.log(wishList); %>
+					<% for( let i=0; i < wishList.length; i++ ) { %>
+						<div class="card shadow-0 border " id="wishlist-card-<%= wishList[i].product._id %>"
+							style="border-radius: 10px;">
+							<div class="card-body">
+								<div class="row mt-3">
+									<div class="col-md-12 col-lg-3 col-xl-3 mb-1  mb-lg-0">
+										<%= console.log(wishList[i].product.image[0]); %>
+											<img style="width: 120px; height: 130px;"
+												src="/product-images/<%= wishList[i].product.image[0].filename %>"
+												alt="image is not available">
+									</div>
+									<div class="col-md-6 col-lg-6 col-xl-6">
+										<h5>
+											<%= wishList[i].product.product_name %>
+										</h5>
+										<p class="text-truncate mb-4 mb-md-0">
+										<h6>
+											<%= wishList[i].product.product_price %>
+										</h6>
+										</p>
+									</div>
+									<div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+										<div class="d-flex flex-column mt-4">
 
-				<% for( let i = 0; i < wishList.length; i++ ) { %>
-					<div class="card shadow-0 border " id="wishlist-card-<%= wishList[i].product._id %>" style="border-radius: 10px;">
-						<div class="card-body">
-							<div class="row mt-3">
-								<div class="col-md-12 col-lg-3 col-xl-3 mb-1  mb-lg-0">
-									<%= console.log(wishList[i].product.image[0]); %>
-									<img style="width: 120px; height: 130px;" src="/product-images/<%= wishList[i].product.image[0].filename %>" alt="image is not available">
-								</div>
-								<div class="col-md-6 col-lg-6 col-xl-6">
-									<h5><%= wishList[i].product.product_name %></h5>
-									<p class="text-truncate mb-4 mb-md-0">
-										<h6><%= wishList[i].product.product_price %></h6>
-									</p>
-								</div>
-								<div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
-									<div class="d-flex flex-column mt-4">
-										<button class="btn btn-primary btn-sm add-product" type="button" data-value="<%= wishList[i].product._id %>">Add to Cart</button>
-										<button onclick="removeFromWishList('<%= wishList[i].product._id %>')" class="btn btn-outline-primary btn-sm mt-2" type="button">
-											Remove From Wishlist
-										</button>
+
+											<% if (!wishList[i].product.isInCart) { %>
+												<button class="btn btn-primary btn-sm add-product" type="button"
+													data-value="<%= wishList[i].product._id %>">Add to Cart</button>
+												<!-- 											
+												<div class="product-action">
+													<a href="/cart" data-value="<%= wishList[i]._id %>"
+														class="add-product btn-product btn-cart"><span>add to
+															cart</span></a> -->
+												<!-- </div> -->
+												<% } else {%>
+
+													<!-- <div class="btn btn-primary btn-sm"> -->
+
+													<a href="/cart" class=" btn-product"><span><button
+																class="btn btn-primary btn-sm" type="button">View in
+																Cart</button></span></a>
+													<!-- </div> -->
+													<% } %>
+
+
+
+														<!-- <button class="btn btn-primary btn-sm" type="button" data-value="<%= wishList[i].product._id %>">Add to Cart</button> -->
+
+														<button
+															onclick="removeFromWishList('<%= wishList[i].product._id %>')"
+															class="btn btn-outline-primary btn-sm mt-2" type="button">
+															Remove From Wishlist
+														</button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				<% } %>
+						<% } %>
 			</div>
 		</div>
 	</div>
@@ -46,32 +77,32 @@
 
 
 <script>
-	function removeFromWishList(productId){
-		console.log("clicked",productId);
+	function removeFromWishList(productId) {
+		console.log("clicked", productId);
 		$.ajax({
-			url:'/remove-from-wishList',
-			type:'post',
-			data:{
-				productId:productId
+			url: '/remove-from-wishList',
+			type: 'post',
+			data: {
+				productId: productId
 			}
 		})
-		.then((res)=>{
-			iziToast.success({
-				title: 'OK',
-				message: `${res.message}`,
-				position: 'topRight',
-				onOpening: function (instance, toast) {
-					// Modify the top property to adjust the message position
-					toast.style.top = '80px'; // Adjust the value as needed to move the message down
-				}
+			.then((res) => {
+				iziToast.success({
+					title: 'OK',
+					message: `${res.message}`,
+					position: 'topRight',
+					onOpening: function (instance, toast) {
+						// Modify the top property to adjust the message position
+						toast.style.top = '80px'; // Adjust the value as needed to move the message down
+					}
+				})
+				$('#wishlist-card-' + productId).remove()
+				document.getElementById('wishListCount').innerHTML = `${res.wishListCount}`;
+				console.log(res);
 			})
-			$('#wishlist-card-'+productId).remove()
-			document.getElementById('wishListCount').innerHTML=`${res.wishListCount}` ;			
-			console.log(res);
-		})
-		.fail((error)=>{
-			console.log(error);
-		})
+			.fail((error) => {
+				console.log(error);
+			})
 	}
 
 
@@ -84,7 +115,7 @@
 			console.log('clicked', prodId)
 			$.ajax({
 				url: '/add-to-cart/' + prodId,
-				type: 'get'
+				type: 'post'
 			})
 				.done((res) => {
 					console.log(res);

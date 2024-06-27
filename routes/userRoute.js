@@ -48,6 +48,7 @@ router.get('/wallet',userChecking,userController.getWallet)
 
 router.get('/profile',userChecking,userController.profile)
 
+// product routes
 
 router.get('/viewProducts',userController.viewProducts);
 
@@ -67,7 +68,7 @@ router.post('/remove-from-wishList',userChecking,userController.removeFromWishLi
 // cart routes
 router.get('/cart',userChecking,userController.cart)
 
-router.get('/add-to-cart/:id',userChecking,userController.addToCart)
+router.post('/add-to-cart/:id',userChecking,userController.addToCart)
 
 router.post('/quantity-change',userChecking,userController.incDecQuantity)
 

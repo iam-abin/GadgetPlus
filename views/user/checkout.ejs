@@ -180,7 +180,7 @@
 														<label for="wallet">Wallet</label><br>
 													</h2>
 												</h2>
-											</div><!-- End .card-header -->
+											</div>
 										</div><!-- End .card -->
 										<br>
 										<div class="card">
@@ -189,7 +189,7 @@
 													<input type="radio" id="COD" name="payment" value="COD"> <label
 														for="COD">Cash on delivery</label><br>
 												</h2>
-											</div><!-- End .card-header -->
+											</div>
 										</div><!-- End .card -->
 										<br>
 										<div class="card">
@@ -200,10 +200,10 @@
 															value="razorpay"> <label for="razorpay">Razorpay</label><br>
 													</h2>
 												</h2>
-											</div><!-- End .card-header -->
+											</div>
 										</div><!-- End .card -->
 
-										<br>
+										<!-- <br>
 										<div class="card">
 											<div class="card-header" id="heading-4">
 												<h2 class="card-title">
@@ -212,8 +212,8 @@
 															value="paypal"> <label for="paypal">Paypal</label><br>
 													</h2>
 												</h2>
-											</div><!-- End .card-header -->
-										</div><!-- End .card -->
+											</div>
+										</div> -->
 										<!-- <button type="submit">Place Order</button> -->
 										<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
 											<span class="btn-text">Place Order</span>
@@ -408,21 +408,22 @@
 				data: $('#checkout-form').serialize()
 			})
 				.done((response) => {
-					if (response.error) {
-						Toastify({
-							text: `${response.message}`,
-							duration: 3000,
-							newWindow: true,
-							close: true,
-							gravity: "top", // `top` or `bottom`
-							position: "center", // `left`, `center` or `right`
-							stopOnFocus: true, // Prevents dismissing of toast on hover
-							style: {
-								background: "linear-gradient(to right, #00b09b, #96c93d)",
-							},
+					console.log("response",response);
+					// if (response.error) {
+					// 	Toastify({
+					// 		text: `${response.message || "something went wrong"}`,
+					// 		duration: 3000,
+					// 		newWindow: true,
+					// 		close: true,
+					// 		gravity: "top", // `top` or `bottom`
+					// 		position: "center", // `left`, `center` or `right`
+					// 		stopOnFocus: true, // Prevents dismissing of toast on hover
+					// 		style: {
+					// 			background: "linear-gradient(to right, #00b09b, #96c93d)",
+					// 		},
 
-						}).showToast();
-					} else {
+					// 	}).showToast();
+					// } else {
 						switch (response.paymentMethod) {
 							case 'COD':
 								console.log("payment done");
@@ -446,11 +447,24 @@
 
 						}
 
-					}
+					// }
 				})
 				.fail((error) => {
 					console.log("Error occured");
 					console.log(error);
+					Toastify({
+							text: `${error.responseJSON.message || "something went wrong"}`,
+							duration: 3000,
+							newWindow: true,
+							close: true,
+							gravity: "top", // `top` or `bottom`
+							position: "center", // `left`, `center` or `right`
+							stopOnFocus: true, // Prevents dismissing of toast on hover
+							style: {
+								background: "linear-gradient(to right, #00b09b, #96c93d)",
+							},
+
+						}).showToast();
 				})
 		})
 	})

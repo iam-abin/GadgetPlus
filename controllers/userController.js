@@ -27,6 +27,17 @@ const landingPage = async (req, res, next) => {
 	try {
 		let latestProducts = await productHelper.getRecentProducts();
 		let featuredProducts = await productHelper.getFeaturedProducts();
+
+		for (let i = 0; i < latestProducts.length; i++) {
+			latestProducts[i].product_price = formatCurrency(
+				latestProducts[i].product_price
+			);
+
+			featuredProducts[i].product_price = formatCurrency(
+				featuredProducts[i].product_price
+			);
+		}
+
 		res.render("user/index", {
 			loginStatus: req.session.user,
 			latestProducts,
@@ -285,6 +296,10 @@ const viewProducts = async (req, res, next) => {
 			wishListCount = await wishListHelper.getWishListCount(userId);
 		}
 
+		console.log("======================================");
+		console.log(req.query.filterData);
+		console.log("======================================");
+
 		if (!req.query.filterData) {
 			products = await productHelper.getAllProductsWithLookup();
 			for (let i = 0; i < products.length; i++) {
@@ -364,6 +379,12 @@ const viewAProduct = async (req, res, next) => {
 				req.session.user._id,
 				product._id
 			);
+			const isInWishList = await wishListHelper.isProductInWishList(
+				req.session.user._id,
+				product._id
+			);
+
+			product.isInWishList = isInWishList;
 			product.isInCart = isInCart;
 		}
 		product.product_price = formatCurrency(product.product_price);
@@ -381,13 +402,29 @@ const viewAProduct = async (req, res, next) => {
 const wishlist = async (req, res, next) => {
 	try {
 		let userId = req.session.user._id;
-		let wishList = await wishListHelper.getAllWishListItems(userId);
-		res.render("user/wishlist", {
-			loginStatus: req.session.user,
-			wishList,
-			cartCount,
-			wishListCount,
-		});
+		if (userId) {
+			let wishList = await wishListHelper.getAllWishListItems(userId);
+
+			for (let i = 0; i < wishList.length; i++) {
+				const isInCart = await cartHelper.isAProductInCart(
+					userId,
+					wishList[i].product._id
+				);
+
+				wishList[i].product.isInCart = isInCart;
+
+				wishList[i].product.product_price = formatCurrency(
+					wishList[i].product.product_price
+				);
+			}
+			console.log("wishlist ==>", wishlist);
+			res.render("user/wishlist", {
+				loginStatus: req.session.user,
+				wishList,
+				cartCount,
+				wishListCount,
+			});
+		}
 	} catch (error) {
 		next(error);
 	}
@@ -447,6 +484,9 @@ const addToCart = async (req, res, next) => {
 	try {
 		let productId = req.params.id;
 		let user = req.session.user;
+		console.log("/////////////////////");
+		console.log(user);
+		console.log("/////////////////////");
 		let response = await cartHelper.addToUserCart(user._id, productId);
 		if (response) {
 			cartCount = await cartHelper.getCartCount(user._id);
@@ -611,19 +651,21 @@ const placeOrder = async (req, res, next) => {
 		let cartItems = await cartHelper.getAllCartItems(userId);
 		let coupon = await couponSchema.find({ user: userId });
 
+		console.log("========inside place order conteroller==============>");
 		if (!cartItems.length)
-			return res.json({
+			return res.send({
 				error: true,
 				message: "Please add items to cart before checkout",
 			});
+		console.log("1");
 
-		if (req.body.addressSelected == undefined)
+		if (!req.body.addressSelected)
 			return res
 				.status(400)
-				.json({ error: true, message: "Please Choose Address" });
-
-		if (paymentType == undefined)
-			return res.status(400).json({
+				.send({ error: true, message: "Please Choose Address" });
+		console.log("2");
+		if (!paymentType)
+			return res.status(400).send({
 				error: true,
 				message: "Please Choose A Payment Method",
 			});
@@ -637,6 +679,7 @@ const placeOrder = async (req, res, next) => {
 					totalAmount,
 					cartItems
 				);
+
 				await productHelper.decreaseStock(cartItems);
 				await cartHelper.clearCart(userId);
 				res.status(202).json({
@@ -668,10 +711,13 @@ const placeOrder = async (req, res, next) => {
 				});
 				break;
 			case "wallet":
+				console.log("3");
+				console.log("3 totalAmount", totalAmount);
 				let isPaymentDone = await walletHelper.payUsingWallet(
 					userId,
 					totalAmount
 				);
+				console.log("isPaymentDone ", isPaymentDone);
 				if (isPaymentDone) {
 					const orderDetailsWallet = await orderHelper.orderPlacing(
 						req.body,
