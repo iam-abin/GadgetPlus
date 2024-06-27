@@ -392,7 +392,7 @@
 
 	checkboxes.forEach(function (checkbox) {
 		checkbox.addEventListener('change', function () {
-			console.log("change");
+			console.log("check box change ", Array.from(checkboxes));
 
 			const checkboxeStates = Array.from(checkboxes).map(function (cb) {
 				return {

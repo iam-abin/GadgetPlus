@@ -48,6 +48,7 @@ router.get('/wallet',userChecking,userController.getWallet)
 
 router.get('/profile',userChecking,userController.profile)
 
+// product routes
 
 router.get('/viewProducts',userController.viewProducts);
 

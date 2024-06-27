@@ -29,20 +29,16 @@
                         <div class="product-gallery product-gallery-vertical">
                             <div class="row">
                                 <figure class="product-main-image">
-                                    <%= console.log("-----------------"); %>
-                                        <%= console.log(product); %>
-                                            <%= console.log("-----------------"); %>
+                                    <img id="product-zoom" src="/product-images/<%= product.image[0].filename %>"
+                                        data-zoom-image="/product-images/<%= product.image[0].filename %>"
+                                        alt="product image">
 
-                                                <img id="product-zoom"
-                                                    src="/product-images/<%= product.image[0].filename %>"
-                                                    data-zoom-image="/product-images/<%= product.image[0].filename %>"
-                                                    alt="product image">
-
-                                                <a href="#" id="btn-product-gallery" class="btn-product-gallery">
-                                                    <i class="icon-arrows"></i>
-                                                </a>
+                                    <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                        <i class="icon-arrows"></i>
+                                    </a>
                                 </figure><!-- End .product-main-image -->
 
+                                <!-- 4 product images showing in the left side -->
                                 <div id="product-zoom-gallery" class="product-image-gallery">
                                     <a class="product-gallery-item active" href="#"
                                         data-image="/product-images/<%= product.image[0].filename %>"
@@ -118,68 +114,68 @@
                             </div><!-- End .details-filter-row -->
                             <div class="product-details-action">
 
-                                <a href="" data-value="<%= product._id %>"
-                                    class="btn-product add-to-cart btn-cart"><span>add to cart</span></a>
 
-                                <%= console.log("/////sd",product); %>
-
-
-
+                                <!-- START -->
+                                <% if (loginStatus) { %>
                                     <% if (!product.isInCart) { %>
-                                        <% if (loginStatus) { %>
-                                            <div class="product-action">
-                                                <a data-value="<%= product._id %>"
-                                                    class="add-to-cart btn-product btn-cart"><span>add to
-                                                        cart</span></a>
-                                            </div><!-- End .product-action -->
-                                            <% } else {%>
-                                                <div class="product-action">
-                                                    <a href="/user-login" class=" btn-product btn-cart"><span>add
-                                                            tocart</span></a>
-                                                </div><!-- End .product-action -->
-                                                <% } %>
+                                        <a href="" data-value="<%= product._id %>"
+                                            class="btn-product add-to-cart btn-cart"><span>add to cart</span></a>
+                                        <% } else { %>
+                                            <!-- if product is in cart -->
+                                            <a href="/cart" class="btn-product  btn-cart"><span>View in
+                                                    cart</span></a>
 
-                                                    <% } else { %>
-                                                        <div class="product-action">
-                                                            <a href="/cart"
-                                                                class="view-cart-products btn-product btn"><span>View
-                                                                    in cart</span></a>
-                                                        </div><!-- End .product-action -->
+                                            <% } %>
+                                                <% } else {%>
+                                                    <a href="/user-login" data-value="<%= product._id %>"
+                                                        class="btn-product btn-cart"><span>add to cart</span></a>
 
-                                                        <% } %>
+
+                                                    <% } %>
 
 
 
-                                                            <div class="details-action-wrapper">
-                                                                <% if (!product.isInWishList) { %>
-                                                                    <a class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist"
+                                                        <!-- END -->
+
+                                                        <% if (loginStatus) { %>
+                                                            <% if (!product.isInWishList) { %>
+                                                                <a href="#"
+                                                                    class="btn-product  btn-wishlist add-to-Wishlist"
+                                                                    data-value="<%= product._id%>"
+                                                                    title="Add to wishlist"><span>Add to
+                                                                        Wishlist</span></a>
+                                                                <% } else { %>
+                                                                    <!-- if product is in wishlist -->
+                                                                    <a href="/wishlist"
+                                                                        class="btn-product-icon btn-wishlist bg-danger"></a>
+                                                                    <a href="/wishlist" class=""
                                                                         data-value="<%= product._id%>"
-                                                                        title="Add to wishlist"><span>add to
+                                                                        title="Remove from wishlist"><span>remove
+                                                                            from
                                                                             wishlist</span>
                                                                     </a>
-                                                                    <% } else {%>
-                                                                        <a href="/quickView"
-                                                                            class="btn-product-icon btn-wishlist btn-expandable bg-danger"
-                                                                            data-value="<%= product._id%>"
-                                                                            title="Remove from wishlist"><span>remove
-                                                                                from
-                                                                                wishlist</span>
-                                                                        </a>
-                                                                        <% } %>
-                                                                            <a href="#" class="btn-product btn-wishlist"
-                                                                                title="Wishlist"><span>Add to
-                                                                                    Wishlist</span></a>
-                                                            </div><!-- End .details-action-wrapper -->
-                            </div><!-- End .product-details-action -->
-
-                            <hr>
-                        </div><!-- End .product-details -->
-                    </div><!-- End .col-md-6 -->
-                </div><!-- End .row -->
-            </div><!-- End .product-details-top -->
 
 
-        </div><!-- End .container -->
+                                                                    <% } %>
+                                                        <% } else {%>
+                                                            <a href="/user-login"
+                                                                class="btn-product btn-wishlist"
+                                                                data-value="<%= product._id%>"
+                                                                title="Add to wishlist"><span>Add to
+                                                                    Wishlist</span></a>
+
+                                                            <% } %>
+                            </div><!-- End .details-action-wrapper -->
+                        </div><!-- End .product-details-action -->
+
+                        <hr>
+                    </div><!-- End .product-details -->
+                </div><!-- End .col-md-6 -->
+            </div><!-- End .row -->
+        </div><!-- End .product-details-top -->
+
+
+    </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
