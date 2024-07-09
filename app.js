@@ -53,28 +53,27 @@ app.use(
 	})
 );
 
-// throw new Error("hiiiii")
-
-
 // Routes
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
 // 404 error handler
-app.use((req, res, next) => {
+app.all("*", (req, res, next) => {
 	return next(createError(404, "Page Not Found"));
 });
+
 
 // General error handler
 app.use(errorHandler);
 
 console.clear();
 
-
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "localhost", () => {
-	// app.listen(PORT,'0.0.0.0', () => {
 	console.log(`Server startes on http://localhost:${PORT}`);
-	console.log("access using  https://gadgetplus.abi");
 });
+
+// app.listen(PORT, "0.0.0.0", () => {
+// 	console.log("access using  https://gadgetplus.abi");
+// });

@@ -435,7 +435,8 @@ const addToWishList = async (req, res, next) => {
 		let productId = req.body.productId;
 		let user = req.session.user._id;
 		wishListHelper.addItemToWishList(productId, user);
-		res.json({ message: `item added to wishList ${productId}` });
+		console.log(`item added to wishList ${productId}`);
+		res.json({ message: `item added to wishList` });
 	} catch (error) {
 		next(error);
 	}

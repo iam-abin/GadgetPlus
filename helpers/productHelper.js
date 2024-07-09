@@ -7,6 +7,9 @@ module.exports = {
 	addProductToDb: async (data, files) => {
 		try {
 			let imagesArray = Object.values(files).flat(1);
+			console.log("======= image array ======");
+			console.log(imagesArray);
+			console.log("======= image array ======");
 			const slug = slugify(data.product_name);
 
 			const product = await productModel.create({
