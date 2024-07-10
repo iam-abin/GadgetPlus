@@ -9,9 +9,15 @@ GadgetPlus is an e-commerce application. It allows users to browse and purchase 
 - EJS, HTML5, CSS3
 
 ---
+### Images
+![Screenshot from 2024-07-10 09-55-21](https://github.com/iam-abin/GadgetPlus/assets/112235416/234725d1-a5ad-4345-81c0-68b22a1f9bd0)
+
+![Screenshot from 2024-07-10 09-56-56](https://github.com/iam-abin/GadgetPlus/assets/112235416/84af0178-a1fa-49a8-9c42-b76c688971be)
+
+![Screenshot from 2024-07-10 09-55-47](https://github.com/iam-abin/GadgetPlus/assets/112235416/35918b51-d529-4499-a6e4-f957fe486e20)
 
 
-Node version: Welcome to Node.js v18.15.0
+---
 
 ### User-Facing Features
 
