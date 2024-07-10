@@ -28,14 +28,17 @@ const landingPage = async (req, res, next) => {
 		let latestProducts = await productHelper.getRecentProducts();
 		let featuredProducts = await productHelper.getFeaturedProducts();
 
-		for (let i = 0; i < latestProducts.length; i++) {
-			latestProducts[i].product_price = formatCurrency(
-				latestProducts[i].product_price
-			);
+		// console.log("latestProducts ",latestProducts);
 
-			featuredProducts[i].product_price = formatCurrency(
-				featuredProducts[i].product_price
+		for (let i = 0; i < 5; i++) {
+			latestProducts[i].product_price = formatCurrency(
+				latestProducts[i]?.product_price ?? 0
 			);
+			if (i < featuredProducts.length) {
+				featuredProducts[i].product_price = formatCurrency(
+					featuredProducts[i]?.product_price ?? 0
+				);
+			}
 		}
 
 		res.render("user/index", {
@@ -296,9 +299,9 @@ const viewProducts = async (req, res, next) => {
 			wishListCount = await wishListHelper.getWishListCount(userId);
 		}
 
-		console.log("======================================");
-		console.log(req.query.filterData);
-		console.log("======================================");
+		// console.log("======================================");
+		// console.log(req.query.filterData);
+		// console.log("======================================");
 
 		if (!req.query.filterData) {
 			products = await productHelper.getAllProductsWithLookup();

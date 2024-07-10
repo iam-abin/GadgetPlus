@@ -286,14 +286,16 @@ $(document).ready(function () {
         }
     }
 
+    // ===========================================
+
     // Product Image Zoom plugin - product pages
     if ( $.fn.elevateZoom ) {
         $('#product-zoom').elevateZoom({
             gallery:'product-zoom-gallery',
             galleryActiveClass: 'active',
-            zoomType: "inner",
+            zoomType: "window",
             cursor: "crosshair",
-            zoomWindowFadeIn: 400,
+            zoomWindowFadeIn: 500,
             zoomWindowFadeOut: 400,
             responsive: true
         });
@@ -326,6 +328,56 @@ $(document).ready(function () {
             }
         });
     }
+
+    // $(document).ready(function() {
+    //     if ($.fn.elevateZoom) {
+    //         // Initialize Elevate Zoom
+    //         $('#product-zoom').elevateZoom({
+    //             gallery: 'product-zoom-gallery',
+    //             galleryActiveClass: 'active',
+    //             zoomType: "inner",
+    //             cursor: "crosshair",
+    //             zoomWindowFadeIn: 400,
+    //             zoomWindowFadeOut: 400,
+    //             responsive: true
+    //         });
+    
+    //         // On click change thumbs active item
+    //         $('.product-gallery-item').on('click', function(e) {
+    //             e.preventDefault();
+    //             var zoomImage = $(this).data('zoom-image');
+    //             var imageSrc = $(this).attr('href');
+    //             $('#product-zoom').attr('src', imageSrc).data('zoom-image', zoomImage);
+    //             $('.product-gallery-item').removeClass('active');
+    //             $(this).addClass('active');
+                
+    //             // Reinitialize Elevate Zoom
+    //             var ez = $('#product-zoom').data('elevateZoom');
+    //             ez.swaptheimage(imageSrc, zoomImage);
+    //         });
+    
+    //         // Open popup - product images
+    //         $('#btn-product-gallery').on('click', function(e) {
+    //             e.preventDefault();
+    //             var ez = $('#product-zoom').data('elevateZoom');
+    //             if ($.fn.magnificPopup && ez) {
+    //                 $.magnificPopup.open({
+    //                     items: ez.getGalleryList(),
+    //                     type: 'image',
+    //                     gallery: {
+    //                         enabled: true
+    //                     },
+    //                     fixedContentPos: false,
+    //                     removalDelay: 600,
+    //                     closeBtnInside: false
+    //                 }, 0);
+    //             }
+    //         });
+    //     }
+    // });
+    
+
+    // ===========================================
 
     // Product Gallery - product-gallery.html 
     if ( $.fn.owlCarousel && $.fn.elevateZoom ) {

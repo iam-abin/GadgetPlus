@@ -2,31 +2,71 @@ const productModel = require("../models/productModel");
 const ObjectId = require("mongoose").Types.ObjectId;
 const fs = require("fs");
 const slugify = require("slugify");
+const sharp = require('sharp');
 
 module.exports = {
-	addProductToDb: async (data, files) => {
-		try {
-			let imagesArray = Object.values(files).flat(1);
-			console.log("======= image array ======");
-			console.log(imagesArray);
-			console.log("======= image array ======");
-			const slug = slugify(data.product_name);
+	// addProductToDb: async (data, files) => {
+	// 	try {
+	// 		let imagesArray = Object.values(files).flat(1);
+	// 		console.log("======= image array ======");
+	// 		console.log(imagesArray);
+	// 		console.log("======= image array ======");
+	// 		const slug = slugify(data.product_name);
 
-			const product = await productModel.create({
-				product_name: data.product_name,
-				product_description: data.product_description,
-				product_category: data.product_category,
-				product_price: data.price,
-				product_quantity: data.quantity,
-				product_discount: data.discount,
-				image: imagesArray,
-				slug: slug,
-			});
-			return product;
-		} catch (error) {
-			throw error;
-		}
-	},
+	// 		const product = await productModel.create({
+	// 			product_name: data.product_name,
+	// 			product_description: data.product_description,
+	// 			product_category: data.product_category,
+	// 			product_price: data.price,
+	// 			product_quantity: data.quantity,
+	// 			product_discount: data.discount,
+	// 			image: imagesArray,
+	// 			slug: slug,
+	// 		});
+	// 		return product;
+	// 	} catch (error) {
+	// 		throw error;
+	// 	}
+	// },
+
+	addProductToDb: async (data, files) => {
+        try {
+            let imagesArray = Object.values(files).flat(1);
+
+			console.log("imagesArray ",imagesArray);
+            const slug = slugify(data.product_name);
+
+            // Process each image to resize and crop to 800x800 pixels
+            const processedImages = await Promise.all(imagesArray.map(async (image) => {
+                const imageBuffer = await sharp(image.path)
+                    .resize({ width: 800, height: 800, fit: 'cover' }) // Resize and crop to 800x800 pixels
+                    .toBuffer();
+                
+                return {
+                    filename: image.filename, // Assuming you store filenames in your database
+                    contentType: image.mimetype, // Example: 'image/jpeg', 'image/png'
+                    imageBuffer: imageBuffer // Buffer containing resized image
+                };
+            }));
+
+			console.log("processedImages ",processedImages);
+            // Save product data along with processed images
+            const product = await productModel.create({
+                product_name: data.product_name,
+                product_description: data.product_description,
+                product_category: data.product_category,
+                product_price: data.price,
+                product_quantity: data.quantity,
+                product_discount: data.discount,
+                image: processedImages,
+                slug: slug,
+            });
+
+            return product;
+        } catch (error) {
+            throw error;
+        }
+    },
 
 	getAllProductsWithLookup: async () => {
 		try {

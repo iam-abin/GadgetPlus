@@ -2,6 +2,53 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
 
 
+<style>
+	.product-image {
+	 width: 100%;
+	 max-height: 250px; /* Adjust this height as needed */
+	 object-fit: contain; /* Ensures the image covers the entire space */
+ }
+
+ .product-image-container {
+	 position: relative;
+	 width: 100%;
+	 height: 250px; /* Adjust this height as needed */
+	 overflow: hidden;
+	 object-fit: contain; /
+ }
+
+ .product-image {
+	 display: block;
+	 width: 100%;
+	 height: 100%;
+	 object-fit: contain;
+	 /* transition: opacity 0.3s ease-in-out; */
+ }
+
+ .product-image-hover {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 display: none;
+	 width: 100%;
+	 height: 100%;
+	 object-fit: cover;
+	 object-fit: contain; 
+	 /* transition: opacity 0.3s ease-in-out; */
+ }
+
+ .product:hover .product-image {
+	 opacity: 0; /* Hide the main image on hover */
+ }
+
+ .product:hover .product-image-hover {
+	 display: block; /* Show the hover image on hover */
+	 opacity: 1;
+ }
+
+</style>
+
+
 
 
 <main class="main">
@@ -115,7 +162,8 @@
 						</div><!-- End .row -->
 					</div><!-- End .products -->
 
-					<nav aria-label="Page navigation">
+					<!-- pagination start -->
+					<!-- <nav aria-label="Page navigation">
 						<ul class="pagination justify-content-center">
 							<li class="page-item disabled">
 								<a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1"
@@ -132,7 +180,9 @@
 									Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
 								</a>
 							</li>
-						</ul>
+						</ul> -->
+					<!-- pagination end -->
+
 					</nav>
 				</div><!-- End .col-lg-9 -->
 				<aside class="col-lg-3 order-lg-first" style="background-color: #ffffff;">
