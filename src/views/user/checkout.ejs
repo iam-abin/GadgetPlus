@@ -202,19 +202,6 @@
 												</h2>
 											</div>
 										</div><!-- End .card -->
-
-										<!-- <br>
-										<div class="card">
-											<div class="card-header" id="heading-4">
-												<h2 class="card-title">
-													<h2 class="card-title">
-														<input type="radio" id="paypal" name="payment"
-															value="paypal"> <label for="paypal">Paypal</label><br>
-													</h2>
-												</h2>
-											</div>
-										</div> -->
-										<!-- <button type="submit">Place Order</button> -->
 										<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
 											<span class="btn-text">Place Order</span>
 											<span class="btn-hover-text">Place Order</span>
@@ -409,21 +396,6 @@
 			})
 				.done((response) => {
 					console.log("response",response);
-					// if (response.error) {
-					// 	Toastify({
-					// 		text: `${response.message || "something went wrong"}`,
-					// 		duration: 3000,
-					// 		newWindow: true,
-					// 		close: true,
-					// 		gravity: "top", // `top` or `bottom`
-					// 		position: "center", // `left`, `center` or `right`
-					// 		stopOnFocus: true, // Prevents dismissing of toast on hover
-					// 		style: {
-					// 			background: "linear-gradient(to right, #00b09b, #96c93d)",
-					// 		},
-
-					// 	}).showToast();
-					// } else {
 						switch (response.paymentMethod) {
 							case 'COD':
 								console.log("payment done");
@@ -433,12 +405,6 @@
 							case 'razorpay':
 								console.log("razorpay");
 								paymentMethodrazorpayPayment(response);
-								break;
-							case 'paypal':
-								console.log("paypal");
-								console.log("paypal done");
-								// paymentMethodpaypalpayPayment(response);
-								location.href = response.paypalOrderDetails
 								break;
 							case 'wallet':
 								console.log("wallet");
