@@ -72,7 +72,7 @@
     }
 </style>
 
-<!-- <link rel="stylesheet" href="/admin/assets/css/vendors/material-icon-round.css"> -->
+<link rel="stylesheet" href="/admin/assets/css/vendors/material-icon-round.css">
 <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
 
 
@@ -81,10 +81,6 @@
     <div class="content-header">
         <div>
             <h1 class="content-title card-title">Order details</h1>
-<!-- lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll -->
-            <%= console.log("orderDetails",orderDetails,"orderDetailsorderDetails"); %>
-<!-- lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll -->
-
         </div>
     </div>
     <div class="card">
@@ -122,7 +118,6 @@
                                             data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template>
                                         <br> +91 <%= orderDetails.address?.mobile %>
                             </p>
-                            <a href="/admin/userProfile/<%= orderDetails.user %>">View profile</a>
                         </div>
                     </article>
                 </div> <!-- col// -->
@@ -217,8 +212,23 @@
                                                     <dl class="dlist">
                                                         <dt class="text-muted">Status:</dt>
                                                         <dd>
-                                                            <span
-                                                                class="badge rounded-pill alert-success text-success"><%= orderDetails.orderStatus %></span>
+                                                                <% if (orderDetails.orderStatus == 'pending') { %>
+                                                                    <span  class="badge rounded-pill alert-warning"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'processing') {%>
+                                                                    <span  class="badge rounded-pill alert-secondary"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'confirmed') {%>
+                                                                    <span  class="badge rounded-pill alert-dark"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'shipped') {%>
+                                                                    <span  class="badge rounded-pill alert-info"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'outForDelivery') {%>
+                                                                    <span  class="badge rounded-pill alert-warning"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'delivered') {%>
+                                                                    <span  class="badge rounded-pill alert-success"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'cancelPending') {%>
+                                                                    <span  class="badge rounded-pill alert-warning"><%= orderDetails.orderStatus %></span>
+                                                                <% } else {%>
+                                                                    <span  class="badge rounded-pill alert-danger"><%= orderDetails.orderStatus %></span>
+                                                                <% } %>
                                                         </dd>
                                                     </dl>
                                                     <% if (orderDetails.orderStatus !== 'delivered' && orderDetails.orderStatus !== 'cancelled' && orderDetails.orderStatus !== 'return pending' && orderDetails.orderStatus !== 'returned') { %>

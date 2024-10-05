@@ -150,7 +150,28 @@
                             <td width="10%"><%= userOrderDetails[i].orderDate %></td>
                             <td width="10%"><%= userOrderDetails[i].addressLookedup[0]?.address %></td>                        
                             <td width="10%"><%= userOrderDetails[i].totalAmount %></td>
-                            <td width="10%"><%= userOrderDetails[i].orderStatus %></td>
+
+							<td width="10%" >
+								<% if (userOrderDetails[i].orderStatus == 'pending') { %>
+									<span class="badge rounded-pill alert-warning"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else if (userOrderDetails[i].orderStatus == 'processing') {%>
+									<span class="badge rounded-pill alert-secondary"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else if (userOrderDetails[i].orderStatus == 'confirmed') {%>
+									<span class="badge rounded-pill alert-dark"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else if (userOrderDetails[i].orderStatus == 'shipped') {%>
+									<span class="badge rounded-pill alert-info"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else if (userOrderDetails[i].orderStatus == 'outForDelivery') {%>
+									<span class="badge rounded-pill alert-warning"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else if (userOrderDetails[i].orderStatus == 'delivered') {%>
+									<span class="badge rounded-pill alert-success"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else if (userOrderDetails[i].orderStatus == 'cancelPending') {%>
+									<span class="badge rounded-pill alert-warning"><%= userOrderDetails[i].orderStatus %></span>
+								<% } else {%>
+									<span class="badge rounded-pill alert-danger"><%= userOrderDetails[i].orderStatus %></span>
+								<% } %>
+							</td>
+
+
                             <td width="10%"><%= userOrderDetails[i].paymentMethod %></td>                        
                             <td width="12%" style="align-items: center;"><a href="/order-details/<%= userOrderDetails[i]._id %>"  class="btn btn-primary">View Details</a></td>
                             <!-- <td width="10%"><button>Cancel Order</button></td> -->

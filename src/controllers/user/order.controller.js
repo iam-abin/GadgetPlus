@@ -1,3 +1,4 @@
+const razorpay = require("../../api/razorpay");
 const cartHelper = require("../../helpers/cartHelper");
 const orderHelper = require("../../helpers/orderHepler");
 const productHelper = require("../../helpers/productHelper");
@@ -15,7 +16,6 @@ const placeOrder = async (req, res, next) => {
         const cartItems = await cartHelper.getAllCartItems(userId);
         let coupon = await couponModel.find({ user: userId });
 
-        console.log("========inside place order conteroller==============>");
         if (!cartItems.length)
             return res.send({
                 error: true,

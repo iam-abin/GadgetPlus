@@ -54,12 +54,8 @@
                                             <% } else {%>
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-danger"><%= orders[i].orderStatus %></span>
                                             <% } %>
-                                        
-<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
-                                        </td>
-                                        <td width="10%" >
-<!-- 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
-                                                                                    
+                                     </td>
+                                        <td width="10%" >                                                                   
                                             <% if (orders[i].orderStatus == 'pending') { %>
                                                 <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','processing','confirmed')" class="btn btn-warning-light rounded font-sm">processing</a>
                                             <% } else if (orders[i].orderStatus == 'processing') {%>

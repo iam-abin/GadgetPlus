@@ -15,17 +15,6 @@
                             </span> <br>
                             <small class="text-muted">Order ID:  <%= orderdetails._id %></small>
                         </div>
-                        <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                            <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
-                                <option>Change status</option>
-                                <option>Awaiting payment</option>
-                                <option>Confirmed</option>
-                                <option>Shipped</option>
-                                <option>Delivered</option>
-                            </select>
-                            <a class="btn btn-primary" href="#">Save</a>
-                            <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
-                        </div>
                     </div>
                 </header> <!-- card-header end// -->
                 <div class="card-body">
@@ -55,7 +44,6 @@
                                     <p class="mb-1">
                                         Shipping: Fargo express <br> Pay method: <%= orderdetails.paymentMethod %> <br> Status: new
                                     </p>
-                                    <a href="#">Download info</a>
                                 </div>
                             </article>
                         </div> <!-- col// -->
@@ -128,7 +116,26 @@
                                                     <dl class="dlist">
                                                         <dt class="text-muted">Status:</dt>
                                                         <dd>
-                                                            <span class="badge rounded-pill alert-success text-success"><%= productDetails[0].orderStatus %></span>
+
+                                                            <% if (productDetails[0].orderStatus == 'pending') { %>
+                                                                <span  class="badge rounded-pill alert-warning"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else if (productDetails[0].orderStatus == 'processing') {%>
+                                                                <span  class="badge rounded-pill alert-secondary"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else if (productDetails[0].orderStatus == 'confirmed') {%>
+                                                                <span  class="badge rounded-pill alert-dark"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else if (productDetails[0].orderStatus == 'shipped') {%>
+                                                                <span  class="badge rounded-pill alert-info"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else if (productDetails[0].orderStatus == 'outForDelivery') {%>
+                                                                <span  class="badge rounded-pill alert-warning"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else if (productDetails[0].orderStatus == 'delivered') {%>
+                                                                <span  class="badge rounded-pill alert-success"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else if (productDetails[0].orderStatus == 'cancelPending') {%>
+                                                                <span  class="badge rounded-pill alert-warning"><%= productDetails[0].orderStatus %></span>
+                                                            <% } else {%>
+                                                                <span  class="badge rounded-pill alert-danger"><%= productDetails[0].orderStatus %></span>
+                                                            <% } %>
+
+
                                                         </dd>
                                                     </dl>
                                                 </article>
