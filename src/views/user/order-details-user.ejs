@@ -1,0 +1,419 @@
+<!-- <link href="/user/assets/css/admin-main-copy.css" rel="stylesheet" type="text/css" /> -->
+
+
+<style>
+    .orderDetailspage-card-left {
+        padding: 27px;
+        background: #f8f9fa;
+        border-radius: 20px 0px 0px 20px;
+    }
+
+    .orderDetailspage-card-middle {
+        padding: 27px;
+        background: #f8f9fa;
+
+    }
+
+    b {
+        font-weight: 500;
+    }
+
+    .orderDetailspage-card-right {
+        padding: 27px;
+        background: #f8f9fa;
+        border-radius: 0px 20px 20px 0px;
+    }
+
+    .table> :not(:last-child)> :last-child>* {
+        border-bottom-color: currentColor;
+    }
+
+    .rounded-pill {
+        padding-right: 0.6em;
+        padding-left: 0.6em;
+    }
+
+    .text-success {
+        color: #00B517 !important;
+    }
+
+    .rounded-pill {
+        border-radius: 50rem !important;
+    }
+
+    .alert-success {
+        color: #006d0e;
+        background-color: #ccf0d1;
+        border-color: #b3e9b9;
+    }
+
+
+
+    .float-end {
+        float: right !important;
+    }
+
+    .content-header .content-title {
+        margin-bottom: 0;
+    }
+
+    .card-title {
+        color: #383e50 !important;
+    }
+
+    .card-title {
+        margin-bottom: 1rem;
+        font-size: 40px;
+    }
+
+
+    .text-muted {
+        color: #adb5bd !important;
+    }
+</style>
+
+<link rel="stylesheet" href="/admin/assets/css/vendors/material-icon-round.css">
+<script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
+
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h1 class="content-title card-title">Order details</h1>
+        </div>
+    </div>
+    <div class="card">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
+                    <span class="ml-4">
+                        <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2020, 4:34PM</b>
+                    </span> <br>
+                    <small class="text-muted ml-4">Order ID: <%= orderDetails._id %></small>
+                </div>
+                <% if (orderDetails.orderStatus =="delivered") { %>
+                    <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
+                        <button class="float-right mr-5" id="invoice">Download Invoice</button>
+                    </div>
+                 <% } %> 
+                 
+            </div>
+
+        </header> <!-- card-header end// -->
+        <hr>
+        <div class="card-body">
+            <div class="row mb-50 mt-20 order-info-wrap">
+                <div class="col-md-4 orderDetailspage-card-left">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-person"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Customer</h6>
+                            <p class="mb-1">
+
+                                <%= orderDetails.address?.first_name %>
+                                    <%= orderDetails.address?.last_name %> <template class="__cf_email__"
+                                            data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template>
+                                        <br> +91 <%= orderDetails.address?.mobile %>
+                            </p>
+                        </div>
+                    </article>
+                </div> <!-- col// -->
+                <div class="col-md-4 orderDetailspage-card-middle">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-local_shipping"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Order info</h6>
+                            <p class="mb-1">
+                                Shipping: Fargo express <br> Pay method: <%= orderDetails.paymentMethod %> <br> Status:
+                                    new
+                            </p>
+                        </div>
+                    </article>
+                </div> <!-- col// -->
+                <div class="col-md-4 orderDetailspage-card-right">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-place"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Deliver to</h6>
+                            <p class="mb-1">
+                                City : <%= orderDetails.address?.city %>
+                            </p>
+                            <p class="mb-1">
+                                Address : <%= orderDetails.address?.address %>
+                            </p>
+                        </div>
+                    </article>
+                </div> <!-- col// -->
+            </div> <!-- row // -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="40%">Product</th>
+                                    <th width="20%">Unit Price</th>
+                                    <th width="20%">Quantity</th>
+                                    <th width="20%" class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( let i=0; i < productDetails.length; i++ ) { %>
+                                    <tr>
+                                        <td>
+                                            <a class="itemside" href="#">
+                                                <div class="left">
+                                                    <img src="/product-images/<%= productDetails[i].orderedProduct.image[0].filename %>"
+                                                        width="40" height="40" class="img-xs" alt="Item">
+                                                </div>
+                                                <div class="info">
+                                                    <%= productDetails[i].orderedProduct.product_name %>
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <%= formatCurrency(productDetails[i]?.orderedPrice[i]) %>
+                                        </td>
+                                        <td>
+                                            <%= productDetails[i].orderedItems.quantity %>
+                                        </td>
+                                        <td class="text-end">
+                                            <%= formatCurrency((productDetails[i]?.orderedProduct?.product_price)*(productDetails[i].orderedItems.quantity))
+                                        %>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                        <tr>
+                                            <!-- <div class="col-lg-6 col-md-6 mb-lg-0  pt-3">
+                                            </div> -->
+                                            <td colspan="4">
+                                                <article class="float-end">
+                                                    <dl class="dlist">
+                                                        <dt>Subtotal:</dt>
+                                                        <dd></dd>
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt>coupon discount:</dt>
+                                                        <dd style="color: #00B517;">-<%= orderDetails.coupon %></dd>
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt>Grand total:</dt>
+                                                        <dd> <b class="h5">
+                                                                <%= formatCurrency(orderDetails.totalAmount) %>
+                                                            </b> </dd>
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt class="text-muted">Status:</dt>
+                                                        <dd>
+                                                                <% if (orderDetails.orderStatus == 'pending') { %>
+                                                                    <span  class="badge rounded-pill alert-warning"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'processing') {%>
+                                                                    <span  class="badge rounded-pill alert-secondary"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'confirmed') {%>
+                                                                    <span  class="badge rounded-pill alert-dark"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'shipped') {%>
+                                                                    <span  class="badge rounded-pill alert-info"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'outForDelivery') {%>
+                                                                    <span  class="badge rounded-pill alert-warning"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'delivered') {%>
+                                                                    <span  class="badge rounded-pill alert-success"><%= orderDetails.orderStatus %></span>
+                                                                <% } else if (orderDetails.orderStatus == 'cancelPending') {%>
+                                                                    <span  class="badge rounded-pill alert-warning"><%= orderDetails.orderStatus %></span>
+                                                                <% } else {%>
+                                                                    <span  class="badge rounded-pill alert-danger"><%= orderDetails.orderStatus %></span>
+                                                                <% } %>
+                                                        </dd>
+                                                    </dl>
+                                                    <% if (orderDetails.orderStatus !== 'delivered' && orderDetails.orderStatus !== 'cancelled' && orderDetails.orderStatus !== 'return pending' && orderDetails.orderStatus !== 'returned') { %>
+                                                        <button class="float-left ml-5" style="background-color: rgb(205, 120, 120);" onclick="cancelOrder('<%= orderDetails.user %>','<%= orderDetails._id %>')">Cancel order</button>
+                                                      <% } %>
+                                                        
+
+                                                      
+
+                                                    <% if (orderDetails.orderStatus == 'delivered') { %>
+                                                        <button class="float-left ml-5 " style="background-color: rgb(60, 109, 182);" onclick="returnOrder('<%= orderDetails.user %>','<%= orderDetails._id %>')">Return order</button>
+                                                    <% } %>
+
+                                                </article>
+                                            </td>
+                                        </tr>
+                            </tbody>
+                        </table>
+
+                        <input type="hidden" id="orderDetails" value="<%= JSON.stringify(orderDetails) %>">
+                        <input type="hidden" name="" id="productDetails" value="<%= JSON.stringify(productDetails) %>">
+                    </div> <!-- table-responsive// -->
+                </div> <!-- col// -->
+            </div>
+        </div> <!-- card-body end// -->
+    </div> <!-- card end// -->
+</section> <!-- content-main end// -->
+
+
+
+<script>
+
+
+    //--------------------------------------------------
+    // const orderDate = 'Wed, Aug 13, 2020, 4:34PM';
+    // const orderID = orderDetails._id;
+    // const customerName = `${orderDetails.address.first_name} ${orderDetails.address.last_name}`;
+    // const customerEmail = orderDetails.address.email_id;
+    // const customerPhone = `+91 ${orderDetails.address.mobile}`;
+    // const shippingMethod = 'Fargo express';
+    // const paymentMethod = orderDetails.paymentMethod;
+    // const shippingCity = orderDetails.address.city;
+    // const country = orderDetails.address.country;
+    // const shippingAddress = orderDetails.address.address;
+    // const productDetails = productDetails.orderedProduct;
+    // const subtotal = orderDetails.totalAmount; // Calculate the subtotal dynamically based on the product details and prices
+    // const shippingCost = 'Rs 10.00';
+    // const grandTotal = orderDetails.totalAmount;
+    // const status = 'Payment done';
+    //--------------------------------------------------
+
+
+
+    $(document).ready(function () {
+        $('#invoice').click((e) => {
+            let orderDetails = JSON.parse(document.getElementById('orderDetails').value);
+            let productDetails = JSON.parse(document.getElementById('productDetails').value);
+
+            console.log("clicked");
+
+
+            console.log("clicked");
+            e.preventDefault();
+            swal("do you want to download Invoice", {
+                buttons: ['cancel', 'ok']
+            })
+                .then((res) => {
+                    if (res) {
+                        const data = {
+                            "documentTitle": "INVOICE GadgetPlus", // Title of the invoice
+                            "currency": "INR",
+                            "taxNotation": "GST", // VAT or GST
+                            "marginTop": 25,
+                            "marginRight": 25,
+                            "marginLeft": 25,
+                            "marginBottom": 25,
+                            "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png", // URL or base64 encoded image
+                            "sender": {
+                                "company": "gadgetPlus",
+                                "address": "Panampally Nagar",
+                                "zip": "1234 AB",
+                                "city": "Kochi",
+                                "country": "India"
+                            },
+                            "client": {
+                                "company": orderDetails.address.first_name,
+                                "address": orderDetails.address.address,
+                                "zip": "5678 CD",
+                                "city": orderDetails.address.city,
+                                "country": orderDetails.address.country
+                            },
+                            "invoiceNumber": "2021.0001",
+                            "invoiceDate": "15-05-2023",
+                            "products": productDetails.map((product) => ({
+                                quantity: product.orderedItems.quantity,
+                                description: product.orderedProduct.product_name,
+                                tax: 0,
+                                price: product.orderedProduct.product_price
+                            }))
+                            ,
+                            "bottomNotice": "Thank you for your business."
+                        };
+
+                        //create invoice
+                        easyinvoice.createInvoice(data, function (result) {
+                            easyinvoice.download('gadgetPlus-invoice.pdf', result.pdf);
+                        });
+
+                    }
+                })
+        })
+    })
+
+    function cancelOrder(userId,orderId){
+        console.log("clicked",userId);
+
+        swal("do you want to Cancel This Order", {
+            buttons: ['No', 'Yes']
+        })
+        .then((res)=>{
+            if(res){
+                $.ajax({
+                    url:'/cancel-order',
+                    method:'post',
+                    data:{
+                        userId:userId,
+                        orderId:orderId
+                    }
+                })
+                .done((res)=>{
+                    console.log(res);
+                    Toastify({
+							text: `${res.message}`,
+							duration: 3000,
+							newWindow: true,
+							close: true,
+							gravity: "top", // `top` or `bottom`
+							position: "center", // `left`, `center` or `right`
+							stopOnFocus: true, // Prevents dismissing of toast on hover
+							style: {
+								background: "linear-gradient(to right, #00b09b, #96c93d)",
+							},
+
+						}).showToast();
+                        location.reload()
+                })
+            }
+        })
+    }
+
+
+    function returnOrder(userId,orderId){
+        console.log("clicked",userId);
+
+        swal("do you want to Retrun This Order", {
+            buttons: ['No', 'Yes']
+        })
+        .then((res)=>{
+            if(res){
+                $.ajax({
+                    url:'/return-order',
+                    method:'post',
+                    data:{
+                        userId:userId,
+                        orderId:orderId
+                    }
+                })
+                .done((res)=>{
+                    console.log(res);
+                    Toastify({
+							text: `${res.message}`,
+							duration: 3000,
+							newWindow: true,
+							close: true,
+							gravity: "top", // `top` or `bottom`
+							position: "center", // `left`, `center` or `right`
+							stopOnFocus: true, // Prevents dismissing of toast on hover
+							style: {
+								background: "linear-gradient(to right, #00b09b, #96c93d)",
+							},
+
+						}).showToast();
+                        location.reload()
+                })
+            }
+        })
+    }
+</script>

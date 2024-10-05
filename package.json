@@ -2,11 +2,10 @@
   "name": "gadget_plus",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node app.js",
-    "dev": "NODE_ENV=development nodemon app.js"
+    "start": "NODE_ENV=production node src/app.js",
+    "dev": "NODE_ENV=development nodemon src/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -29,7 +28,6 @@
     "multer": "^1.4.5-lts.1",
     "nocache": "^3.0.4",
     "nodemon": "^2.0.22",
-    "paypal-rest-sdk": "^1.8.1",
     "pdfkit": "^0.13.0",
     "razorpay": "^2.8.6",
     "sharp": "^0.29.0",

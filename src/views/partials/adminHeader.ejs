@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <title>gadgetPlus Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg"> -->
+
+    <!-- Template CSS -->
+    <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
+
+    <!-- datatable -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- toastify js -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="/admin" class="brand-wrap" style="text-decoration: none;">
+                <h2>Admin Panel</h2>
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav class="navBar">
+            <ul class="menu-aside nav-bar-ul">
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link " href="/admin/users-List"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Users </span>
+                    </a>
+                </li>
+
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/product"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Product </span>
+                    </a>
+                    </div>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/product-categories">
+                        <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Category </span>
+                    </a>
+                    </div>
+                </li>
+
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Order </span>
+                    </a>
+                </li>
+
+
+                <!-- <li class="menu-item">
+                    <a class="menu-link" href="/admin/banner"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Banner </span>
+                    </a>
+                </li> -->
+
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/coupon"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Coupon </span>
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/logout"> <i class="material-icons md-exit_to_app"></i>
+                        <span class="text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+            <br>
+            <br>
+        </nav>
+    </aside>
+
+
+    <main class="main-wrap">
+        <header class="main-header navbar" style="flex: auto; justify-content: end; ">
+            <!-- <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i
+                                class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div> -->
+            <div class="col-nav ">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
+                        </a>
+                    </li>
+
+                    <li class="dropdown nav-item">
+                        <a > <img class="img-xs rounded-circle"
+                                src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <!-- <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
+                                Profile</a>
+                            <a class="dropdown-item" href="#"><i
+                                    class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                        </div> -->
+                    </li>
+                </ul>
+            </div>
+
+
+
+        </header>
+
+        <script>
+            // $(document).ready(function(){
+            //     $('.nav-bar-ul').on('click','li',function(){
+            //         $('.nav-bar-ul .active').removeClass('active');
+            //         $(this).addClass('active')
+            //     })
+            // })
+
+            const activePage=window.location.pathname;
+            console.log(activePage);
+
+            const navLinks=document.querySelectorAll('nav a').forEach((link)=>{
+                console.log(link.href);
+                const linkPath = new URL(link.href).pathname; // Extract path from link.href
+                let linkpathDashBoard = new URL(link.href).pathname
+                linkpathDashBoard='/admin'+linkpathDashBoard+"-home"
+                
+                if (linkPath === activePage) {
+                    console.log(linkPath);
+                    link.classList.add('active');
+                }else if(linkpathDashBoard === activePage){
+                    link.classList.add('active');
+                }
+            })
+        </script>
