@@ -6,123 +6,130 @@ const {
 	adminChecking,
 } = require("../middlewares/sessionHandling");
 const multer = require("../middlewares/multer");
-const adminController = require("../controllers/adminController");
+const adminHomeController = require("../controllers/home/admin.home.controller");
+const adminProductController = require("../controllers/admin/product.controller");
+const adminCategoryController = require("../controllers/admin/category.controller");
+const adminCouponController = require("../controllers/admin/coupon.controller");
+const adminOrderController = require("../controllers/admin/order.controller");
+const adminUserController = require("../controllers/admin/user.controller");
+const adminReportController = require("../controllers/admin/report.controller");
+const adminAuthController = require("../controllers/auth/admin.auth.controller");
 
-router.get("/", adminAuthenticationChecking, adminController.adminLogin);
+router.get("/", adminAuthenticationChecking, adminAuthController.adminLogin);
 
-router.post("/adminLogin", adminController.adminLoginPost);
+router.post("/adminLogin", adminAuthController.adminLoginPost);
 
-router.get("/admin-home", adminChecking, adminController.adminHome);
+router.get("/admin-home", adminChecking, adminHomeController.adminHome);
 
 // Sales Report Routes
 router.get(
 	"/sales-report-page",
 	adminChecking,
-	adminController.salesReportPage
+	adminReportController.salesReportPage
 );
 
-router.post("/sales-report", adminChecking, adminController.salesReport);
+router.post("/sales-report", adminChecking, adminReportController.salesReport);
 
 // User Management Routes
-router.get("/users-List", adminChecking, adminController.usersList);
+router.get("/users-List", adminChecking, adminUserController.usersList);
 
 router.get(
 	"/block-unblock-user/:id",
 	adminChecking,
-	adminController.blockUnBlockUser
+	adminUserController.blockUnBlockUser
 );
 
 // Product Management Routes
-router.get("/product", adminChecking, adminController.productList);
+router.get("/product", adminChecking, adminProductController.productList);
 
-router.get("/add-product", adminChecking, adminController.addProduct);
+router.get("/add-product", adminChecking, adminProductController.addProduct);
 
 router.post(
 	"/add-product",
 	adminChecking,
 	multer.productUpload,
-	adminController.postAddProduct
+	adminProductController.postAddProduct
 );
 
-router.get("/edit-product/:slug", adminChecking, adminController.editProduct);
+router.get("/edit-product/:slug", adminChecking, adminProductController.editProduct);
 
 router.post(
 	"/edit-product/:slug",
 	adminChecking,
 	multer.productUpload,
-	adminController.postEditProduct
+	adminProductController.postEditProduct
 );
 
 router.get(
 	"/delete-product/:slug",
 	adminChecking,
-	adminController.deleteProduct
+	adminProductController.deleteProduct
 );
 
 // Category Management Routes
 router.get(
 	"/product-categories",
 	adminChecking,
-	adminController.productCategory
+	adminCategoryController.productCategory
 );
 
 router.post(
 	"/add-productCategory",
 	adminChecking,
-	adminController.postAddProductCategory
+	adminCategoryController.postAddProductCategory
 );
 
 router.get(
 	"/edit-productCategory/:id",
 	adminChecking,
-	adminController.editProductCategory
+	adminCategoryController.editProductCategory
 );
 
 router.post(
 	"/edit-productCategoryPost",
 	adminChecking,
-	adminController.editProductCategoryPost
+	adminCategoryController.editProductCategoryPost
 );
 
 router.get(
 	"/delete-productCategory/:id",
 	adminChecking,
-	adminController.deleteProductCategory
+	adminCategoryController.deleteProductCategory
 );
 
 // Order Management Routes
-router.get("/orders", adminChecking, adminController.productOrders);
+router.get("/orders", adminChecking, adminOrderController.productOrders);
 
 router.post(
 	"/order-status",
 	adminChecking,
-	adminController.changeProductOrderStatus
+	adminOrderController.changeProductOrderStatus
 );
 
 router.get(
 	"/order-details/:id",
 	adminChecking,
-	adminController.productOrderDetails
+	adminOrderController.productOrderDetails
 );
 
 // Banner Route
-router.get("/banner", adminChecking, adminController.banners);
+router.get("/banner", adminChecking, adminHomeController.banners);
 
 // Coupon Management Routes
-router.get("/coupon", adminChecking, adminController.coupons);
+router.get("/coupon", adminChecking, adminCouponController.coupons);
 
-router.post("/add-coupon", adminChecking, adminController.postAddCoupon);
+router.post("/add-coupon", adminChecking, adminCouponController.postAddCoupon);
 
-router.get("/edit-coupon/:id", adminChecking, adminController.editCoupon);
+router.get("/edit-coupon/:id", adminChecking, adminCouponController.editCoupon);
 
-router.post("/edit-coupon", adminChecking, adminController.editCouponPost);
+router.post("/edit-coupon", adminChecking, adminCouponController.editCouponPost);
 
-router.get("/delete-coupon/:id", adminChecking, adminController.deleteCoupon);
+router.get("/delete-coupon/:id", adminChecking, adminCouponController.deleteCoupon);
 
 // user Profile Route
-router.get("/userProfile/:id", adminChecking, adminController.userProfile);
+router.get("/userProfile/:id", adminChecking, adminUserController.userProfile);
 
 // Logout Route
-router.get("/logout", adminController.adminLogout);
+router.get("/logout", adminAuthController.adminLogout);
 
 module.exports = router;

@@ -127,11 +127,9 @@ module.exports = {
 	getCartCount: async (userId) => {
 		try {
 			let count = 0;
-			let cart = await cartModel.findOne({ user: userId });
-			if (cart) {
-				count = cart.products.length;
-			} else {
-				count = 0;
+			let cartItemCount = await cartModel.countDocuments({ user: userId });
+			if (cartItemCount) {
+				count = cartItemCount;
 			}
 			return count;
 		} catch (error) {
