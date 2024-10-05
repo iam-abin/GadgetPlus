@@ -7,3 +7,6 @@
 06:23:30 error: Page Not Found Page Not Found
 06:23:30 error: Page Not Found Page Not Found
 09:20:14 error: productHelper is not defined productHelper is not defined
+10:04:51 error: this.getAllCartItems is not a function this.getAllCartItems is not a function
+10:05:53 error: cartHelper is not defined cartHelper is not defined
+10:06:42 error: cartItems is not defined cartItems is not defined

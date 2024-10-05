@@ -16,10 +16,6 @@ const viewProducts = async (req, res, next) => {
             user = req.session.user;
         }
 
-        // console.log("======================================");
-        // console.log(req.query.filterData);
-        // console.log("======================================");
-
         if (!req.query.filterData) {
             products = await productHelper.getAllProductsWithLookup();
             for (let i = 0; i < products.length; i++) {
@@ -52,7 +48,6 @@ const viewProducts = async (req, res, next) => {
             });
         } else {
             let filterData = JSON.parse(req.query.filterData);
-            console.log(filterData, "filterData");
             if (filterData.selectedCategories.length) {
                 products = await productHelper.filterProduct(filterData);
                 for (let i = 0; i < products.length; i++) {

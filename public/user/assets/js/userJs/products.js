@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     let submitButton = document.getElementsByClassName('add-to-cart')
-    console.log(submitButton, "add-to-cart submitButton");
     $('.add-to-cart').click(function (e) {
         e.preventDefault()
         // Disable the submit button
@@ -13,8 +12,6 @@ $(document).ready(function () {
             type: 'post'
         })
             .done((res) => {
-                console.log(res);
-                console.log("abi");
                 swal("successfull", `${res.message}`, "success")
                     .then(() => {
                         location.reload()
@@ -38,7 +35,6 @@ $(document).ready(function () {
             data: { productId: productId }
         })
             .done((res) => {
-                console.log(res.message);
                 swal("successfull", `${res.message}`, "success")
                     .then(() => {
                         location.reload()

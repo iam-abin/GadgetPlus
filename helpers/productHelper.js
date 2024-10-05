@@ -8,9 +8,6 @@ module.exports = {
 	// addProductToDb: async (data, files) => {
 	// 	try {
 	// 		let imagesArray = Object.values(files).flat(1);
-	// 		console.log("======= image array ======");
-	// 		console.log(imagesArray);
-	// 		console.log("======= image array ======");
 	// 		const slug = slugify(data.product_name);
 
 	// 		const product = await productModel.create({
@@ -33,7 +30,6 @@ module.exports = {
         try {
             let imagesArray = Object.values(files).flat(1);
 
-			console.log("imagesArray ",imagesArray);
             const slug = slugify(data.product_name);
 
             // Process each image to resize and crop to 800x800 pixels
@@ -155,7 +151,6 @@ module.exports = {
 	},
 
 	getAProduct: async (slug) => {
-		console.log("Inside get a Product");
 		try {
 			const product = await productModel.findOne({ slug: slug }).lean();
 			return product;
@@ -263,7 +258,6 @@ module.exports = {
 
 	isOutOfStock: async function(productSlug, newQuantity = false) {
 		// newQuantity for cart product quantity increase
-		console.log(this);
 		try {
 			let product = await this.getAProduct(productSlug);
 			let stock = product.product_quantity;

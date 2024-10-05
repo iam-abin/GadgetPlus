@@ -37,8 +37,6 @@ module.exports = {
                 } else {
                     for (let i = 0; i < payment.links.length; i++) {
                         if (payment.links[i].rel === 'approval_url') {
-                            console.log("Create Payment Response");
-                            console.log(payment);
                             let link = payment.links[i].href
                             resolve(link);
                         }

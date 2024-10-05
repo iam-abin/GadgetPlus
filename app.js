@@ -42,15 +42,15 @@ app.use(nocache());
 
 // Session middleware
 app.use(
-	session({
-		key: "user_sid",
-		secret: "thisisthekeyforuser",
-		resave: false,
-		saveUninitialized: false,
-		cookie: {
-			maxAge: 6000000,
-		},
-	})
+    session({
+        key: "user_sid",
+        secret: "thisisthekeyforuser",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 6000000,
+        },
+    })
 );
 
 // Routes
@@ -59,10 +59,8 @@ app.use("/admin", adminRoute);
 
 // 404 error handler
 app.all("*", (req, res, next) => {
-	return next(createError(404, "Page Not Found"));
+    return next(createError(404, "Page Not Found"));
 });
-
-
 
 // General error handler
 app.use(errorHandler);
@@ -72,7 +70,7 @@ console.clear();
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "localhost", () => {
-	console.log(`Server startes on http://localhost:${PORT}`);
+    console.log(`Server startes on http://localhost:${PORT}`);
 });
 
 // app.listen(PORT, "0.0.0.0", () => {

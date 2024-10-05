@@ -1,6 +1,4 @@
 function changeUserStatus(userId) {
-    console.log('clicked', userId)
-
     swal("Are you sure you want to do this?", {
         buttons: ["No!", "Yes!"],
     }).then((res) => {

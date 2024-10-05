@@ -21,13 +21,13 @@ const placeOrder = async (req, res, next) => {
                 error: true,
                 message: "Please add items to cart before checkout",
             });
-        console.log("1");
+ 
 
         if (!req.body.addressSelected)
             return res
                 .status(400)
                 .send({ error: true, message: "Please Choose Address" });
-        console.log("2");
+     
         if (!paymentType)
             return res.status(400).send({
                 error: true,
@@ -75,13 +75,12 @@ const placeOrder = async (req, res, next) => {
                 });
                 break;
             case "wallet":
-                console.log("3");
-                console.log("3 totalAmount", totalAmount);
+                
                 let isPaymentDone = await walletHelper.payUsingWallet(
                     userId,
                     totalAmount
                 );
-                console.log("isPaymentDone ", isPaymentDone);
+                
                 if (isPaymentDone) {
                     const orderDetailsWallet = await orderHelper.orderPlacing(
                         req.body,

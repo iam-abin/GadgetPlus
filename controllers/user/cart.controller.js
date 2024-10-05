@@ -4,8 +4,11 @@ const { formatCurrency } = require("../../utils/currency-format");
 const cart = async (req, res, next) => {
     try {
         const { user } = req.session;
+        const cartItems = await cartHelper.getAllCartItems(user._id);
 
-        let totalandSubTotal = await cartHelper.totalSubtotal(user._id);
+        let totalandSubTotal = await cartHelper.totalSubtotal(
+            user._id,
+        );
 
         totalandSubTotal = formatCurrency(totalandSubTotal);
 
@@ -71,6 +74,7 @@ const removeFromCart = async (req, res, next) => {
     try {
         await cartHelper.removeAnItemFromCart(cartId, productId);
 
+        
         let totalAmount = await cartHelper.totalSubtotal(userId);
         totalAmount = formatCurrency(totalAmount);
 

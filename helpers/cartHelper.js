@@ -81,7 +81,7 @@ module.exports = {
 			const cart = await cartModel.findOne({ user: userId });
 			let cartProduct;
 			cart.products.forEach((product) => {
-				console.log(product.productItemId.toString() == productId);
+				
 				if (product.productItemId.toString() == productId) {
 					cartProduct = product;
 					return;
@@ -127,9 +127,11 @@ module.exports = {
 	getCartCount: async (userId) => {
 		try {
 			let count = 0;
-			let cartItemCount = await cartModel.countDocuments({ user: userId });
-			if (cartItemCount) {
-				count = cartItemCount;
+			let cart = await cartModel.findOne({ user: userId });
+			if (cart) {
+				count = cart.products.length;
+			} else {
+				count = 0;
 			}
 			return count;
 		} catch (error) {
@@ -153,12 +155,10 @@ module.exports = {
 		}
 	},
 
-	totalSubtotal: async (userId) => {
+	totalSubtotal: async function(userId) {
 		try {
 			let cart = await cartModel.findOne({ user: userId });
 			let cartItems = await this.getAllCartItems(userId);
-			console.log(cartItems);
-			
 
 			let total = 0;
 			if (cart) {

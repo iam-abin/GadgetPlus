@@ -47,9 +47,6 @@
 
         let orderStatus = JSON.parse(document.getElementById('orderStatus').value)
 
-        
-        console.log(orderStatus,"hiiiiiiiiiiiiiiii");
-
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -97,8 +94,6 @@
 
         let dailyDataStr = $('#myChartData').data('daily')
         let dailyData = dailyDataStr.split(",").map(Number)
-
-        console.log(dailyData);
 
         let chart = new Chart(ctx, {
             // The type of chart we want to create

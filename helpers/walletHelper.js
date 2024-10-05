@@ -26,7 +26,6 @@ module.exports = {
 	payUsingWallet: async (userId, amount) => {
 		try {
 			let wallet = await walletModel.findOne({ user: userId });
-			console.log("in payUsingWallet wallet" ,wallet);
 
 			if (!wallet) {
 				throw new Error("Insufficient balance")

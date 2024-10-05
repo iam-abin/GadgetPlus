@@ -26,7 +26,6 @@ module.exports = {
 	getAnAddress: async (addressId) => {
 		try {
 			const address = await addressModel.findById(addressId);
-			console.log("inside helper");
 			return address;
 		} catch (error) {
 			throw error;
@@ -43,16 +42,8 @@ module.exports = {
 	},
 
 	editAnAddress: async (editedAddress) => {
-		console.log("edit address post inside helper", editedAddress);
-
 		try {
 			let address = await addressModel.findById(editedAddress.addressId);
-
-			console.log(
-				"edit address post inside helper address try=",
-				address
-			);
-
 			address.first_name = editedAddress.fname;
 			address.last_name = editedAddress.lname;
 			address.mobile = editedAddress.mobile;
