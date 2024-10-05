@@ -2,8 +2,8 @@ const winston = require('winston')
 const { createLogger, format, transports } = require("winston");
 const { combine, timestamp, printf } = format;
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-	return `${timestamp} [${label}] ${level}: ${message}`;
+const myFormat = printf(({ level, message, timestamp }) => {
+	return `${timestamp} ${level}: ${message}`;
 });
 
 const winstonLogger = createLogger({
@@ -24,6 +24,7 @@ const errorHandler = (error, req, res, next) => {
     console.error("=============================");
 	
 	winstonLogger.error(error.message, error);
+	
 	// if (process.env.NODE_ENV !== "production") {
 		winstonLogger.add(
 			new transports.Console({

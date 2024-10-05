@@ -8,7 +8,6 @@ $(document).ready(function () {
         // $('.add-to-cart').prop('disabled', true);
         submitButton.disabled = true;
         const prodId = $(this).data('value')
-        console.log('clicked', prodId)
         $.ajax({
             url: '/add-to-cart/' + prodId,
             type: 'post'
@@ -33,8 +32,6 @@ $(document).ready(function () {
     $('.add-to-Wishlist').click(function (e) {
         e.preventDefault();
         const productId = $(this).data('value');
-        console.log("clicked");
-        console.log("hjjjjjjjjjj", productId);
         $.ajax({
             url: '/add-to-wishList',
             type: 'post',
