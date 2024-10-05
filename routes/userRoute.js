@@ -19,10 +19,12 @@ const userPaymentController=require('../controllers/user/payment.controller');
 const userProfileController=require('../controllers/profile/user.profile.controller');
 const errorController=require('../controllers/error/error.controller');
 
+const cartWishlistCount = require('../middlewares/cartWishlistCount');
+
 // middleware that is used to fetch filter categories
 // its better to use localstorage than this middleware
 router.use(categorySupply);
-
+router.use(cartWishlistCount)
 
 router.get('/',userAuthenticationCheck,userHomeController.landingPage);
 

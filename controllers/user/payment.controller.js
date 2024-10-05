@@ -1,14 +1,21 @@
+const addressHelper = require("../../helpers/addressHelper");
+const cartHelper = require("../../helpers/cartHelper");
+const walletHelper = require("../../helpers/walletHelper");
+const orderHelper = require("../../helpers/orderHepler");
+const { formatCurrency } = require("../../utils/currency-format");
+const razorpay = require("../../api/razorpay");
+const productHelper = require("../../helpers/productHelper");
 
 const checkout = async (req, res, next) => {
     //to view details and price products that are going to order and manage address
     try {
-        const user = req.session.user;
+        const { user } = req.session;
 
         let cartItems = await cartHelper.getAllCartItems(user._id);
         let walletBalance = await walletHelper.walletBalance(user._id);
         walletBalance = formatCurrency(walletBalance);
 
-        let totalAmount = await cartHelper.totalSubtotal(user._id, cartItems);
+        let totalAmount = await cartHelper.totalSubtotal(user._id);
         totalAmount = totalAmount.toLocaleString("en-in", {
             style: "currency",
             currency: "INR",
@@ -27,8 +34,6 @@ const checkout = async (req, res, next) => {
 
         res.render("user/checkout", {
             loginStatus: req.session.user,
-            cartCount,
-            wishListCount,
             walletBalance,
             user,
             totalAmount: totalAmount,
@@ -39,7 +44,6 @@ const checkout = async (req, res, next) => {
         next(error);
     }
 };
-
 
 //razorpay payment verification
 const verifyPayment = async (req, res, next) => {
@@ -64,11 +68,7 @@ const verifyPayment = async (req, res, next) => {
     }
 };
 
-
-
 module.exports = {
-
     checkout,
     verifyPayment,
-  
-}
+};

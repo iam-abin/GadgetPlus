@@ -6,8 +6,8 @@ const userSignup = async (req, res) => {
 
 const userSignupPost = async (req, res, next) => {
     try {
-        const response = userHelper.doSignup(req.body);
-        if (!response.userExist) {
+        const signupResponse = await userHelper.doSignup(req.body);
+        if (!signupResponse.userExist) {
             res.redirect("/user-login");
         } else {
             res.redirect("/");
@@ -26,24 +26,23 @@ const userLogin = async (req, res) => {
 
 const userLoginPost = async (req, res, next) => {
     try {
-        const response = await userHelper.doLogin(req.body);
-        if (response.loggedIn) {
-            req.session.user = response.user;
-            res.status(202).json({
+        const loggedInResponse = await userHelper.doLogin(req.body);
+        if (loggedInResponse.loggedIn) {
+            req.session.user = loggedInResponse.user;
+            res.status(200).json({
                 error: false,
-                message: response.logginMessage,
+                message: loggedInResponse.logginMessage,
             });
         } else {
             res.status(401).json({
                 error: false,
-                message: response.logginMessage,
+                message: loggedInResponse.logginMessage,
             });
         }
     } catch (error) {
         next(error);
     }
 };
-
 
 const userLogout = async (req, res, next) => {
     try {
@@ -54,11 +53,10 @@ const userLogout = async (req, res, next) => {
     }
 };
 
-
-module.exports ={
+module.exports = {
     userSignup,
     userSignupPost,
     userLogin,
     userLoginPost,
     userLogout,
-}
+};

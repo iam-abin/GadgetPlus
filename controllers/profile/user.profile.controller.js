@@ -7,15 +7,12 @@ const profile = async (req, res, next) => {
         res.render("user/profile", {
             loginStatus: req.session.user,
             addresses,
-            cartCount,
-            wishListCount,
         });
     } catch (error) {
         next(error);
     }
 };
 
-
 module.exports = {
-    profile
-}
+    profile,
+};

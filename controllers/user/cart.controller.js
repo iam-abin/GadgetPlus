@@ -1,22 +1,18 @@
+const cartHelper = require("../../helpers/cartHelper");
+const { formatCurrency } = require("../../utils/currency-format");
 
 const cart = async (req, res, next) => {
     try {
-        let user = req.session.user;
-        let cartItems = await cartHelper.getAllCartItems(user._id);
-        cartCount = await cartHelper.getCartCount(user._id);
-        wishListCount = await wishListHelper.getWishListCount(user._id);
-        let totalandSubTotal = await cartHelper.totalSubtotal(
-            user._id,
-            cartItems
-        );
+        const { user } = req.session;
+
+        let totalandSubTotal = await cartHelper.totalSubtotal(user._id);
 
         totalandSubTotal = formatCurrency(totalandSubTotal);
+
         res.render("user/cart", {
             loginStatus: req.session.user,
             cartItems,
-            cartCount,
             totalAmount: totalandSubTotal,
-            wishListCount,
         });
     } catch (error) {
         next(error);
@@ -26,15 +22,11 @@ const cart = async (req, res, next) => {
 const addToCart = async (req, res, next) => {
     try {
         let productId = req.params.id;
-        let user = req.session.user;
-        console.log("/////////////////////");
-        console.log(user);
-        console.log("/////////////////////");
-        let response = await cartHelper.addToUserCart(user._id, productId);
-        if (response) {
-            cartCount = await cartHelper.getCartCount(user._id);
-            wishListCount = await wishListHelper.getWishListCount(user._id);
-            res.status(202).json({
+        const { user } = req.session;
+
+        const addedItem = await cartHelper.addToUserCart(user._id, productId);
+        if (addedItem) {
+            res.status(201).json({
                 status: "success",
                 message: "product added to cart",
             });
@@ -44,28 +36,25 @@ const addToCart = async (req, res, next) => {
     }
 };
 
-
 const incDecQuantity = async (req, res, next) => {
     try {
-        let obj = {};
-        let user = req.session.user;
-        let productId = req.body.productId;
-        let quantity = req.body.quantity;
+        const obj = {};
+        const { user } = req.session;
+        const { productId, quantity } = req.body;
 
-        response = await cartHelper.incDecProductQuantity(
+        const cartItem = await cartHelper.incDecProductQuantity(
             user._id,
             productId,
             quantity
         );
 
-        obj.quantity = response.newQuantity;
+        obj.quantity = cartItem.newQuantity;
 
-        let cartItems = await cartHelper.getAllCartItems(user._id);
-        obj.totalAmount = await cartHelper.totalSubtotal(user._id, cartItems);
+        obj.totalAmount = await cartHelper.totalSubtotal(user._id);
 
         obj.totalAmount = formatCurrency(obj.totalAmount);
 
-        if (response.isOutOfStock) {
+        if (cartItem.isOutOfStock) {
             res.status(202).json({ OutOfStock: true, message: obj });
         } else {
             res.status(202).json({ OutOfStock: false, message: obj });
@@ -75,35 +64,28 @@ const incDecQuantity = async (req, res, next) => {
     }
 };
 
-
 const removeFromCart = async (req, res, next) => {
     const userId = req.session.user._id;
-    const cartId = req.body.cartId;
+    const { cartId } = req.body;
     const productId = req.params.id;
     try {
         await cartHelper.removeAnItemFromCart(cartId, productId);
 
-        let cartItems = await cartHelper.getAllCartItems(userId);
-        let totalAmount = await cartHelper.totalSubtotal(userId, cartItems);
+        let totalAmount = await cartHelper.totalSubtotal(userId);
         totalAmount = formatCurrency(totalAmount);
 
-        let cartCount = await cartHelper.getCartCount(userId);
-        wishListCount = await wishListHelper.getWishListCount(userId);
-        res.status(202).json({
+        res.status(200).json({
             message: "sucessfully item removed",
             totalAmount,
-            cartCount,
-            wishListCount,
         });
     } catch (error) {
         next(error);
     }
 };
 
-
 module.exports = {
     cart,
     addToCart,
     incDecQuantity,
     removeFromCart,
-}
+};

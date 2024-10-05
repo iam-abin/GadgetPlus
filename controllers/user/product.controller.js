@@ -1,17 +1,19 @@
+const cartHelper = require("../../helpers/cartHelper");
+const productHelper = require("../../helpers/productHelper");
+const wishListHelper = require("../../helpers/wishListHelper");
+const productModel = require("../../models/productModel");
+const { formatCurrency } = require("../../utils/currency-format");
 
 const viewProducts = async (req, res, next) => {
     try {
-        console.log("THis is view prodict controller");
-
         let products;
+        let user;
         // let minAmount= await productHelper.getMinimumPrice();
         // let maxAmount= await productHelper.getMaximumPrice();
         // const page = req.params.page;
         // const perPage = 2;
         if (req.session.user) {
-            let userId = req.session.user._id;
-            cartCount = await cartHelper.getCartCount(userId);
-            wishListCount = await wishListHelper.getWishListCount(userId);
+            user = req.session.user;
         }
 
         // console.log("======================================");
@@ -21,8 +23,8 @@ const viewProducts = async (req, res, next) => {
         if (!req.query.filterData) {
             products = await productHelper.getAllProductsWithLookup();
             for (let i = 0; i < products.length; i++) {
-                if (req.session.user) {
-                    let userId = req.session.user._id;
+                if (user) {
+                    let userId = user._id;
                     const isInCart = await cartHelper.isAProductInCart(
                         userId,
                         products[i]._id
@@ -46,9 +48,7 @@ const viewProducts = async (req, res, next) => {
 
             res.render("user/view-products", {
                 product: products,
-                loginStatus: req.session.user,
-                cartCount,
-                wishListCount,
+                loginStatus: user,
             });
         } else {
             let filterData = JSON.parse(req.query.filterData);
@@ -56,8 +56,8 @@ const viewProducts = async (req, res, next) => {
             if (filterData.selectedCategories.length) {
                 products = await productHelper.filterProduct(filterData);
                 for (let i = 0; i < products.length; i++) {
-                    if (req.session.user) {
-                        let userId = req.session.user._id;
+                    if (user) {
+                        let userId = user._id;
                         const isInCart = await cartHelper.isAProductInCart(
                             userId,
                             products[i]._id
@@ -80,15 +80,13 @@ const viewProducts = async (req, res, next) => {
                 }
                 res.json({
                     product: products,
-                    loginStatus: req.session.user,
-                    cartCount,
-                    wishListCount,
+                    loginStatus: user,
                 });
             } else {
                 products = await productHelper.getAllProductsWithLookup();
                 for (let i = 0; i < products.length; i++) {
-                    if (req.session.user) {
-                        let userId = req.session.user._id;
+                    if (user) {
+                        let userId = user._id;
                         const isInCart = await cartHelper.isAProductInCart(
                             userId,
                             products[i]._id
@@ -112,9 +110,7 @@ const viewProducts = async (req, res, next) => {
 
                 res.render("user/view-products", {
                     product: products,
-                    loginStatus: req.session.user,
-                    cartCount,
-                    wishListCount,
+                    loginStatus: user,
                 });
             }
         }
@@ -127,13 +123,15 @@ const viewAProduct = async (req, res, next) => {
     try {
         let productSlug = req.params.slug;
         let product = await productHelper.getAProduct(productSlug);
-        if (req.session.user) {
+        let user;
+        if (req.session.user) user = req.session.user;
+        if (user) {
             const isInCart = await cartHelper.isAProductInCart(
-                req.session.user._id,
+                user._id,
                 product._id
             );
             const isInWishList = await wishListHelper.isProductInWishList(
-                req.session.user._id,
+                user._id,
                 product._id
             );
 
@@ -143,20 +141,17 @@ const viewAProduct = async (req, res, next) => {
         product.product_price = formatCurrency(product.product_price);
         res.render("user/quick-view", {
             product,
-            cartCount,
-            loginStatus: req.session.user,
-            wishListCount,
+            loginStatus: user,
         });
     } catch (error) {
         next(error);
     }
 };
 
-
 const searchProduct = async (req, res, next) => {
     let payload = req.body.payload.trim();
     try {
-        let searchResult = await productSchema
+        let searchResult = await productModel
             .find({
                 product_name: { $regex: new RegExp("^" + payload + ".*", "i") },
             })
@@ -168,9 +163,8 @@ const searchProduct = async (req, res, next) => {
     }
 };
 
-
 module.exports = {
     viewProducts,
     viewAProduct,
     searchProduct,
-}
+};

@@ -1,10 +1,19 @@
+const cartHelper = require("../../helpers/cartHelper");
+const orderHelper = require("../../helpers/orderHepler");
+const productHelper = require("../../helpers/productHelper");
+const walletHelper = require("../../helpers/walletHelper");
+const couponModel = require("../../models/couponModel");
+const { formatCurrency } = require("../../utils/currency-format");
+const { formatDate } = require("../../utils/date-format");
 
 const placeOrder = async (req, res, next) => {
     try {
-        let userId = req.body.userId;
-        let paymentType = req.body.payment;
-        let cartItems = await cartHelper.getAllCartItems(userId);
-        let coupon = await couponSchema.find({ user: userId });
+        // const { userId } = req.body;
+        const userId = req.session.user._id;
+
+        const paymentType = req.body.payment;
+        const cartItems = await cartHelper.getAllCartItems(userId);
+        let coupon = await couponModel.find({ user: userId });
 
         console.log("========inside place order conteroller==============>");
         if (!cartItems.length)
@@ -134,8 +143,6 @@ const orders = async (req, res, next) => {
         res.render("user/orders-user", {
             userOrderDetails,
             loginStatus: req.session.user,
-            cartCount,
-            wishListCount,
         });
     } catch (error) {
         next(error);
@@ -153,8 +160,6 @@ const productOrderDetails = async (req, res, next) => {
         ); //got ordered products details
         res.render("user/order-details-user", {
             orderDetails,
-            cartCount,
-            wishListCount,
             productDetails,
             loginStatus: req.session.user,
             formatCurrency,
@@ -192,7 +197,6 @@ const returnOrder = async (req, res, next) => {
     }
 };
 
-
 module.exports = {
     placeOrder,
     orderSuccess,
@@ -200,4 +204,4 @@ module.exports = {
     productOrderDetails,
     cancelOrder,
     returnOrder,
-}
+};

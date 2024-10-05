@@ -1,14 +1,14 @@
 const cartHelper = require('../helpers/cartHelper');
-const User = require('../models/user');
+const wishListHelper = require('../helpers/wishListHelper');
 
 const cartWishlistCount = async (req, res, next) => {
-    let userId = req.session.user._id;
+    const userId = req.session?.user?._id;
     if (userId) { // Check if the user is logged in
         try {
-            cartCount = await cartHelper.getCartCount(userId);
-            // const user = await User.findById(req.session.userId);
+            const cartCount = await cartHelper.getCartCount(userId);
+            const wishlistCount = await wishListHelper.getWishListCount(userId);
             res.locals.cartCount = cartCount;
-            res.locals.wishlistCount = user.wishlist.length;
+            res.locals.wishlistCount = wishlistCount;
         } catch (err) {
             res.locals.cartCount = 0;
             res.locals.wishlistCount = 0;

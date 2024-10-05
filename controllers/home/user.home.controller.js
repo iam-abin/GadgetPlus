@@ -8,8 +8,6 @@ const landingPage = async (req, res, next) => {
         let latestProducts = await productHelper.getRecentProducts();
         let featuredProducts = await productHelper.getFeaturedProducts();
 
-        // console.log("latestProducts ",latestProducts);
-
         for (let i = 0; i < 5; i++) {
             latestProducts[i].product_price = formatCurrency(
                 latestProducts[i]?.product_price ?? 0
@@ -34,8 +32,6 @@ const landingPage = async (req, res, next) => {
 const userHome = async (req, res, next) => {
     try {
         let userId = req.session.user._id;
-        cartCount = await cartHelper.getCartCount(userId);
-        wishListCount = await wishListHelper.getWishListCount(userId);
         let latestProducts = await productHelper.getRecentProducts();
         let featuredProducts = await productHelper.getFeaturedProducts();
 
@@ -77,8 +73,6 @@ const userHome = async (req, res, next) => {
 
         res.status(200).render("user/index", {
             loginStatus: req.session.user,
-            cartCount,
-            wishListCount,
             latestProducts,
             featuredProducts,
         });
@@ -90,14 +84,11 @@ const userHome = async (req, res, next) => {
 const contact = (req, res) => {
     res.render("user/contact", {
         loginStatus: req.session.user,
-        cartCount,
-        wishListCount,
     });
 };
-
 
 module.exports = {
     landingPage,
     userHome,
     contact,
-}
+};

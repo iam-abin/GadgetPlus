@@ -1,3 +1,5 @@
+const couponHelper = require("../../helpers/coupenHelper");
+
 const applyCoupon = async (req, res, next) => {
     try {
         const user = req.session.user;
@@ -10,7 +12,6 @@ const applyCoupon = async (req, res, next) => {
     }
 };
 
-
 module.exports = {
     applyCoupon,
-}
+};

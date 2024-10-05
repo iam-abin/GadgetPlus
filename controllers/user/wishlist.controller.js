@@ -1,7 +1,10 @@
+const cartHelper = require("../../helpers/cartHelper");
+const wishListHelper = require("../../helpers/wishListHelper");
+const { formatCurrency } = require("../../utils/currency-format");
 
 const wishlist = async (req, res, next) => {
     try {
-        let userId = req.session.user._id;
+        const userId = req.session.user._id;
         if (userId) {
             let wishList = await wishListHelper.getAllWishListItems(userId);
 
@@ -17,12 +20,10 @@ const wishlist = async (req, res, next) => {
                     wishList[i].product.product_price
                 );
             }
-            console.log("wishlist ==>", wishlist);
+
             res.render("user/wishlist", {
                 loginStatus: req.session.user,
                 wishList,
-                cartCount,
-                wishListCount,
             });
         }
     } catch (error) {
@@ -32,34 +33,30 @@ const wishlist = async (req, res, next) => {
 
 const addToWishList = async (req, res, next) => {
     try {
-        let productId = req.body.productId;
-        let user = req.session.user._id;
-        wishListHelper.addItemToWishList(productId, user);
-        console.log(`item added to wishList ${productId}`);
-        res.json({ message: `item added to wishList` });
+        const { productId } = req.body;
+        const user = req.session.user._id;
+        await wishListHelper.addItemToWishList(productId, user);
+        res.status(201).json({ message: `item added to wishList` });
     } catch (error) {
         next(error);
     }
 };
 
 const removeFromWishList = async (req, res, next) => {
-    let userId = req.session.user._id;
-    let productId = req.body.productId;
+    const userId = req.session.user._id;
+    const { productId } = req.body;
     try {
         await wishListHelper.removeAnItemFromWishList(userId, productId);
-        wishListCount = await wishListHelper.getWishListCount(userId);
         res.status(200).json({
             message: "product removed from wishList",
-            wishListCount,
         });
     } catch (error) {
         next(error);
     }
 };
 
-
 module.exports = {
     wishlist,
     addToWishList,
     removeFromWishList,
-}
+};

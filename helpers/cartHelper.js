@@ -27,7 +27,7 @@ module.exports = {
 		}
 	},
 
-	getAllCartItems: async (userId) => {
+	getAllCartItems: async function (userId){
 		try {
 			let userCartItems = await cartModel.aggregate([
 				{
@@ -153,9 +153,12 @@ module.exports = {
 		}
 	},
 
-	totalSubtotal: async (userId, cartItems) => {
+	totalSubtotal: async (userId) => {
 		try {
 			let cart = await cartModel.findOne({ user: userId });
+			let cartItems = await this.getAllCartItems(userId);
+			console.log(cartItems);
+			
 
 			let total = 0;
 			if (cart) {

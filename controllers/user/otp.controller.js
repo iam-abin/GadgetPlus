@@ -1,3 +1,4 @@
+const userModel = require("../../models/userModel");
 const twilio = require("../../api/twilio");
 
 const otpSendingForgot = async (req, res, next) => {
@@ -5,16 +6,13 @@ const otpSendingForgot = async (req, res, next) => {
         const find = req.body;
 
         req.session.mobile = find.phone;
-        const userWithNumber = await userSchema.findOne({ phone: find.phone });
+        const userWithNumber = await userModel.findOne({ phone: find.phone });
         if (userWithNumber) {
             await twilio.sentOtp(find.phone);
             res.render("user/otp-fill-forgotpswd");
         } else {
             res.redirect("/user-signup");
         }
-        // .catch((error) => {
-        // 	res.redirect("/user-signup");
-        // });
     } catch (error) {
         next(error);
     }
@@ -36,7 +34,6 @@ const otpVerifyingForgot = async (req, res, next) => {
     }
 };
 
-
 // otp login page
 const otpUser = (req, res) => {
     res.render("user/otp-form", { loginStatus: req.session.user });
@@ -47,7 +44,7 @@ const otpSending = async (req, res, next) => {
     const find = req.body;
     req.session.mobile = req.body.phone;
     try {
-        const userData = await userSchema.findOne({ phone: find.phone });
+        const userData = await userModel.findOne({ phone: find.phone });
         if (userData) {
             req.session.tempUser = userData;
             await twilio.sentOtp(find.phone);
@@ -82,11 +79,10 @@ const otpVerifying = async (req, res, next) => {
     }
 };
 
-
 module.exports = {
     otpSendingForgot,
     otpVerifyingForgot,
     otpUser,
     otpSending,
     otpVerifying,
-}
+};
