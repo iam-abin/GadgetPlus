@@ -153,7 +153,6 @@
 
 <script>
     function deleteCoupon(couponId) {
-        console.log("clicked", couponId);
         swal('are you sure you want to delete this coupon', {
             buttons: ["no", "yes"]
         }).then((res) => {
@@ -173,7 +172,7 @@
                         }
                     })
                     .fail((error) => {
-                        console.log(error);
+                        console.error(error);
                     })
             }
         })
@@ -184,7 +183,6 @@
 
 <script>
     function getCouponData(couponId) {
-        console.log("clicked", couponId);
         $.ajax({
             url: "/admin/edit-coupon/" + couponId,
             type: 'get',
@@ -202,7 +200,7 @@
                 }
             })
             .fail((error) => {
-                console.log(error);
+                console.error(error);
             })
 
     }

@@ -45,7 +45,6 @@ module.exports = {
                 };
             }));
 
-			console.log("processedImages ",processedImages);
             // Save product data along with processed images
             const product = await productModel.create({
                 product_name: data.product_name,
@@ -173,7 +172,7 @@ module.exports = {
 			if (file) {
 				new_image = file.filename;
 				fs.unlink("/product-images/" + data.old_image, (err) => {
-					if (err) console.log(err);
+					if (err) console.error(err);
 				});
 			} else {
 				new_image = data.image;
@@ -273,7 +272,7 @@ module.exports = {
 				return true;
 			}
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 			throw error;
 		}
 	},

@@ -8,30 +8,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    # steps:
+    # - name: Checkout code
+    #   uses: actions/checkout@v3
 
-    - name: Setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+    # - name: Setup node
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: '20'
 
-    - name: Log current directory
-      run: pwd
+    # - name: Log current directory
+    #   run: pwd
 
-    - name: List files in current directory
-      run: ls -la
+    # - name: List files in current directory
+    #   run: ls -la
 
-    - name: Install dependencies
-      run: npm install
+    # - name: Install dependencies
+    #   run: npm install
 
-    - name: Configure .env file
-      run: |
-        echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env
+    # - name: Configure .env file
+    #   run: |
+    #     echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env
 
-    - name: Start Application
-      run: npm start
+    # - name: Start Application
+    #   run: npm start
       # env:
       #   NODE_ENV: production
 

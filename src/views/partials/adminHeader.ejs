@@ -159,24 +159,15 @@
         </header>
 
         <script>
-            // $(document).ready(function(){
-            //     $('.nav-bar-ul').on('click','li',function(){
-            //         $('.nav-bar-ul .active').removeClass('active');
-            //         $(this).addClass('active')
-            //     })
-            // })
 
             const activePage=window.location.pathname;
-            console.log(activePage);
 
             const navLinks=document.querySelectorAll('nav a').forEach((link)=>{
-                console.log(link.href);
                 const linkPath = new URL(link.href).pathname; // Extract path from link.href
                 let linkpathDashBoard = new URL(link.href).pathname
                 linkpathDashBoard='/admin'+linkpathDashBoard+"-home"
                 
                 if (linkPath === activePage) {
-                    console.log(linkPath);
                     link.classList.add('active');
                 }else if(linkpathDashBoard === activePage){
                     link.classList.add('active');

@@ -20,7 +20,7 @@ module.exports = {
                 .then((verification) => {
                     resolve(verification.sid);
                 }).catch((error) => {
-                    console.log(error);
+                    console.error(error);
                 })
         })
     },
@@ -37,7 +37,7 @@ module.exports = {
                 .then((verification) => {
                     resolve(verification.valid);
                 }).catch((error) => {
-                    console.log(error);
+                    console.error(error);
                 });
         })
     }
