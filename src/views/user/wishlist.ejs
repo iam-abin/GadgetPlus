@@ -9,14 +9,12 @@
 
 		<div class="row justify-content-center mb-3 ">
 			<div class="col-md-12 col-xl-10">
-				<% console.log(wishList); %>
 					<% for( let i=0; i < wishList.length; i++ ) { %>
 						<div class="card shadow-0 border " id="wishlist-card-<%= wishList[i].product._id %>"
 							style="border-radius: 10px;">
 							<div class="card-body">
 								<div class="row mt-3">
 									<div class="col-md-12 col-lg-3 col-xl-3 mb-1  mb-lg-0">
-										<%= console.log(wishList[i].product.image[0]); %>
 											<img style="width: 120px; height: 130px;"
 												src="/product-images/<%= wishList[i].product.image[0].filename %>"
 												alt="image is not available">
@@ -78,7 +76,6 @@
 
 <script>
 	function removeFromWishList(productId) {
-		console.log("clicked", productId);
 		$.ajax({
 			url: '/remove-from-wishList',
 			type: 'post',
@@ -98,10 +95,9 @@
 				})
 				$('#wishlist-card-' + productId).remove()
 				document.getElementById('wishListCount').innerHTML = `${res.wishListCount}`;
-				console.log(res);
 			})
 			.fail((error) => {
-				console.log(error);
+				console.error(error);
 			})
 	}
 
@@ -112,21 +108,18 @@
 		$('.add-product').click(function (e) {
 			e.preventDefault()
 			const prodId = $(this).data('value')
-			console.log('clicked', prodId)
 			$.ajax({
 				url: '/add-to-cart/' + prodId,
 				type: 'post'
 			})
 				.done((res) => {
-					console.log(res);
-					console.log("abi");
 					swal("successfull", `${res.message}`, "success")
 						.then(() => {
 							location.reload()
 						})
 				})
 				.fail((err) => {
-					console.log(err);
+					console.error(err);
 				})
 		})
 	})

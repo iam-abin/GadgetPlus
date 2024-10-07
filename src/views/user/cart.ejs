@@ -58,12 +58,6 @@
 								</tr>
 							</thead>
 
-							<%= console.log("cartItems"); %>
-							
-							<%= console.log(cartItems); %>
-							<%= console.log("cartItems"); %>
-							
-
 							<tbody>
 								<% for( let i=0; i < cartItems.length; i++ ) { %>
 
@@ -147,7 +141,6 @@
 
 <script>
 	function productRemove(productId,cartId) {
-		console.log(cartId);
 		swal("Do you want to remove this item from cart?", {
 			buttons: ["No", "yes"],
 		}).then((res) => {
@@ -171,7 +164,6 @@
 							toast.style.top = '80px'; // Adjust the value as needed to move the message down
 							}
 						});									
-						console.log(res.cartCount);
 						document.getElementById('totalAmount').innerHTML=res.totalAmount
 						document.getElementById('cart-count').innerHTML=res.cartCount;
 
@@ -181,11 +173,10 @@
 
 					}
 					
-					console.log(`${res.message}`);
 					
 				})
 				.fail((error) => {
-					console.log(error);
+					console.error(error);
 				})	
 			}
 		})
@@ -196,9 +187,6 @@
 
 <script>
 	function incDecQuantity(productId,cartId,number,price){
-		// console.log(cartId);
-		// console.log(number);
-		// console.log(productId);
 		$.ajax({
 			url:'/quantity-change',
 			type:'post',
@@ -210,7 +198,6 @@
 		})
 		.done((res)=>{
 			if(res){
-				console.log("res",res);
 				if(!res.OutOfStock){
 					
 					document.getElementById('incDec'+productId).innerHTML=res.message.quantity
