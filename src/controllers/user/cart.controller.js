@@ -6,9 +6,7 @@ const cart = async (req, res, next) => {
         const { user } = req.session;
         const cartItems = await cartHelper.getAllCartItems(user._id);
 
-        let totalandSubTotal = await cartHelper.totalSubtotal(
-            user._id,
-        );
+        let totalandSubTotal = await cartHelper.totalSubtotal(user._id);
 
         totalandSubTotal = formatCurrency(totalandSubTotal);
 
@@ -72,15 +70,18 @@ const removeFromCart = async (req, res, next) => {
     const { cartId } = req.body;
     const productId = req.params.id;
     try {
-        await cartHelper.removeAnItemFromCart(cartId, productId);
+        const response = await cartHelper.removeAnItemFromCart(
+            cartId,
+            productId
+        );
+        const cartCount = await cartHelper.getCartCount(userId);
 
-        
         let totalAmount = await cartHelper.totalSubtotal(userId);
         totalAmount = formatCurrency(totalAmount);
-
         res.status(200).json({
             message: "sucessfully item removed",
             totalAmount,
+            cartCount
         });
     } catch (error) {
         next(error);

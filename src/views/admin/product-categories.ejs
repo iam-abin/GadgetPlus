@@ -207,7 +207,6 @@
               document.getElementById("delete-category" + categoryId).classList.remove("btn-success");
               button.innerHTML = "UnListed";
             }
-            console.log(res.listed);
           }
         });
       }
@@ -215,14 +214,11 @@
   }
 
   function getCategory(categoryId) {
-    console.log(categoryId);
-
     $.ajax({
       url: "/admin/edit-productCategory/" + categoryId,
       type: "get",
     })
       .done((res) => {
-        console.log(res);
         $("#editCategoryName").val(res.category.name);
         $("#editCategoryDescription").val(res.category.description);
         $("#editCategoryId").val(res.category._id);
@@ -240,12 +236,7 @@
     e.preventDefault();
 
     const categoryName = document.getElementById('addcategoryName').value
-    const categoryDescription = document.getElementById('addcategoryDescription').value
-
-    console.log("helloGetelem");
-    console.log(categoryName);
-    console.log(categoryDescription);
-    console.log("helloGetelem");
+    const categoryDescription = document.getElementById('addcategoryDescription').value;
 
     let data = {
       categoryName: categoryName,
@@ -274,11 +265,10 @@
 
         } else {
           document.getElementById('categoryError').classList.remove('d-none')
-          console.log("error");
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       })
   })
 
@@ -286,8 +276,6 @@
 
   document.getElementById('editProductCategoryForm').addEventListener('submit', function (e) {
     e.preventDefault();
-
-    console.log("hello");
 
     const categoryName = document.getElementById('editCategoryName').value
     const categoryDescription = document.getElementById('editCategoryDescription').value
@@ -328,11 +316,10 @@
 
         } else {
           document.getElementById('editCategoryError').classList.remove('d-none')
-          console.log("error");
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       })
   })
 

@@ -19,7 +19,7 @@ $(document).ready(function () {
                     // $('.add-to-cart').prop('disabled', false);
             })
             .fail((err) => {
-                console.log(err);
+                console.error(err);
             })
     })
 })
@@ -41,7 +41,7 @@ $(document).ready(function () {
                     })
             })
             .fail((err) => {
-                console.log(err);
+                console.error(err);
             })
     })
 })

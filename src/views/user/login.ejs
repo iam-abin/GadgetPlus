@@ -91,11 +91,9 @@
             type: 'post',
             data: $('#loginForm').serialize()
           }).done((res) => {
-            console.log(`succcess ${res.message}`);
             location.reload() 
 
           }).fail((err) => {
-            // console.log(err);
             document.getElementById("loginError").innerHTML=`${err.responseJSON.message}`
             document.getElementById("loginError").classList.remove('d-none')
 

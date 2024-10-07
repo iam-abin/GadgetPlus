@@ -92,11 +92,6 @@
 
         <script>
             function changeOrderStatus(orderId,status,nextButtonValue){
-                console.log(orderId);
-                console.log(status);
-
-                // let buttonId='changeStatus'+orderId;
-                // let statusId='status'+orderId;
                 swal('Do you want to change the order Status',{
                         buttons:["No","Yes"]
                 })
@@ -113,18 +108,13 @@
                         .done((res)=>{
                             if(res){
                                 if(!res.error){
-                                
                                     window.location.reload();
-                                    // const a = document.getElementById("status"+orderId)
-                                    // a.innerHTML=status
-                                    // document.getElementById(buttonId).innerHtml=nextButtonValue
-
                                 }
                             }
 
                         })
                         .fail((err)=>{
-                            console.log(err);
+                            console.error(err);
                         })
                     }
                             

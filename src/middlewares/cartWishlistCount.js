@@ -7,8 +7,6 @@ const cartWishlistCount = async (req, res, next) => {
         try {
             const cartCount = await cartHelper.getCartCount(userId);
             const wishlistCount = await wishListHelper.getWishListCount(userId);
-            console.log("cartCount ===========>",cartCount);
-            console.log("wishlistCount ===========>",wishlistCount);
             
             res.locals.cartCount = cartCount;
             res.locals.wishlistCount = wishlistCount;

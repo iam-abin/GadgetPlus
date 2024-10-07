@@ -442,21 +442,19 @@
         $('.add-product').click(function (e) {
             e.preventDefault()
             const prodId = $(this).data('value')
-            console.log('clicked', prodId)
             $.ajax({
                 url: '/add-to-cart/' + prodId,
                 type: 'post'
             })
                 .done((res) => {
-                    console.log(res);
-                    console.log("?????");
+              
                     swal("successfull", `${res.message}`, "success")
                         .then(() => {
                             location.reload()
                         })
                 })
                 .fail((err) => {
-                    console.log(err);
+                    console.error(err);
                 })
         })
     })
@@ -467,22 +465,21 @@
         $('.add-produtToWishlist').click(function (e) {
             e.preventDefault();
             const productId = $(this).data('value');
-            console.log("clicked");
-            console.log("hjjjjjjjjjj", productId);
+            
             $.ajax({
                 url: '/add-to-wishList',
                 type: 'post',
                 data: { productId: productId }
             })
                 .done((res) => {
-                    console.log(res.message);
+                    
                     swal("successfull", `${res.message}`, "success")
                         .then(() => {
                             location.reload()
                         })
                 })
                 .fail((err) => {
-                    console.log(err);
+                    console.error(err);
                 })
         })
     })
@@ -491,22 +488,19 @@
         $('.remove-produtFromWishlist').click(function (e) {
             e.preventDefault();
             const productId = $(this).data('value');
-            console.log("clicked");
-            console.log("hjjjjjjjjjj", productId);
             $.ajax({
                 url: '/add-to-wishList',
                 type: 'post',
                 data: { productId: productId }
             })
                 .done((res) => {
-                    console.log(res.message);
                     swal("successfull", `${res.message}`, "success")
                         .then(() => {
                             location.reload()
                         })
                 })
                 .fail((err) => {
-                    console.log(err);
+                    console.error(err);
                 })
         })
     })

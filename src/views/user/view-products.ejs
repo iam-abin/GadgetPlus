@@ -206,9 +206,6 @@
 									<div class="widget-body">
 										<div class="filter-items filter-items-count">
 
-
-											<%= console.log(allCategories,"hi"); %>
-
 												<% var i=1 %>
 													<% allCategories.forEach(category=> { %>
 														<% if (category.status) { %>
@@ -312,10 +309,7 @@
 
 <script>
 
-	const checkboxes = document.querySelectorAll('.checkBox-input')
-	console.log(checkboxes);
-
-
+	const checkboxes = document.querySelectorAll('.checkBox-input');
 
 	const clearButton = document.getElementById('clearButton');
 
@@ -329,12 +323,7 @@
 		let selectedCategories = [];
 		$('input:checked').each(function () {
 			selectedCategories.push($(this).val())
-		})
-		console.log(selectedCategories, "selectedCategories");
-
-		console.log(min);
-		console.log(max);
-		console.log(typeof selectedCategories, "selectedCategories");
+		});
 		filterData(selectedCategories, min, max);
 	})
 
@@ -354,13 +343,10 @@
 
 		})
 			.done((res) => {
-				console.log(res);
 				let product = res.product;
 				let loginStatus = res.loginStatus
 				let cartCount = res.cartCount
 
-
-				console.log(product, "res product");
 				for (let i = 0; i < product.length; i++) {
 
 					if (product[i].product_status) {
@@ -433,14 +419,13 @@
 
 			})
 			.fail((error) => {
-				console.log(error);
+				console.error(error);
 			})
 	}
 
 
 	checkboxes.forEach(function (checkbox) {
 		checkbox.addEventListener('change', function () {
-			console.log("check box change ", Array.from(checkboxes));
 
 			const checkboxeStates = Array.from(checkboxes).map(function (cb) {
 				return {
@@ -454,7 +439,6 @@
 
 	clearButton.addEventListener('click', function (e) {
 		e.preventDefault();
-		console.log("clear");
 		checkboxes.forEach(function (checkbox) {
 			checkbox.checked = false
 		})

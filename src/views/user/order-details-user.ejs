@@ -286,11 +286,6 @@
         $('#invoice').click((e) => {
             let orderDetails = JSON.parse(document.getElementById('orderDetails').value);
             let productDetails = JSON.parse(document.getElementById('productDetails').value);
-
-            console.log("clicked");
-
-
-            console.log("clicked");
             e.preventDefault();
             swal("do you want to download Invoice", {
                 buttons: ['cancel', 'ok']
@@ -343,7 +338,6 @@
     })
 
     function cancelOrder(userId,orderId){
-        console.log("clicked",userId);
 
         swal("do you want to Cancel This Order", {
             buttons: ['No', 'Yes']
@@ -359,7 +353,6 @@
                     }
                 })
                 .done((res)=>{
-                    console.log(res);
                     Toastify({
 							text: `${res.message}`,
 							duration: 3000,
@@ -381,7 +374,6 @@
 
 
     function returnOrder(userId,orderId){
-        console.log("clicked",userId);
 
         swal("do you want to Retrun This Order", {
             buttons: ['No', 'Yes']
@@ -397,7 +389,6 @@
                     }
                 })
                 .done((res)=>{
-                    console.log(res);
                     Toastify({
 							text: `${res.message}`,
 							duration: 3000,

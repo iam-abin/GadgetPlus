@@ -242,7 +242,6 @@
                 let searchElement = document.getElementById('searchInput');
                 searchElement.onkeyup = function () {
                     let searchWord = searchElement.value;
-                    console.log("searchWord", searchWord);
                     if (searchWord != '') {
                         loadData(searchWord);
                     }else{
@@ -261,21 +260,16 @@
                     })
                         .then(res => res.json())
                         .then((data) => {
-                            console.log("res block start");
                             let searchResult = data.searchResult;
-                            console.log("Hiii", searchResult);
 
                             let html = ''
-                            console.log(data.searchResult.length);
                             if (data.searchResult.length > 0) {
                                 for (let i = 0; i < data.searchResult.length; i++) {
-                                    console.log("in loop");
                                     html += `<a href="/quick-view/${data.searchResult[i].slug}"><li style="  border-bottom: 1px solid #acb1b5; width:330px ;padding:10px"> ${data.searchResult[i].product_name} <img class="img-thumbnail" width="50" src="/product-images/${data.searchResult[i].image[0].filename}" alt="no image avalable"></li></a>`;
                                     document.getElementById('suggestionList').innerHTML = html
 
                                 }
                             }
-                            console.log("end");
                         })
                 }
 
@@ -283,16 +277,12 @@
 
                 $('#wallet-details').on('click', function (e) {
                     e.preventDefault()
-                    // let userId=$('#wallet-details').data('wallet')
-                    // console.log("userId",userId);
                     $.ajax({
                         url: "/wallet",
                         method: 'get',
-                        // data:userId
 
                     })
                         .then((res) => {
-                            console.log(res);
                             document.getElementById('walletAmount').innerHTML = "Your wallet balance is : " + res.walletDetails
 
                             $("#walletModal").modal("show");

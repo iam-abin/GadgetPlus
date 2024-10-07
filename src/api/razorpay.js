@@ -22,7 +22,7 @@ module.exports = {
                     resolve(orderDetails)
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.error(error);
                 })
         })
     },

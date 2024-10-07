@@ -88,7 +88,6 @@
 <script>
     $('#date-wise-report').on('submit', function (e) {
         e.preventDefault()
-        console.log("clicked");
         swal('do you want to do this', {
             buttots: ["no", "yes"]
         })
@@ -101,14 +100,11 @@
                     })
                         .done((res) => {
                             let sales = res.sales
-                            console.log("hi");
-                            console.log(sales);
                             $('#defaultReport').remove();
 
                             $('#sales-table').append('<tbody id="date-wise-report"></tbody>');
 
                             for (let i = 0; i < sales.length; i++) {
-                                console.log(sales[i]._id);
                                 $('#sales-table').append(`
                             <tr>
                                 <td class="text-center">`+ (i + 1) + `</td>
@@ -140,10 +136,8 @@
             .then((res) => {
                 if (res) {
                     event.preventDefault();
-                    console.log("pdf");
                     let element = document.getElementById('sales-report');
                     const randomNumber = Math.floor(Math.random() * 10000);
-                    console.log(randomNumber);
 
                     var opt = {
                         margin: 0,
@@ -191,28 +185,6 @@
             }
         })
     }
-
-
-
-
-
-
-    // $(document).ready(function () {
-    //     $('#xlsheet').on('click', function (e) {
-    //         console.log("clickedd");
-    //         console.log(document.getElementById('salesReportStore').value);
-    //         e.preventDefault();
-    //         $.ajax({
-    //             url: '/admin/sales-report-excel',
-    //             method: 'post',
-    //             data:
-
-    //         })
-    //             .done((res) => {
-    //                 console.log(res);
-    //             })
-    //     })
-    // })
 
 
 </script>

@@ -388,26 +388,21 @@
 	$(document).ready(function () {
 		$('#checkout-form').submit((e) => {
 			e.preventDefault();
-			console.log("hello");
 			$.ajax({
 				url: '/place-order',
 				type: 'post',
 				data: $('#checkout-form').serialize()
 			})
 				.done((response) => {
-					console.log("response",response);
 						switch (response.paymentMethod) {
 							case 'COD':
-								console.log("payment done");
 								location.href = "/order-success"
 								break;
 
 							case 'razorpay':
-								console.log("razorpay");
 								paymentMethodrazorpayPayment(response);
 								break;
 							case 'wallet':
-								console.log("wallet");
 								location.href = "/order-success"
 								break;
 
@@ -416,8 +411,7 @@
 					// }
 				})
 				.fail((error) => {
-					console.log("Error occured");
-					console.log(error);
+					console.error(error);
 					Toastify({
 							text: `${error.responseJSON.message || "something went wrong"}`,
 							duration: 3000,
@@ -437,7 +431,6 @@
 
 
 	function paymentMethodrazorpayPayment(orderinfo) {
-		console.log("inside ejs razorpayPayment function");
 		const options = {
 
 			"key": `${orderinfo.razorpaykeyId}`, // Enter the Key ID generated from the Dashboard
@@ -448,13 +441,6 @@
 			"image": "/user/assets/images/logo.png",
 			"order_id": `${orderinfo.razorpayOrderDetails.id}`, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
 			"handler": function (response) {
-				// alert(response.razorpay_payment_id);
-				// alert(response.razorpay_order_id);
-				// alert(response.razorpay_signature);
-				console.log(response.razorpay_payment_id);
-				console.log(response.razorpay_order_id);
-				console.log("response.razorpay_signature", response.razorpay_signature);
-
 				verifyPaymentSignature(response, orderinfo.orderDetails, orderinfo.razorpayOrderDetails);
 
 			},
@@ -471,7 +457,6 @@
 			}
 		};
 
-		console.log("new Razorpay(options)");
 		const rzp1 = new Razorpay(options);
 		rzp1.open();
 
@@ -479,7 +464,6 @@
 
 
 	function verifyPaymentSignature(payment, orderDetails, razorpayOrderDetails) {
-		console.log("function verifyPaymentSignature(payment,orderDetails,razorpayOrderDetails)");
 		$.ajax({
 			url: '/verify-payment',
 			method: 'post',
@@ -535,40 +519,23 @@
 						icon: "success",
 						button: "OK",
 					}).then(() => {
-						console.log(res.message);
 						location.reload()
-						// setTimeout(()=>{
-						// 	Toastify({
-						// 		text: "Address added ",
-						// 		duration: 3000,
-						// 		newWindow: true,
-						// 		close: true,
-						// 		gravity: "top", // `top` or `bottom`
-						// 		position: "center", // `left`, `center` or `right`
-						// 		stopOnFocus: true, // Prevents dismissing of toast on hover
-						// 		style: {
-						// 			background: "yellow",
-						// 		},
-						// 		}).showToast();
-						// },1000)
-						// location.href = "#tab-addAddress"
+						
 					})
 				})
 				.fail((err) => {
-					console.log(err);
+					console.error(err);
 				})
 		})
 	})
 
 
 	function getAddress(addressId) {
-		console.log(addressId);
 		$.ajax({
 			url: '/edit-address/' + addressId,
 			type: 'get',
 
 		}).done((res) => {
-			console.log(res.address);
 			document.getElementById('addressId').value = res.address._id;
 			document.getElementById('fname').value = res.address.first_name;
 			document.getElementById('lname').value = res.address.last_name;
@@ -581,7 +548,7 @@
 			document.getElementById('pincode').value = res.address.pincode;
 		})
 			.fail((error) => {
-				console.log(error);
+				console.error(error);
 			})
 	}
 
@@ -606,12 +573,11 @@
 						icon: "success",
 						button: "OK",
 					}).then(() => {
-						console.log(res.message);
 						location.reload()
 					})
 				})
 				.fail((err) => {
-					console.log(err);
+					console.error(err);
 				})
 		})
 	})
@@ -643,7 +609,7 @@
 							$(`#card-${addressId}`).remove()
 						})
 						.fail((error) => {
-							console.log(error);
+							console.error(error);
 
 						})
 				}
@@ -652,8 +618,6 @@
 
 	function applyCoupon(totalAmount) {
 		const couponCode = document.getElementById('couponCode').value;
-		
-		console.log(couponCode);
 
 		$.ajax({
 			url: '/apply-coupon',
@@ -664,21 +628,14 @@
 		})
 			.done((res) => {
 				if (res.status) {
-					console.log("hello");
-					console.log(res);
 					document.getElementById('couponApplyFail').classList.add('d-none')
 					document.getElementById('couponApplySuccess').classList.remove('d-none')
 					document.getElementById('couponApplySuccess').innerHTML = res.message
 					document.getElementById('discount').innerHTML = -res.discount
-					console.log(";;;;;;;;;;;;;;;;;;;;;;;");
-					console.log(res);
-					console.log(res.discount);
-					console.log(";;;;;;;;;;;;;;;;;;;;;;;");
-
+				
 					document.getElementById('couponDiscount').value = res.discount
 					document.getElementById('totalAmount').innerHTML = res.cart.totalAmount
 				} else {
-					console.log(res);
 					document.getElementById('couponApplySuccess').classList.add('d-none')
 					document.getElementById('couponApplyFail').classList.remove('d-none')
 					document.getElementById('couponApplyFail').innerHTML = res.message

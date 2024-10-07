@@ -369,40 +369,22 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 						icon: "success",
 						button: "OK",
 					}).then(() => {
-						console.log(res.message);
-						location.reload()
-						// setTimeout(()=>{
-						// 	Toastify({
-						// 		text: "Address added ",
-						// 		duration: 3000,
-						// 		newWindow: true,
-						// 		close: true,
-						// 		gravity: "top", // `top` or `bottom`
-						// 		position: "center", // `left`, `center` or `right`
-						// 		stopOnFocus: true, // Prevents dismissing of toast on hover
-						// 		style: {
-						// 			background: "yellow",
-						// 		},
-						// 		}).showToast();
-						// },1000)
-						// location.href = "#tab-addAddress"
+						location.reload();
 					})
 				})
 				.fail((err) => {
-					console.log(err);
+					console.error(err);
 				})
 		})
 	})
 
 
 	function getAddress(addressId){
-		console.log(addressId);
 		$.ajax({
 			url:'/edit-address/'+addressId,
 			type:'get',
 
 		}).done((res)=>{
-			console.log(res.address);
 			document.getElementById('addressId').value=res.address._id;
 			document.getElementById('fname').value=res.address.first_name;
 			document.getElementById('lname').value=res.address.last_name;
@@ -415,7 +397,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 			document.getElementById('pincode').value=res.address.pincode;
 		})
 		.fail((error)=>{
-			console.log(error);
+			console.error(error);
 		})
 	}
 
@@ -435,12 +417,11 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 						icon: "success",
 						button: "OK",
 					}).then(() => {
-						console.log(res.message);
 						location.reload()
 					})
 				})
 				.fail((err) => {
-					console.log(err);
+					console.error(err);
 				})
 		})
 	})
