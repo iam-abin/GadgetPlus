@@ -1,15 +1,18 @@
 <section class="content-main">
     <div class="content-header">
         <h2 class="content-title">Product List</h2>
-        <a href="/admin/add-product"> <button type="button" class="btn btn-primary">Add Product +</button></a>
-
+        <a href="/admin/add-product">
+            <button type="button" class="btn btn-primary">
+                Add Product +
+            </button></a
+        >
     </div>
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
                 <% if (!products.length) { %>
-                    <h1>No Products Are Added Yet</h1>
-                    <% } else { %>
+                <h1>No Products Are Added Yet</h1>
+                <% } else { %>
                 <table class="table table-hover" id="productTable">
                     <thead>
                         <tr class="text-left">
@@ -20,68 +23,108 @@
                             <th>Discount</th>
                             <th>Image</th>
                             <th>Update</th>
-                            <th >Status</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <% for( let i = 0; i < products.length; i++ ) { %>
 
-                       <% for( let i = 0; i < products.length; i++ ) { %>
-                        
-                    
-                            <tr>
-                                <td style="vertical-align: middle;" width="17%"><%= products[i].product_name %></td>
-                                <td style="vertical-align: middle;" width="12%"><%= products[i].category[0]?.name  %></td>
-                                
-                                <td style="vertical-align: middle;" width="12%"><%= products[i].product_price %></td>
-                                <td style="vertical-align: middle;" width="12%"><%= products[i].product_quantity %></td>
-                                <td style="vertical-align: middle;" width="12%"><%= products[i].product_discount %></td>
-                                
-                                <td style="vertical-align: middle;" width="10%"><img class="img-thumbnail" width="80" src="/product-images/<%= products[i].image[0].filename %>" alt="no image avalable"></td>
-                               
-                                <td style="vertical-align: middle;" width="10%"><a href="/admin/edit-product/<%= products[i].slug %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
-    
-                                <% if (products[i].product_status) { %>
-                                <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i].slug %>')" class="btn btn-sm btn-danger rounded font-sm mt-15">Unlist</button> </td>
-                                 
-                                <% } else {%>
-                                    <td style="vertical-align: middle;" > <button onclick="changeProductStatus('<%= products[i].slug %>')" class="btn btn-sm btn-success rounded font-sm mt-15">List</button> </td>
-                                
-                                <% } %>
-    
-                            </tr>
-                        
+                        <tr>
+                            <td style="vertical-align: middle" width="17%">
+                                <%= products[i].product_name %>
+                            </td>
+                            <td style="vertical-align: middle" width="12%">
+                                <%= products[i].category[0]?.name %>
+                            </td>
+
+                            <td style="vertical-align: middle" width="12%">
+                                <%= products[i].product_price %>
+                            </td>
+                            <td style="vertical-align: middle" width="12%">
+                                <%= products[i].product_quantity %>
+                            </td>
+                            <td style="vertical-align: middle" width="12%">
+                                <%= products[i].product_discount %>
+                            </td>
+
+                            <td style="vertical-align: middle" width="10%">
+                                <img
+                                    class="img-thumbnail"
+                                    width="80"
+                                    src="/product-images/<%= products[i].image[0].filename %>"
+                                    alt="no image avalable"
+                                />
+                            </td>
+
+                            <td style="vertical-align: middle" width="10%">
+                                <a
+                                    href="/admin/edit-product/<%= products[i].slug %>"
+                                    class="btn btn-success btn-sm rounded font-sm mt-15"
+                                    >Edit</a
+                                >
+                            </td>
+
+                            <% if (products[i].product_status) { %>
+                            <td style="vertical-align: middle">
+                                <button
+                                    onclick="changeProductStatus('<%= products[i].slug %>')"
+                                    class="btn btn-sm btn-danger rounded font-sm mt-15"
+                                >
+                                    Unlist
+                                </button>
+                            </td>
+
+                            <% } else {%>
+                            <td style="vertical-align: middle">
+                                <button
+                                    onclick="changeProductStatus('<%= products[i].slug %>')"
+                                    class="btn btn-sm btn-success rounded font-sm mt-15"
+                                >
+                                    List
+                                </button>
+                            </td>
+
+                            <% } %>
+                        </tr>
 
                         <% } %>
-                        
                     </tbody>
-                </table> <!-- table-responsive.// -->
+                </table>
+                <!-- table-responsive.// -->
                 <% } %>
             </div>
-        </div> <!-- card-body end// -->
-    </div> <!-- card end// -->
-
-</section> <!-- content-main end// -->
-
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+</section>
+<!-- content-main end// -->
 
 <script>
-    function changeProductStatus(productId){
+    function changeProductStatus(productId) {
         swal("Are you sure you want to do this?", {
             buttons: ["No!", "Yes!"],
-        }).then((res)=>{
-            if(res){
+        }).then((res) => {
+            if (res) {
                 $.ajax({
-                    url:"/admin/delete-product/"+productId,
-                    type:'get' 
-                }).done((res)=>{
-                    swal("successful",`${res.message}`,"success").then(()=>{
-                        location.reload();
-                    })
-                }).fail((err)=>{
-                    swal("successful",`${res.message}`,"success").then(()=>{
-                        location.reload()
-                    })
+                    url: "/admin/delete-product/" + productId,
+                    type: "get",
                 })
+                    .done((res) => {
+                        swal("successful", `${res.message}`, "success").then(
+                            () => {
+                                location.reload();
+                            }
+                        );
+                    })
+                    .fail((err) => {
+                        swal("successful", `${res.message}`, "success").then(
+                            () => {
+                                location.reload();
+                            }
+                        );
+                    });
             }
-        })
+        });
     }
 </script>

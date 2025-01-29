@@ -36,7 +36,6 @@
                                         <td width="7%" ><%= orders[i].totalAmount %></td>
                                         <td width="7%" ><%= orders[i].paymentMethod %></td>
                                         <td width="10%" >
-<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
                                             <% if (orders[i].orderStatus == 'pending') { %>
                                                 <span id="status<%= orders[i]._id %>" class="badge rounded-pill alert-warning"><%= orders[i].orderStatus %></span>
                                             <% } else if (orders[i].orderStatus == 'processing') {%>
@@ -69,9 +68,6 @@
                                             <% } else if (orders[i].orderStatus == 'return pending') {%>
                                                 <a id="changeStatus<%= orders[i]._id %>" onclick="changeOrderStatus('<%= orders[i]._id %>','returned','d-none')" class="btn btn-warning-light rounded font-sm">Approve Return</a>
                                             <% } %>
-                                 
-
-<!-- 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
 
                                         </td>
 

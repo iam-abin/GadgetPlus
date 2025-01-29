@@ -1,11 +1,22 @@
 <section class="content-main">
     <div class="content-header">
         <div>
-            <h2 class="content-title card-title">Sales Report </h2>
+            <h2 class="content-title card-title">Sales Report</h2>
         </div>
         <div>
-            <a id="xlsheet" onclick="ExportToExcel()" class="btn btn-light rounded font-md">Download XLSheet</a>
-            <a href="#" id="pdf" data-value="" class="btn btn-light rounded  font-md">Download PDF</a>
+            <a
+                id="xlsheet"
+                onclick="ExportToExcel()"
+                class="btn btn-light rounded font-md"
+                >Download XLSheet</a
+            >
+            <a
+                href="#"
+                id="pdf"
+                data-value=""
+                class="btn btn-light rounded font-md"
+                >Download PDF</a
+            >
         </div>
     </div>
     <div class="card mb-4">
@@ -14,18 +25,36 @@
                 <div class="row gx-3">
                     <div class="col-lg-2 col-6 col-md-3">
                         <label class="form-label">Start Date</label>
-                        <input type="date" name="startDate" value="" class="form-control" required>
+                        <input
+                            type="date"
+                            name="startDate"
+                            value=""
+                            class="form-control"
+                            required
+                        />
                     </div>
                     <div class="col-lg-2 col-6 col-md-3">
                         <label class="form-label">End Date</label>
-                        <input type="date" name="endDate" value="" class="form-control" required>
+                        <input
+                            type="date"
+                            name="endDate"
+                            value=""
+                            class="form-control"
+                            required
+                        />
                     </div>
                     <div class="col-lg-4 col-md-6 me-auto">
-                        <button type="submit" class="btn btn-primary mt-4  btn-sm rounded">Get Report</button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary mt-4 btn-sm rounded"
+                        >
+                            Get Report
+                        </button>
                     </div>
                 </div>
             </form>
-        </header> <!-- card-header end// -->
+        </header>
+        <!-- card-header end// -->
         <div id="sales-report" class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover" id="sales-table">
@@ -42,149 +71,154 @@
                     </thead>
                     <tbody id="defaultReport">
                         <% for( let i=0; i < sales.length; i++ ) { %>
-                            <tr>
-                                <td>
-                                    <%= i+1 %>
-                                </td>
-                                <td><b>
-                                        <%= sales[i]._id %>
-                                    </b></td>
-                                <td>
-                                    <%= sales[i].userDetails[0].name %>
-                                </td>
-                                <td>
-                                    <%= sales[i].orderDate %>
-                                </td>
-                                <td>
-                                    <%= sales[i].paymentMethod %>
-                                </td>
-                                <td><span class="badge rounded-pill alert-warning">
-                                        <%= sales[i].orderStatus %>
-                                    </span></td>
-                                <td>
-                                    <%= sales[i].totalAmount %>
-                                </td>
-
-                            </tr>
-                            <% } %>
-
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <td><b> <%= sales[i]._id %> </b></td>
+                            <td><%= sales[i].userDetails[0].name %></td>
+                            <td><%= sales[i].orderDate %></td>
+                            <td><%= sales[i].paymentMethod %></td>
+                            <td>
+                                <span class="badge rounded-pill alert-warning">
+                                    <%= sales[i].orderStatus %>
+                                </span>
+                            </td>
+                            <td><%= sales[i].totalAmount %></td>
+                        </tr>
+                        <% } %>
                     </tbody>
                 </table>
-                <!-- <input type="hidden" id="salesReportStore" value="ejsout sales "> -->
-            </div> <!-- table-responsive //end -->
-        </div> <!-- card-body end// -->
-    </div> <!-- card end// -->
+            </div>
+            <!-- table-responsive //end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+</section>
+<!-- content-main end// -->
 
-</section> <!-- content-main end// -->
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
     integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+></script>
 
-<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
-
+<script
+    type="text/javascript"
+    src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"
+></script>
 
 <script>
-    $('#date-wise-report').on('submit', function (e) {
-        e.preventDefault()
-        swal('do you want to do this', {
-            buttots: ["no", "yes"]
-        })
-            .then((res) => {
-                if (res) {
-                    $.ajax({
-                        url: '/admin/sales-report',
-                        type: 'post',
-                        data: $('#date-wise-report').serialize()
-                    })
-                        .done((res) => {
-                            let sales = res.sales
-                            $('#defaultReport').remove();
+    $("#date-wise-report").on("submit", function (e) {
+        e.preventDefault();
+        swal("do you want to do this", {
+            buttots: ["no", "yes"],
+        }).then((res) => {
+            if (res) {
+                $.ajax({
+                    url: "/admin/sales-report",
+                    type: "post",
+                    data: $("#date-wise-report").serialize(),
+                }).done((res) => {
+                    let sales = res.sales;
+                    $("#defaultReport").remove();
 
-                            $('#sales-table').append('<tbody id="date-wise-report"></tbody>');
+                    $("#sales-table").append(
+                        '<tbody id="date-wise-report"></tbody>'
+                    );
 
-                            for (let i = 0; i < sales.length; i++) {
-                                $('#sales-table').append(`
+                    for (let i = 0; i < sales.length; i++) {
+                        $("#sales-table").append(
+                            `
                             <tr>
-                                <td class="text-center">`+ (i + 1) + `</td>
-                                <td class="text-center"><b>`+ sales[i]._id + `</b></td>
-                                <td class="text-center">`+ sales[i].user + `</td>
-                                <td class="text-center">`+ sales[i].orderDate + `</td>
-                                <td class="text-center">`+ sales[i].paymentMethod + `</td>
-                                <td class="text-center"><span class="badge rounded-pill alert-warning">`+ sales[i].orderStatus + `</span></td>
-                                <td class="text-center">`+ sales[i].totalAmount + `</td>
+                                <td class="text-center">` +
+                                (i + 1) +
+                                `</td>
+                                <td class="text-center"><b>` +
+                                sales[i]._id +
+                                `</b></td>
+                                <td class="text-center">` +
+                                sales[i].user +
+                                `</td>
+                                <td class="text-center">` +
+                                sales[i].orderDate +
+                                `</td>
+                                <td class="text-center">` +
+                                sales[i].paymentMethod +
+                                `</td>
+                                <td class="text-center"><span class="badge rounded-pill alert-warning">` +
+                                sales[i].orderStatus +
+                                `</span></td>
+                                <td class="text-center">` +
+                                sales[i].totalAmount +
+                                `</td>
                                         
                             </tr>
-                            `);
+                            `
+                        );
+                    }
 
-                            }
+                    document.getElementById("salesReportStore").value = sales;
+                });
+            }
+        });
+    });
 
-                            document.getElementById('salesReportStore').value = sales
-
-                        })
-                }
-            })
-
-    })
-
-    $('#pdf').on('click', function (e) {
+    $("#pdf").on("click", function (e) {
         e.preventDefault();
         swal("Do you want to download this pdf", {
-            buttons: ["No", "Yes"]
-        })
-            .then((res) => {
-                if (res) {
-                    event.preventDefault();
-                    let element = document.getElementById('sales-report');
-                    const randomNumber = Math.floor(Math.random() * 10000);
+            buttons: ["No", "Yes"],
+        }).then((res) => {
+            if (res) {
+                event.preventDefault();
+                let element = document.getElementById("sales-report");
+                const randomNumber = Math.floor(Math.random() * 10000);
 
-                    var opt = {
-                        margin: 0,
-                        filename: `myfile${randomNumber}.pdf`,
-                        html2canvas: { scale: 10 },
-                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                    };
+                var opt = {
+                    margin: 0,
+                    filename: `myfile${randomNumber}.pdf`,
+                    html2canvas: { scale: 10 },
+                    jsPDF: {
+                        unit: "in",
+                        format: "letter",
+                        orientation: "portrait",
+                    },
+                };
 
-                    html2pdf().set(opt).from(element).save();
-
-
-                }
-            })
-    })
+                html2pdf().set(opt).from(element).save();
+            }
+        });
+    });
 
     function ExportToExcel() {
         swal("Do you want to download this Excel Sheet", {
-            buttons: ["No", "Yes"]
-        }).then((res)=>{
-            if(res){
-                var elt = document.getElementById('sales-table');
+            buttons: ["No", "Yes"],
+        }).then((res) => {
+            if (res) {
+                var elt = document.getElementById("sales-table");
                 var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-        
+
                 // Adjust column widths
-                var ws = wb.Sheets['sheet1'];
+                var ws = wb.Sheets["sheet1"];
                 var columnWidths = [
-                    { wch: 5 },   // Width for column "No"
-                    { wch: 15 },  // Width for column "Order Id"
-                    { wch: 20 },  // Width for column "Customer"
-                    { wch: 15 },  // Width for column "Order Date"
-                    { wch: 20 },  // Width for column "Payment Method"
-                    { wch: 15 },  // Width for column "Order Status"
-                    { wch: 15 }   // Width for column "Total Amount"
+                    { wch: 5 }, // Width for column "No"
+                    { wch: 15 }, // Width for column "Order Id"
+                    { wch: 20 }, // Width for column "Customer"
+                    { wch: 15 }, // Width for column "Order Date"
+                    { wch: 20 }, // Width for column "Payment Method"
+                    { wch: 15 }, // Width for column "Order Status"
+                    { wch: 15 }, // Width for column "Total Amount"
                 ];
-        
+
                 // Set column widths
                 columnWidths.forEach(function (width, index) {
                     var col = XLSX.utils.encode_col(index);
-                    ws['!cols'] = ws['!cols'] || [];
-                    ws['!cols'][index] = width;
+                    ws["!cols"] = ws["!cols"] || [];
+                    ws["!cols"][index] = width;
                 });
-        
-                XLSX.writeFile(wb, 'sales-table.xlsx');
 
+                XLSX.writeFile(wb, "sales-table.xlsx");
             }
-        })
+        });
     }
-
-
 </script>

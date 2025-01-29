@@ -1,152 +1,272 @@
-
-        <section class="content-main">
-            <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Order details</h2>
-
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Order details</h2>
+        </div>
+    </div>
+    <div class="card">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                    <span>
+                        <i class="material-icons md-calendar_today"></i>
+                        <b
+                            ><%= new
+                            Date(productDetails[0].orderDate).toString().slice(0,25)
+                            %></b
+                        >
+                    </span>
+                    <br />
+                    <small class="text-muted"
+                        >Order ID: <%= orderdetails._id %></small
+                    >
                 </div>
             </div>
-            <div class="card">
-                <header class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                            <span>
-                                <i class="material-icons md-calendar_today"></i> <b><%= new Date(productDetails[0].orderDate).toString().slice(0,25)  %></b>
-                            </span> <br>
-                            <small class="text-muted">Order ID:  <%= orderdetails._id %></small>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="row mb-50 mt-20 order-info-wrap">
+                <div class="col-md-4 orderDetailspage-card-left">
+                    <article class="icontext align-items-start">
+                        <span
+                            class="icon icon-sm rounded-circle bg-primary-light"
+                        >
+                            <i
+                                class="text-primary material-icons md-person"
+                            ></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Customer</h6>
+                            <p class="mb-1">
+                                <%= orderdetails.address.first_name %> <%=
+                                orderdetails.address.last_name %>
+                                <template
+                                    class="__cf_email__"
+                                    data-cfemail="e2838e879aa2879a838f928e87cc818d8f"
+                                    >[email&#160;protected]</template
+                                >
+                                <br />
+                                +91 <%= orderdetails.address.mobile %>
+                            </p>
+                            <a
+                                href="/admin/userProfile/<%= orderdetails.user %><%=  %>"
+                                >View profile</a
+                            >
                         </div>
+                    </article>
+                </div>
+                <!-- col// -->
+                <div class="col-md-4 orderDetailspage-card-middle">
+                    <article class="icontext align-items-start">
+                        <span
+                            class="icon icon-sm rounded-circle bg-primary-light"
+                        >
+                            <i
+                                class="text-primary material-icons md-local_shipping"
+                            ></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Order info</h6>
+                            <p class="mb-1">
+                                Shipping: Fargo express <br />
+                                Pay method: <%= orderdetails.paymentMethod %>
+                                <br />
+                                Status: new
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <!-- col// -->
+                <div class="col-md-4 orderDetailspage-card-right">
+                    <article class="icontext align-items-start">
+                        <span
+                            class="icon icon-sm rounded-circle bg-primary-light"
+                        >
+                            <i class="text-primary material-icons md-place"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Deliver to</h6>
+                            <p class="mb-1">
+                                City : <%= orderdetails.address.city %>
+                            </p>
+                            <p class="mb-1">
+                                Address : <%= orderdetails.address.address %>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <!-- col// -->
+            </div>
+            <!-- row // -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="40%">Product</th>
+                                    <th width="20%">Unit Price</th>
+                                    <th width="20%">Quantity</th>
+                                    <th width="20%" class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( let i = 0; i < productDetails.length;
+                                i++ ) { %>
+                                <tr>
+                                    <td>
+                                        <a class="itemside" href="#">
+                                            <div class="left">
+                                                <img
+                                                    src="/product-images/<%= productDetails[i].orderedProduct.image[0].filename %>"
+                                                    width="40"
+                                                    height="40"
+                                                    class="img-xs"
+                                                    alt="Item"
+                                                />
+                                            </div>
+                                            <div class="info">
+                                                <%=
+                                                productDetails[i].orderedProduct.product_name
+                                                %>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <%=
+                                        productDetails[i].orderedProduct.product_price
+                                        %>
+                                    </td>
+                                    <td>
+                                        <%=
+                                        productDetails[i].orderedItems.quantity
+                                        %>
+                                    </td>
+                                    <td class="text-end">
+                                        <%=
+                                        productDetails[i].orderedProduct.totalPriceOfOrderedProducts
+                                        %>
+                                    </td>
+                                </tr>
+                                <% } %>
+                                <tr>
+                                    <td colspan="4">
+                                        <br />
+                                        <br />
+                                        <article class="float-end">
+                                            <dl class="dlist">
+                                                <dt>Subtotal:</dt>
+                                                <dd></dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt>Shipping cost:</dt>
+                                                <dd>₹ 0.00</dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt>discount:</dt>
+                                                <dd>₹ 0.00</dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt>Grand total:</dt>
+                                                <dd>
+                                                    <b class="h5"
+                                                        ><%=
+                                                        orderdetails.totalAmount
+                                                        %></b
+                                                    >
+                                                </dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt class="text-muted">
+                                                    Status:
+                                                </dt>
+                                                <dd>
+                                                    <% if
+                                                    (productDetails[0].orderStatus
+                                                    == 'pending') { %>
+                                                    <span
+                                                        class="badge rounded-pill alert-warning"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else if
+                                                    (productDetails[0].orderStatus
+                                                    == 'processing') {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-secondary"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else if
+                                                    (productDetails[0].orderStatus
+                                                    == 'confirmed') {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-dark"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else if
+                                                    (productDetails[0].orderStatus
+                                                    == 'shipped') {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-info"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else if
+                                                    (productDetails[0].orderStatus
+                                                    == 'outForDelivery') {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-warning"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else if
+                                                    (productDetails[0].orderStatus
+                                                    == 'delivered') {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-success"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else if
+                                                    (productDetails[0].orderStatus
+                                                    == 'cancelPending') {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-warning"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } else {%>
+                                                    <span
+                                                        class="badge rounded-pill alert-danger"
+                                                        ><%=
+                                                        productDetails[0].orderStatus
+                                                        %></span
+                                                    >
+                                                    <% } %>
+                                                </dd>
+                                            </dl>
+                                        </article>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </header> <!-- card-header end// -->
-                <div class="card-body">
-                    <div class="row mb-50 mt-20 order-info-wrap">
-                        <div class="col-md-4 orderDetailspage-card-left">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-person"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Customer</h6>
-                                    <p class="mb-1">
-                                      
-                                        <%= orderdetails.address.first_name %> <%= orderdetails.address.last_name %>  <template class="__cf_email__" data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template> <br> +91 <%= orderdetails.address.mobile %>
-                                    </p>
-                                    <a href="/admin/userProfile/<%= orderdetails.user %><%=  %>">View profile</a>
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                        <div class="col-md-4 orderDetailspage-card-middle">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-local_shipping"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Order info</h6>
-                                    <p class="mb-1">
-                                        Shipping: Fargo express <br> Pay method: <%= orderdetails.paymentMethod %> <br> Status: new
-                                    </p>
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                        <div class="col-md-4 orderDetailspage-card-right">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-place"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Deliver to</h6>
-                                    <p class="mb-1">
-                                        City : <%= orderdetails.address.city %>
-                                    </p>
-                                    <p class="mb-1">
-                                        Address : <%= orderdetails.address.address %>
-                                    </p>
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                    </div> <!-- row // -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th width="40%">Product</th>
-                                            <th width="20%">Unit Price</th>
-                                            <th width="20%">Quantity</th>
-                                            <th width="20%" class="text-end">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% for( let i = 0; i < productDetails.length; i++ ) { %>
-                                            <tr>
-                                                <td>
-                                                    <a class="itemside" href="#">
-                                                        <div class="left">
-                                                            <img src="/product-images/<%= productDetails[i].orderedProduct.image[0].filename %>" width="40" height="40" class="img-xs" alt="Item">
-                                                        </div>
-                                                        <div class="info"> <%= productDetails[i].orderedProduct.product_name %> </div>
-                                                    </a>
-                                                </td>
-                                                <td> <%= productDetails[i].orderedProduct.product_price %> </td>
-                                                <td> <%= productDetails[i].orderedItems.quantity %> </td>
-                                                <td class="text-end"> <%= productDetails[i].orderedProduct.totalPriceOfOrderedProducts %> </td>
-                                            </tr>
-                                        <% } %>
-                                        <tr>
-                                            <td colspan="4">
-                                                <br>
-                                                <br>
-                                                <article class="float-end">
-                                                    <dl class="dlist">
-                                                        <dt>Subtotal:</dt>
-                                                        <dd></dd>
-                                                    </dl>
-                                                    <dl class="dlist">
-                                                        <dt>Shipping cost:</dt>
-                                                        <dd>₹ 0.00</dd>
-                                                    </dl>
-                                                    <dl class="dlist">
-                                                        <dt>discount:</dt>
-                                                        <dd>₹ 0.00</dd>
-                                                    </dl>
-                                                    <dl class="dlist">
-                                                        <dt>Grand total:</dt>
-                                                        <dd> <b class="h5"><%= orderdetails.totalAmount %></b> </dd>
-                                                    </dl>
-                                                    <dl class="dlist">
-                                                        <dt class="text-muted">Status:</dt>
-                                                        <dd>
-
-                                                            <% if (productDetails[0].orderStatus == 'pending') { %>
-                                                                <span  class="badge rounded-pill alert-warning"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else if (productDetails[0].orderStatus == 'processing') {%>
-                                                                <span  class="badge rounded-pill alert-secondary"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else if (productDetails[0].orderStatus == 'confirmed') {%>
-                                                                <span  class="badge rounded-pill alert-dark"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else if (productDetails[0].orderStatus == 'shipped') {%>
-                                                                <span  class="badge rounded-pill alert-info"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else if (productDetails[0].orderStatus == 'outForDelivery') {%>
-                                                                <span  class="badge rounded-pill alert-warning"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else if (productDetails[0].orderStatus == 'delivered') {%>
-                                                                <span  class="badge rounded-pill alert-success"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else if (productDetails[0].orderStatus == 'cancelPending') {%>
-                                                                <span  class="badge rounded-pill alert-warning"><%= productDetails[0].orderStatus %></span>
-                                                            <% } else {%>
-                                                                <span  class="badge rounded-pill alert-danger"><%= productDetails[0].orderStatus %></span>
-                                                            <% } %>
-
-
-                                                        </dd>
-                                                    </dl>
-                                                </article>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div> <!-- table-responsive// -->
-                        </div> <!-- col// -->
-                    </div>
-                </div> <!-- card-body end// -->
-            </div> <!-- card end// -->
-        </section> <!-- content-main end// -->
-        
+                    <!-- table-responsive// -->
+                </div>
+                <!-- col// -->
+            </div>
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+</section>
+<!-- content-main end// -->

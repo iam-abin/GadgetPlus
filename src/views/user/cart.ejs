@@ -1,224 +1,299 @@
-<main class="main " style="background-color: #ffffff;">
-	<div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
-		<div class="container">
-			<h1 class="page-title">Your Cart</h1>
-		</div><!-- End .container -->
-	</div><!-- End .page-header -->
-	<nav aria-label="breadcrumb" class=" breadcrumb-nav" >
-		<div class="container">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="index.html">Home</a></li>
-				<li class="breadcrumb-item"><a href="#">Shop</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
-			</ol>
-		</div><!-- End .container -->
-	</nav><!-- End .breadcrumb-nav -->
+<main class="main" style="background-color: #ffffff">
+    <div
+        class="page-header text-center"
+        style="background-image: url('/user/assets/images/page-header-bg.jpg')"
+    >
+        <div class="container">
+            <h1 class="page-title">Your Cart</h1>
+        </div>
+        <!-- End .container -->
+    </div>
 
-	<div class="page-content ">
-		<div class="cart">
-			<div class="container">
-
+    <div class="page-content">
+        <div class="cart">
+            <div class="container">
                 <% if (!cartItems.length) { %>
-					<div class="container-fluid  mt-3" id="cartEmpty-div">
-						<div class="row">
-						
-							<div class="col-md-12">
-						
-								<div class="card">
-								<div class="card-body cart">
-										<div class="col-sm-12 empty-cart-cls text-center">
-											<img src="/user/assets/images/cart/happy.jpg"  width="30%" height="30%" class="img-fluid mx-auto mr-3">
-											<h3><strong>Your Cart is Empty</strong></h3>
-											<h4>Add something to make me happy :)</h4>
-											<a href="/" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
-											
-										
-										</div>
-								</div>
-							</div>
-							
-						
-						</div>
-						
-						</div>
-				    
-					</div>
-				<% } else { %>
+                <div class="container-fluid mt-3" id="cartEmpty-div">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body cart">
+                                    <div
+                                        class="col-sm-12 empty-cart-cls text-center"
+                                    >
+                                        <img
+                                            src="/user/assets/images/cart/happy.jpg"
+                                            width="30%"
+                                            height="30%"
+                                            class="img-fluid mx-auto mr-3"
+                                        />
+                                        <h3>
+                                            <strong>Your Cart is Empty</strong>
+                                        </h3>
+                                        <h4>
+                                            Add something to make me happy :)
+                                        </h4>
+                                        <a
+                                            href="/"
+                                            class="btn btn-primary cart-btn-transform m-3"
+                                            data-abc="true"
+                                            >continue shopping</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } else { %>
 
-				<div class="row">
-					<div class="col-lg-9" id="tables-div">
-						<table class="table table-cart table-mobile">
-							<thead>
-								<tr>
-									<th>Product</th>
-									<th>Price</th>
-									<th>Quantity</th>
-									<th>Total</th>
-									<th></th>
-								</tr>
-							</thead>
+                <div class="row">
+                    <div class="col-lg-9" id="tables-div">
+                        <table class="table table-cart table-mobile">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
 
-							<tbody>
-								<% for( let i=0; i < cartItems.length; i++ ) { %>
+                            <tbody>
+                                <% for( let i=0; i < cartItems.length; i++ ) {
+                                %>
 
-									
-									<tr id="item-<%= cartItems[i].product._id %>">
-										<td class="product-col">
-											<div class="product">
-												<figure class="product-media">
-													<a href="#">
-														<img src="/product-images/<%= cartItems[i].product.image[0].filename%>"
-															alt="Product image">
-													</a>
-												</figure>
+                                <tr id="item-<%= cartItems[i].product._id %>">
+                                    <td class="product-col">
+                                        <div class="product">
+                                            <figure class="product-media">
+                                                <a href="#">
+                                                    <img
+                                                        src="/product-images/<%= cartItems[i].product.image[0].filename%>"
+                                                        alt="Product image"
+                                                    />
+                                                </a>
+                                            </figure>
 
-												<h3 class="product-title">
-													<a href="#">
-														<%= cartItems[i].product.product_name %>
-													</a>
-												</h3><!-- End .product-title -->
-											</div><!-- End .product -->
-										</td>
-										<td class="price-col" >₹<%= cartItems[i].product.product_price %></td>
-										<td class="quantity-col">
-											<div class="cart-product-quantity">
+                                            <h3 class="product-title">
+                                                <a href="#">
+                                                    <%=
+                                                    cartItems[i].product.product_name
+                                                    %>
+                                                </a>
+                                            </h3>
+                                            <!-- End .product-title -->
+                                        </div>
+                                        <!-- End .product -->
+                                    </td>
+                                    <td class="price-col">
+                                        ₹<%= cartItems[i].product.product_price
+                                        %>
+                                    </td>
+                                    <td class="quantity-col">
+                                        <div class="cart-product-quantity">
+                                            <button
+                                                onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',-1,'<%= cartItems[i].product.product_price %>')"
+                                                style="
+                                                    background-color: transparent;
+                                                    border: none;
+                                                "
+                                            >
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <span
+                                                id="incDec<%= cartItems[i].product._id %>"
+                                                ><%= cartItems[i].quantity
+                                                %></span
+                                            >
+                                            <button
+                                                onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',1,'<%= cartItems[i].product.product_price %>')"
+                                                style="
+                                                    background-color: transparent;
+                                                    border: none;
+                                                "
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
 
-												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',-1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-minus"></i></button>
-												<span id="incDec<%= cartItems[i].product._id %>"><%= cartItems[i].quantity %></span>
-												<button onclick="incDecQuantity('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>',1,'<%= cartItems[i].product.product_price %>')" style="background-color: transparent; border: none;" ><i class="fa fa-plus"></i></button>
+                                            <% if
+                                            (cartItems[i].product.isOutOfStock)
+                                            { %>
+                                            <br /><span
+                                                class="text-danger"
+                                                id="outOfStock<%= cartItems[i].product._id %>"
+                                                >out of stock</span
+                                            >
+                                            <% } %>
+                                            <br /><span
+                                                class="text-danger d-none"
+                                                id="outOfStock<%= cartItems[i].product._id %>"
+                                                >out of stock</span
+                                            >
+                                        </div>
+                                        <!-- End .cart-product-quantity -->
+                                    </td>
+                                    <td
+                                        id="productPrice<%= cartItems[i].product._id %>"
+                                        class="total-col"
+                                    >
+                                        ₹<%= cartItems[i].product.product_price
+                                        * cartItems[i].quantity %>
+                                    </td>
 
-												<% if (cartItems[i].product.isOutOfStock) { %>
-													<br><span class="text-danger" id="outOfStock<%= cartItems[i].product._id %>">out of stock</span>
-												<% } %>
-												<br><span class="text-danger d-none" id="outOfStock<%= cartItems[i].product._id %>">out of stock</span>
-											</div><!-- End .cart-product-quantity -->
-										</td>
-										<td id="productPrice<%= cartItems[i].product._id %>" class="total-col">₹<%= cartItems[i].product.product_price * cartItems[i].quantity %>
-										</td>
+                                    <td class="remove-col">
+                                        <button
+                                            class="btn-remove"
+                                            onclick="productRemove('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>')"
+                                        >
+                                            <i class="icon-close"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <!-- End .table table-wishlist -->
+                    </div>
+                    <!-- End .col-lg-9 -->
+                    <aside class="col-lg-3">
+                        <div class="summary summary-cart">
+                            <h3 class="summary-title">Cart Total</h3>
+                            <!-- End .summary-title -->
 
-										
-										<td class="remove-col"><button class="btn-remove"  
-												onclick="productRemove('<%= cartItems[i].product._id %>','<%= cartItems[i]._id %>')"><i
-													class="icon-close"></i></button></td>
-									</tr>
-									<% } %>
+                            <table class="table table-summary">
+                                <tbody>
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <!-- it receives totalAmount from cart and totalSubTotal -->
+                                        <td id="totalAmount">
+                                            <%= totalAmount %>
+                                        </td>
+                                    </tr>
+                                    <!-- End .summary-total -->
+                                </tbody>
+                            </table>
+                            <!-- End .table table-summary -->
 
-							</tbody>
-						</table><!-- End .table table-wishlist -->
-					</div><!-- End .col-lg-9 -->
-					<aside class="col-lg-3">
-						<div class="summary summary-cart">
-							<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+                            <a
+                                href="/checkout"
+                                class="btn btn-outline-primary-2 btn-order btn-block"
+                                >PROCEED TO CHECKOUT</a
+                            >
+                        </div>
+                        <!-- End .summary -->
 
-							<table class="table table-summary">
-								<tbody>
+                        <a
+                            href="/"
+                            class="btn btn-outline-dark-2 btn-block mb-3"
+                            ><span>CONTINUE SHOPPING</span
+                            ><i class="icon-refresh"></i
+                        ></a>
+                    </aside>
+                    <!-- End .col-lg-3 -->
+                </div>
+                <!-- End .row -->
 
-
-									<tr class="summary-total">
-										<td>Total:</td>
-										<!-- it receives totalAmount from cart and totalSubTotal -->
-										<td id="totalAmount"><%= totalAmount %></td> 
-									</tr><!-- End .summary-total -->
-								</tbody>
-							</table><!-- End .table table-summary -->
-
-							<a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
-								CHECKOUT</a>
-						</div><!-- End .summary -->
-
-						<a href="/" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
-					</aside><!-- End .col-lg-3 -->
-				</div><!-- End .row -->
-
-				<% } %>
-
-			</div><!-- End .container -->
-		</div><!-- End .cart -->
-	</div><!-- End .page-content -->
-</main><!-- End .main -->
-
-
+                <% } %>
+            </div>
+            <!-- End .container -->
+        </div>
+        <!-- End .cart -->
+    </div>
+    <!-- End .page-content -->
+</main>
+<!-- End .main -->
 
 <script>
-	function productRemove(productId,cartId) {
-		swal("Do you want to remove this item from cart?", {
-			buttons: ["No", "yes"],
-		}).then((res) => {
-			if (res) {
-				$.ajax({
-					url: '/remove-cart-item/' + productId,
-					data:{
-						cartId:cartId
-					},
-					type: 'post',
-				})
-				.done((res) => {
-					if(res){
-						$(`#item-${productId}`).remove()
-						iziToast.success({
-							title: 'OK',
-							message: `${res.message}`,
-							position: 'topRight',
-							onOpening: function (instance, toast) {
-								// Modify the top property to adjust the message position
-							toast.style.top = '80px'; // Adjust the value as needed to move the message down
-							}
-						});									
-						document.getElementById('totalAmount').innerHTML=res.totalAmount
-						document.getElementById('cart-count').innerHTML=res.cartCount;
+    function productRemove(productId, cartId) {
+        swal("Do you want to remove this item from cart?", {
+            buttons: ["No", "yes"],
+        }).then((res) => {
+            if (res) {
+                $.ajax({
+                    url: "/remove-cart-item/" + productId,
+                    data: {
+                        cartId: cartId,
+                    },
+                    type: "post",
+                })
+                    .done((res) => {
+                        if (res) {
+                            $(`#item-${productId}`).remove();
+                            iziToast.success({
+                                title: "OK",
+                                message: `${res.message}`,
+                                position: "topRight",
+                                onOpening: function (instance, toast) {
+                                    // Modify the top property to adjust the message position
+                                    toast.style.top = "80px"; // Adjust the value as needed to move the message down
+                                },
+                            });
+                            document.getElementById("totalAmount").innerHTML =
+                                res.totalAmount;
+                            document.getElementById("cart-count").innerHTML =
+                                res.cartCount;
 
-						if (res.cartCount==0) {
-							location.reload()
-						}
-
-					}
-					
-					
-				})
-				.fail((error) => {
-					console.error(error);
-				})	
-			}
-		})
-
-	}
-	
+                            if (res.cartCount == 0) {
+                                location.reload();
+                            }
+                        }
+                    })
+                    .fail((error) => {
+                        console.error(error);
+                    });
+            }
+        });
+    }
 </script>
 
 <script>
-	function incDecQuantity(productId,cartId,number,price){
-		$.ajax({
-			url:'/quantity-change',
-			type:'post',
-			data:{
-				quantity:number,
-				cartId:cartId,
-				productId:productId
-			}
-		})
-		.done((res)=>{
-			if(res){
-				if(!res.OutOfStock){
-					
-					document.getElementById('incDec'+productId).innerHTML=res.message.quantity
-					document.getElementById('totalAmount').innerHTML=res.message.totalAmount
-					document.getElementById('outOfStock'+productId).classList.add('d-none')
-					let total=res.message.quantity*price
-					document.getElementById('productPrice'+productId).innerHTML=total.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
-				}else{
-
-					document.getElementById('incDec'+productId).innerHTML=res.message.quantity
-					document.getElementById('totalAmount').innerHTML=res.message.totalAmount
-					document.getElementById('outOfStock'+productId).classList.remove('d-none')
-					let total=res.message.quantity*price
-					document.getElementById('productPrice'+productId).innerHTML=total.toLocaleString('en-in', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
-				}
-				// else{
-				// swal("Failed", `${err.responseJSON.message}`,"error").then(() => {
-                //     location.reload();
-                // })
-			}
-		}
-		)
-	}
+    function incDecQuantity(productId, cartId, number, price) {
+        $.ajax({
+            url: "/quantity-change",
+            type: "post",
+            data: {
+                quantity: number,
+                cartId: cartId,
+                productId: productId,
+            },
+        }).done((res) => {
+            if (res) {
+                if (!res.OutOfStock) {
+                    document.getElementById("incDec" + productId).innerHTML =
+                        res.message.quantity;
+                    document.getElementById("totalAmount").innerHTML =
+                        res.message.totalAmount;
+                    document
+                        .getElementById("outOfStock" + productId)
+                        .classList.add("d-none");
+                    let total = res.message.quantity * price;
+                    document.getElementById(
+                        "productPrice" + productId
+                    ).innerHTML = total.toLocaleString("en-in", {
+                        style: "currency",
+                        currency: "INR",
+                        maximumFractionDigits: 0,
+                    });
+                } else {
+                    document.getElementById("incDec" + productId).innerHTML =
+                        res.message.quantity;
+                    document.getElementById("totalAmount").innerHTML =
+                        res.message.totalAmount;
+                    document
+                        .getElementById("outOfStock" + productId)
+                        .classList.remove("d-none");
+                    let total = res.message.quantity * price;
+                    document.getElementById(
+                        "productPrice" + productId
+                    ).innerHTML = total.toLocaleString("en-in", {
+                        style: "currency",
+                        currency: "INR",
+                        maximumFractionDigits: 0,
+                    });
+                }
+            }
+        });
+    }
 </script>

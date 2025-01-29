@@ -20,11 +20,6 @@ const wishlist = async (req, res, next) => {
                     wishList[i].product.product_price
                 );
             }
-
-            res.render("user/wishlist", {
-                loginStatus: req.session.user,
-                wishList,
-            });
         }
     } catch (error) {
         next(error);

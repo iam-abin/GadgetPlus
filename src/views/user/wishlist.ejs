@@ -36,25 +36,13 @@
 											<% if (!wishList[i].product.isInCart) { %>
 												<button class="btn btn-primary btn-sm add-product" type="button"
 													data-value="<%= wishList[i].product._id %>">Add to Cart</button>
-												<!-- 											
-												<div class="product-action">
-													<a href="/cart" data-value="<%= wishList[i]._id %>"
-														class="add-product btn-product btn-cart"><span>add to
-															cart</span></a> -->
-												<!-- </div> -->
 												<% } else {%>
-
-													<!-- <div class="btn btn-primary btn-sm"> -->
 
 													<a href="/cart" class=" btn-product"><span><button
 																class="btn btn-primary btn-sm" type="button">View in
 																Cart</button></span></a>
 													<!-- </div> -->
 													<% } %>
-
-
-
-														<!-- <button class="btn btn-primary btn-sm" type="button" data-value="<%= wishList[i].product._id %>">Add to Cart</button> -->
 
 														<button
 															onclick="removeFromWishList('<%= wishList[i].product._id %>')"
@@ -71,8 +59,6 @@
 		</div>
 	</div>
 </section>
-
-
 
 <script>
 	function removeFromWishList(productId) {
@@ -100,9 +86,6 @@
 				console.error(error);
 			})
 	}
-
-
-
 
 	$(document).ready(function () {
 		$('.add-product').click(function (e) {

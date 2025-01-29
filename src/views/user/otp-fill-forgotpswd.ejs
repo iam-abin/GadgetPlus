@@ -1,36 +1,62 @@
 <body>
-    <section class="vh-100" style="background-color: #f0f1f4;">
+    <section class="vh-100" style="background-color: #f0f1f4">
         <div class="container py-4 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
+            <div
+                class="row d-flex justify-content-center align-items-center h-100"
+            >
                 <div class="col col-xl-5 col-md-5 text-center col-lg-5">
-                    <div class="card shadow border" style="border-radius: 20px; margin-top: 50px; margin-bottom: 90px;">
+                    <div
+                        class="card shadow border"
+                        style="
+                            border-radius: 20px;
+                            margin-top: 50px;
+                            margin-bottom: 90px;
+                        "
+                    >
                         <div class="card-body">
-
-                            <form action="/otp-fill-forgotPassword" method="post">
-
+                            <form
+                                action="/otp-fill-forgotPassword"
+                                method="post"
+                            >
                                 <div id="verifier">
-
-                                    <div class="d-flex align-items-center  pb-1">
-                                        <h3 class=" mx-auto font-weight-bold">Verify OTP</h3>
+                                    <div class="d-flex align-items-center pb-1">
+                                        <h3 class="mx-auto font-weight-bold">
+                                            Verify OTP
+                                        </h3>
                                     </div>
                                     <div class="form-outline mb-2 text-center">
-                                        <label for="" class="py-2">Enter 6 digit OTP</label>
-                                        <input type="tel" id="verificationcode" class="form-control form-control-lg"
-                                            name="otp" />
+                                        <label for="" class="py-2"
+                                            >Enter 6 digit OTP</label
+                                        >
+                                        <input
+                                            type="tel"
+                                            id="verificationcode"
+                                            class="form-control form-control-lg"
+                                            name="otp"
+                                        />
                                     </div>
                                     <a href="">
-                                        <p class="text-right text-primary p-1">Resend OTP</p>
+                                        <p class="text-right text-primary p-1">
+                                            Resend OTP
+                                        </p>
                                     </a>
                                     <div class="form-outline mb-2 text-center">
-                                        <span id="verifySuccess" class="text-success"></span>
-                                        <span id="verifyErr" class="text-danger"></span>
+                                        <span
+                                            id="verifySuccess"
+                                            class="text-success"
+                                        ></span>
+                                        <span
+                                            id="verifyErr"
+                                            class="text-danger"
+                                        ></span>
                                     </div>
-                                    <div class="pt-2 ">
-                                        <!-- <button class="btn btn-block" onclick="codeverify()" style="width: 100%;">SUBMIT</button> -->
-                                        <input type="submit" value="verify otp">
+                                    <div class="pt-2">
+                                        <input
+                                            type="submit"
+                                            value="verify otp"
+                                        />
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
