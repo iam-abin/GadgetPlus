@@ -1,0 +1,19 @@
+.card-body {
+    position: relative;
+}
+
+.address-label {
+    display: flex;
+    align-items: flex-start;
+}
+
+.radio-icon {
+    margin-top: 4px;
+    margin-right: 10px;
+}
+
+.delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}

@@ -5,9 +5,9 @@ const cart = async (req, res, next) => {
     try {
         const { user } = req.session;
         const cartItems = await cartHelper.getAllCartItems(user._id);
-
+        
         let totalandSubTotal = await cartHelper.totalSubtotal(user._id);
-
+        
         totalandSubTotal = formatCurrency(totalandSubTotal);
 
         res.render("user/cart", {

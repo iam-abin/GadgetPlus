@@ -1,0 +1,68 @@
+.orderDetailspage-card-left {
+    padding: 27px;
+    background: #f8f9fa;
+    border-radius: 20px 0px 0px 20px;
+}
+
+.orderDetailspage-card-middle {
+    padding: 27px;
+    background: #f8f9fa;
+
+}
+
+b {
+    font-weight: 500;
+}
+
+.orderDetailspage-card-right {
+    padding: 27px;
+    background: #f8f9fa;
+    border-radius: 0px 20px 20px 0px;
+}
+
+.table> :not(:last-child)> :last-child>* {
+    border-bottom-color: currentColor;
+}
+
+.rounded-pill {
+    padding-right: 0.6em;
+    padding-left: 0.6em;
+}
+
+.text-success {
+    color: #00B517 !important;
+}
+
+.rounded-pill {
+    border-radius: 50rem !important;
+}
+
+.alert-success {
+    color: #006d0e;
+    background-color: #ccf0d1;
+    border-color: #b3e9b9;
+}
+
+
+
+.float-end {
+    float: right !important;
+}
+
+.content-header .content-title {
+    margin-bottom: 0;
+}
+
+.card-title {
+    color: #383e50 !important;
+}
+
+.card-title {
+    margin-bottom: 1rem;
+    font-size: 40px;
+}
+
+
+.text-muted {
+    color: #adb5bd !important;
+}

@@ -1,4 +1,4 @@
-<div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
+<div class="page-header text-center" style="background-image: url('/user/assets/images/header/page-header-bg.jpg')">
 	<div class="container">
 		<h1 class="page-title">Your Wishlist</h1>
 	</div><!-- End .container -->
@@ -9,6 +9,30 @@
 
 		<div class="row justify-content-center mb-3 ">
 			<div class="col-md-12 col-xl-10">
+				<% if (!wishList.length) { %>
+					<div class="container-fluid mt-3" id="cartEmpty-div">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card">
+									<div class="card-body cart">
+										<div
+											class="col-sm-12 empty-cart-cls text-center"
+										>
+											<img
+												src="/user/assets/images/wishlist/No-Wishlist.png"
+												width="30%"
+												height="30%"
+												class="img-fluid mx-auto mr-3"
+											/>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<% } else { %>
+	
 					<% for( let i=0; i < wishList.length; i++ ) { %>
 						<div class="card shadow-0 border " id="wishlist-card-<%= wishList[i].product._id %>"
 							style="border-radius: 10px;">
@@ -36,25 +60,13 @@
 											<% if (!wishList[i].product.isInCart) { %>
 												<button class="btn btn-primary btn-sm add-product" type="button"
 													data-value="<%= wishList[i].product._id %>">Add to Cart</button>
-												<!-- 											
-												<div class="product-action">
-													<a href="/cart" data-value="<%= wishList[i]._id %>"
-														class="add-product btn-product btn-cart"><span>add to
-															cart</span></a> -->
-												<!-- </div> -->
 												<% } else {%>
-
-													<!-- <div class="btn btn-primary btn-sm"> -->
 
 													<a href="/cart" class=" btn-product"><span><button
 																class="btn btn-primary btn-sm" type="button">View in
 																Cart</button></span></a>
 													<!-- </div> -->
 													<% } %>
-
-
-
-														<!-- <button class="btn btn-primary btn-sm" type="button" data-value="<%= wishList[i].product._id %>">Add to Cart</button> -->
 
 														<button
 															onclick="removeFromWishList('<%= wishList[i].product._id %>')"
@@ -67,12 +79,11 @@
 							</div>
 						</div>
 						<% } %>
+						<% } %>
 			</div>
 		</div>
 	</div>
 </section>
-
-
 
 <script>
 	function removeFromWishList(productId) {
@@ -100,9 +111,6 @@
 				console.error(error);
 			})
 	}
-
-
-
 
 	$(document).ready(function () {
 		$('.add-product').click(function (e) {

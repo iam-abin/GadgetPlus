@@ -6,74 +6,83 @@
         <div class="card-body">
             <div class="table-responsive">
                 <% if (!users.length) { %>
-                    <h1>No Users</h1>
-                    <% } else { %>
+                <h1>No Users</h1>
+                <% } else { %>
                 <table class="display table table-hover" id="userTable">
-                    <thead >
+                    <thead>
                         <tr>
                             <th>No</th>
                             <th>NAME</th>
                             <th>EMAIL</th>
                             <th>MOBILE</th>
                             <th>STATUS</th>
-                            <th class="text-end"> Action </th>
+                            <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         <% for( let i=0; i < users.length; i++ ) { %>
-                            <tr>
-                                <td width="10%">
-                                    <%= i+1 %>
-                                </td>
-                                <td width="15%">
-                                    <%= users[i].name %>
-                                </td>
-                                <td width="20%">
-                                    <%= users[i].email %>
-                                </td>
-                                <td width="15%">
-                                    <%= users[i].phone %>
-                                </td>
-                                <td>
-                                    <% if (users[i].isActive) { %>
-                                        <span id="user-status-<%= users[i]._id %>"
-                                            class="badge rounded-pill alert-success">Active</span>
-                                    <% }else {%>
-                                        <span id="user-status-<%= users[i]._id %>"
-                                            class="badge rounded-pill alert-danger">Blocked</span>
-                                    <% } %>
-                                </td>
+                        <tr>
+                            <td width="10%"><%= i+1 %></td>
+                            <td width="15%"><%= users[i].name %></td>
+                            <td width="20%"><%= users[i].email %></td>
+                            <td width="15%"><%= users[i].phone %></td>
+                            <td>
+                                <% if (users[i].isActive) { %>
+                                <span
+                                    id="user-status-<%= users[i]._id %>"
+                                    class="badge rounded-pill alert-success"
+                                    >Active</span
+                                >
+                                <% }else {%>
+                                <span
+                                    id="user-status-<%= users[i]._id %>"
+                                    class="badge rounded-pill alert-danger"
+                                    >Blocked</span
+                                >
+                                <% } %>
+                            </td>
 
-                                <td class="text-end" width="20%">
-                                    <% if (users[i].isActive) { %>
-                                        <button id="status-button-<%= users[i]._id %>"
-                                            onclick="changeUserStatus('<%= users[i]._id %>')" type="button"
-                                            class="btn btn-sm btn-success rounded font-sm mt-15 ps-3 pe-3">Block</button>
+                            <td class="text-end" width="20%">
+                                <% if (users[i].isActive) { %>
+                                <button
+                                    id="status-button-<%= users[i]._id %>"
+                                    onclick="changeUserStatus('<%= users[i]._id %>')"
+                                    type="button"
+                                    class="btn btn-sm btn-success rounded font-sm mt-15 ps-3 pe-3"
+                                >
+                                    Block
+                                </button>
 
-                                        <a href="/admin/userProfile/<%= users[i]._id %>"
-                                            class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
-                                    <% } else {%>
-                                        <button id="status-button-<%= users[i]._id %>"
-                                                onclick="changeUserStatus('<%= users[i]._id %>')" type="button"
-                                                class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3">unBlock</button>
+                                <a
+                                    href="/admin/userProfile/<%= users[i]._id %>"
+                                    class="btn btn-sm btn-brand rounded font-sm mt-15"
+                                    >View Details</a
+                                >
+                                <% } else {%>
+                                <button
+                                    id="status-button-<%= users[i]._id %>"
+                                    onclick="changeUserStatus('<%= users[i]._id %>')"
+                                    type="button"
+                                    class="btn btn-sm btn-danger rounded font-sm mt-15 ps-3 pe-3"
+                                >
+                                    unBlock
+                                </button>
 
-                                        <a href="/admin/userProfile/<%= users[i]._id %>"
-                                                class="btn btn-sm btn-brand rounded font-sm mt-15">View Details</a>
-                                    <% } %>
-                                </td>
-                            </tr>
+                                <a
+                                    href="/admin/userProfile/<%= users[i]._id %>"
+                                    class="btn btn-sm btn-brand rounded font-sm mt-15"
+                                    >View Details</a
+                                >
+                                <% } %>
+                            </td>
+                        </tr>
                         <% } %>
-
                     </tbody>
-                </table> <!-- table-responsive.// -->
+                </table>
                 <% } %>
             </div>
-        </div> <!-- card-body end// -->
-    </div> <!-- card end// -->
-   
-</section> <!-- content-main end// -->
+        </div>
+    </div>
+</section>
 
-
-<script src="/admin/assets/js/adminJs/adminScripts.js"></script>
-
+<script src="/admin/assets/js/adminJs/lists.js"></script>

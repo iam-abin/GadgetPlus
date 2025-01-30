@@ -1,12 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en">
 
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
-
 <head>
     <meta charset="utf-8">
-    <title>gadgetPlus Dashboard</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,9 +10,8 @@
     <meta property="og:type" content="">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
-    <!-- Favicon -->
-    <!-- <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg"> -->
-
+    <link rel="icon" type="image/png" sizes="32x32" href="/user/assets/images/icons/favicon-32x32.png">
+    <title>gadgetPlus Dashboard</title>
     <!-- Template CSS -->
     <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
 
@@ -80,14 +75,6 @@
                     </a>
                 </li>
 
-
-                <!-- <li class="menu-item">
-                    <a class="menu-link" href="/admin/banner"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Banner </span>
-                    </a>
-                </li> -->
-
-
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/coupon"> <i class="icon material-icons md-stars"></i>
                         <span class="text">Coupon </span>
@@ -107,34 +94,12 @@
         </nav>
     </aside>
 
-
     <main class="main-wrap">
         <header class="main-header navbar" style="flex: auto; justify-content: end; ">
-            <!-- <div class="col-search">
-                <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i
-                                class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
-                </form>
-            </div> -->
             <div class="col-nav ">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
                         class="material-icons md-apps"></i> </button>
                 <ul class="nav">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
                         </a>
@@ -143,34 +108,7 @@
                     <li class="dropdown nav-item">
                         <a > <img class="img-xs rounded-circle"
                                 src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
-                        <!-- <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
-                                Profile</a>
-                            <a class="dropdown-item" href="#"><i
-                                    class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                        </div> -->
                     </li>
                 </ul>
             </div>
-
-
-
         </header>
-
-        <script>
-
-            const activePage=window.location.pathname;
-
-            const navLinks=document.querySelectorAll('nav a').forEach((link)=>{
-                const linkPath = new URL(link.href).pathname; // Extract path from link.href
-                let linkpathDashBoard = new URL(link.href).pathname
-                linkpathDashBoard='/admin'+linkpathDashBoard+"-home"
-                
-                if (linkPath === activePage) {
-                    link.classList.add('active');
-                }else if(linkpathDashBoard === activePage){
-                    link.classList.add('active');
-                }
-            })
-        </script>

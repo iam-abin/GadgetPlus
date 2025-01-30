@@ -25,10 +25,6 @@
 								<a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-address"
 									role="tab" aria-controls="tab-orders" aria-selected="false">Manage Address</a>
 							</li>
-							<!-- <li class="nav-item">
-								<a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads"
-									role="tab" aria-controls="tab-downloads" aria-selected="false">My Orders </a>
-							</li> -->
 							<li class="nav-item">
 								<a class="nav-link" href="/orders" aria-selected="false">My Orders </a>
 							</li>
@@ -95,15 +91,6 @@
 
 							<div class="tab-pane fade" id="tab-address" role="tabpanel"
 								aria-labelledby="tab-address-link">
-								<!-- <p>The following addresses will be used on the checkout page by default.</p> -->
-								<!-- <div class="text-right ">
-									<a class="btn btn-primary mb-2 nav-link " id="tab-orders-link" data-toggle="tab"
-										href="#tab-addAddress" role="tab" aria-controls="tab-orders"
-										aria-selected="false">Add Address</a>
-								</div> -->
-
-				
-
 <!-- =======Add address Modal======= -->
 								<div class="modal fade " id="AddAddress" tabindex="-1"
 									aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -340,90 +327,10 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 					</div><!-- End .col-lg-9 -->
 				</div><!-- End .row -->
 			</div><!-- End .container -->
-
-
 			<!--End add address -->
-
-
-			
-
 		</div><!-- End .dashboard -->
 	</div><!-- End .page-content -->
 </main><!-- End .main -->
 
 
-<script>
-
-	$(document).ready(function () {
-		$('#add-address-form').submit((e) => {
-			e.preventDefault();
-			$.ajax({
-				url: '/add-address',
-				type: 'post',
-				data: $('#add-address-form').serialize()
-			})
-				.done((res) => {
-					swal({
-						title: "Success",
-						text: "New Address added.",
-						icon: "success",
-						button: "OK",
-					}).then(() => {
-						location.reload();
-					})
-				})
-				.fail((err) => {
-					console.error(err);
-				})
-		})
-	})
-
-
-	function getAddress(addressId){
-		$.ajax({
-			url:'/edit-address/'+addressId,
-			type:'get',
-
-		}).done((res)=>{
-			document.getElementById('addressId').value=res.address._id;
-			document.getElementById('fname').value=res.address.first_name;
-			document.getElementById('lname').value=res.address.last_name;
-			document.getElementById('mobile').value=res.address.mobile;
-			document.getElementById('email').value=res.address.email_id;
-			document.getElementById('address').value=res.address.address;
-			document.getElementById('country').value=res.address.country;
-			document.getElementById('state').value=res.address.state;
-			document.getElementById('city').value=res.address.city;
-			document.getElementById('pincode').value=res.address.pincode;
-		})
-		.fail((error)=>{
-			console.error(error);
-		})
-	}
-
-
-	$(document).ready(function () {
-		$('#edit-address-form').submit((e) => {
-			e.preventDefault();
-			$.ajax({
-				url: '/edit-address',
-				type: 'post',
-				data: $('#edit-address-form').serialize()
-			})
-				.done((res) => {
-					swal({
-						title: "Success",
-						text: "Address Updated.",
-						icon: "success",
-						button: "OK",
-					}).then(() => {
-						location.reload()
-					})
-				})
-				.fail((err) => {
-					console.error(err);
-				})
-		})
-	})
-
-</script>
+<script src="/user/assets/js/userJs/address.js"></script>

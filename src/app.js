@@ -15,7 +15,7 @@ const errorHandler = require("./middlewares/errorHandiling");
 const userRoute = require("./routes/userRoute");
 const adminRoute = require("./routes/adminRoute");
 
-const { USER_LAYOUT } = require("./config/constants");
+const { USER_LAYOUT } = require("./constants/layout");
 
 const app = express();
 

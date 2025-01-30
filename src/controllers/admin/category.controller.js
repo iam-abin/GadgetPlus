@@ -1,4 +1,4 @@
-const { ADMIN_LAYOUT } = require("../../config/constants");
+const { ADMIN_LAYOUT } = require("../../constants/layout");
 const categoryHelper = require("../../helpers/categoryHelper");
 
 const productCategory = async (req, res, next) => {

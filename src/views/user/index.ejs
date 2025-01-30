@@ -1,55 +1,3 @@
-<style>
-    .banner-over-text {
-        color: rgb(0, 0, 0);
-    }
-</style>
-
-<style>
-       .product-image {
-        width: 100%;
-        max-height: 250px; /* Adjust this height as needed */
-        object-fit: contain; /* Ensures the image covers the entire space */
-    }
-
-    .product-image-container {
-        position: relative;
-        width: 100%;
-        height: 250px; /* Adjust this height as needed */
-        overflow: hidden;
-        object-fit: contain; /
-    }
-
-    .product-image {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        /* transition: opacity 0.3s ease-in-out; */
-    }
-
-    .product-image-hover {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: none;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-fit: contain; 
-        /* transition: opacity 0.3s ease-in-out; */
-    }
-
-    .product:hover .product-image {
-        opacity: 0; /* Hide the main image on hover */
-    }
-
-    .product:hover .product-image-hover {
-        display: block; /* Show the hover image on hover */
-        opacity: 1;
-    }
-
-</style>
-
 
 <main class="main">
     <div class="intro-slider-container">
@@ -68,7 +16,7 @@
                         }
                     }'>
             <div class="intro-slide"
-                style="background-image: url(/user/assets/images/demos/demo-8/slider/slide-1.png);">
+                style="background-image: url(/user/assets/images/banners/slide-1.png);">
                 <div class="container intro-content text-left">
                     <h3 class="intro-subtitle">Limited time only *</h3><!-- End .h3 intro-subtitle -->
                     <h1 class="intro-title">Summer<br><strong>sale</strong></h1><!-- End .intro-title -->
@@ -83,7 +31,7 @@
 
 
             <div class="intro-slide"
-                style="background-image: url(/user/assets/images/demos/demo-8/slider/slide-2.png);">
+                style="background-image: url(/user/assets/images/banners/slide-2.png);">
                 <div class="container intro-content text-right">
                     <h3 class="intro-subtitle">PREMIUM QUALITY</h3><!-- End .h3 intro-subtitle -->
                     <h1 class="intro-title">Mobile's <span class="highlight">&</span><br>Laptops</h1>
@@ -94,14 +42,11 @@
                         <i class="icon-long-arrow-right"></i>
                     </a>
                 </div><!-- End .intro-content -->
-                <!-- <img class="position-left" src="/user/assets/images/demos/demo-8/slider/slide-2.png"> -->
             </div><!-- End .intro-slide -->
         </div><!-- End .intro-slider owl-carousel owl-simple -->
 
         <span class="slider-loader"></span><!-- End .slider-loader -->
     </div><!-- End .intro-slider-container -->
-
-
 
     <div class="mb-3"></div><!-- End .mb-6 -->
 
@@ -159,7 +104,7 @@
                                         <% if (loginStatus) { %>
 
                                             <a href="#"
-                                                class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist add-produtToWishlist"
+                                                class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist"
                                                 data-value="<%= featuredProducts[i]._id%>"
                                                 title="Add to wishlist"><span>add
                                                     to wishlist</span>
@@ -184,7 +129,7 @@
                                     <% if (loginStatus) { %>
                                         <div class="product-action">
                                             <a href="#" data-value="<%= featuredProducts[i]._id %>"
-                                                class="add-product btn-product btn-cart"><span>add to
+                                                class="add-to-cart btn-product btn-cart"><span>add to
                                                     cart</span></a>
                                         </div><!-- End .product-action -->
                                         <% } else {%>
@@ -236,7 +181,7 @@
 
     <div class="trending">
         <a href="#">
-            <img src="/user/assets/images/demos/demo-8/banners/third-long-banner.png" alt="Banner">
+            <img src="/user/assets/images/banners/third-long-banner.png" alt="Banner">
         </a>
         <div class="banner banner-big d-md-block">
             <div class="banner-content text-center banner-over-text">
@@ -309,7 +254,7 @@
                                         <% if (loginStatus) { %>
 
                                             <a href="#"
-                                                class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist add-produtToWishlist"
+                                                class="btn-product-icon btn-wishlist btn-expandable add-to-Wishlist"
                                                 data-value="<%= latestProducts[i]._id%>"
                                                 title="Add to wishlist"><span>add
                                                     to wishlist</span>
@@ -337,7 +282,7 @@
                                     <% if (loginStatus) { %>
                                         <div class=" product-action">
                                     <a href="#" data-value="<%= latestProducts[i]._id %>"
-                                        class="add-product btn-product btn-cart"><span>add to
+                                        class="add-to-cart btn-product btn-cart"><span>add to
                                             cart</span></a>
                         </div><!-- End .product-action -->
                         <% } else {%>
@@ -436,72 +381,6 @@
     </div><!-- End .container -->
 </main><!-- End .main -->
 
-<script>
-    // To add product to cart
-    $(document).ready(function () {
-        $('.add-product').click(function (e) {
-            e.preventDefault()
-            const prodId = $(this).data('value')
-            $.ajax({
-                url: '/add-to-cart/' + prodId,
-                type: 'post'
-            })
-                .done((res) => {
-              
-                    swal("successfull", `${res.message}`, "success")
-                        .then(() => {
-                            location.reload()
-                        })
-                })
-                .fail((err) => {
-                    console.error(err);
-                })
-        })
-    })
 
-
-    // To add product to wish list
-    $(document).ready(function () {
-        $('.add-produtToWishlist').click(function (e) {
-            e.preventDefault();
-            const productId = $(this).data('value');
-            
-            $.ajax({
-                url: '/add-to-wishList',
-                type: 'post',
-                data: { productId: productId }
-            })
-                .done((res) => {
-                    
-                    swal("successfull", `${res.message}`, "success")
-                        .then(() => {
-                            location.reload()
-                        })
-                })
-                .fail((err) => {
-                    console.error(err);
-                })
-        })
-    })
-
-    $(document).ready(function () {
-        $('.remove-produtFromWishlist').click(function (e) {
-            e.preventDefault();
-            const productId = $(this).data('value');
-            $.ajax({
-                url: '/add-to-wishList',
-                type: 'post',
-                data: { productId: productId }
-            })
-                .done((res) => {
-                    swal("successfull", `${res.message}`, "success")
-                        .then(() => {
-                            location.reload()
-                        })
-                })
-                .fail((err) => {
-                    console.error(err);
-                })
-        })
-    })
-</script>
+<script src="/user/assets/js/userJs/cart.js"></script>
+<script src="/user/assets/js/userJs/wishlist.js"></script>

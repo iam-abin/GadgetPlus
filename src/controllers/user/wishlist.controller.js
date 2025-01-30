@@ -5,27 +5,25 @@ const { formatCurrency } = require("../../utils/currency-format");
 const wishlist = async (req, res, next) => {
     try {
         const userId = req.session.user._id;
-        if (userId) {
-            let wishList = await wishListHelper.getAllWishListItems(userId);
+        let wishList = await wishListHelper.getAllWishListItems(userId);
 
-            for (let i = 0; i < wishList.length; i++) {
-                const isInCart = await cartHelper.isAProductInCart(
-                    userId,
-                    wishList[i].product._id
-                );
+        for (let i = 0; i < wishList.length; i++) {
+            const isInCart = await cartHelper.isAProductInCart(
+                userId,
+                wishList[i].product._id
+            );
 
-                wishList[i].product.isInCart = isInCart;
+            wishList[i].product.isInCart = isInCart;
 
-                wishList[i].product.product_price = formatCurrency(
-                    wishList[i].product.product_price
-                );
-            }
-
-            res.render("user/wishlist", {
-                loginStatus: req.session.user,
-                wishList,
-            });
+            wishList[i].product.product_price = formatCurrency(
+                wishList[i].product.product_price
+            );
         }
+
+        res.render("user/wishlist", {
+            loginStatus: req.session.user,
+            wishList,
+        });
     } catch (error) {
         next(error);
     }
@@ -50,7 +48,7 @@ const removeFromWishList = async (req, res, next) => {
         const wishListCount = await wishListHelper.getWishListCount(userId);
         res.status(200).json({
             message: "product removed from wishList",
-            wishListCount
+            wishListCount,
         });
     } catch (error) {
         next(error);

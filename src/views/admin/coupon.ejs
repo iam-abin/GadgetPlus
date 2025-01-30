@@ -2,206 +2,227 @@
     <div class="content-header">
         <h2 class="content-title">Coupon Management</h2>
         <div>
-
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCoupon"
-                data-bs-whatever="@getbootstrap">Add Coupon +</button>
-
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#addCoupon"
+                data-bs-whatever="@getbootstrap"
+            >
+                Add Coupon +
+            </button>
         </div>
-
     </div>
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
                 <% if (!coupons.length) { %>
-                    <div class="" >
-                        <h1 class="text-center">No Coupons Are Added Yet</h1>
-                    </div>
-                    <% } else { %>
-                        <table class="table table-hover" id="couponTable">
-                            <thead>
-                                <tr class="text-left">
-                                    <th>No</th>
-                                    <th>Coupon Name</th>
-                                    <th>Coupon Code</th>
-                                    <th>Discount Amount</th>
-                                    <th>Expiry Date</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for( let i=0; i < coupons.length; i++ ) { %>
-                                    <tr class="text-left">
-                                        <td width="15%">
-                                            <%= i+1 %>
-                                        </td>
-                                        <td width="20%">
-                                            <%= coupons[i].couponName %>
-                                        </td>
-                                        <td width="20%">
-                                            <%= coupons[i].code %>
-                                        </td>
-                                        <td width="10%">
-                                            <%= coupons[i].discount %>
-                                        </td>
-                                        <td width="15%">
-                                            <%= coupons[i].expiryDate %>
-                                        </td>
-                                        <td width="10%"><a onclick="getCouponData('<%= coupons[i]._id %>')"
-                                                class="btn btn-sm btn-success rounded font-sm mt-15">Edit</a></td>
-                                        <td width="10%"><a onclick="deleteCoupon('<%= coupons[i]._id %>')"
-                                                class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a> </td>
-                                    </tr>
-                                    <% } %>
-
-                            </tbody>
-                        </table> <!-- table-responsive.// -->
+                <div class="">
+                    <h1 class="text-center">No Coupons Are Added Yet</h1>
+                </div>
+                <% } else { %>
+                <table class="table table-hover" id="couponTable">
+                    <thead>
+                        <tr class="text-left">
+                            <th>No</th>
+                            <th>Coupon Name</th>
+                            <th>Coupon Code</th>
+                            <th>Discount Amount</th>
+                            <th>Expiry Date</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for( let i=0; i < coupons.length; i++ ) { %>
+                        <tr class="text-left">
+                            <td width="15%"><%= i+1 %></td>
+                            <td width="20%"><%= coupons[i].couponName %></td>
+                            <td width="20%"><%= coupons[i].code %></td>
+                            <td width="10%"><%= coupons[i].discount %></td>
+                            <td width="15%"><%= coupons[i].expiryDate %></td>
+                            <td width="10%">
+                                <a
+                                    onclick="getCouponData('<%= coupons[i]._id %>')"
+                                    class="btn btn-sm btn-success rounded font-sm mt-15"
+                                    >Edit</a
+                                >
+                            </td>
+                            <td width="10%">
+                                <p
+                                    onclick="deleteCoupon('<%= coupons[i]._id %>')"
+                                    class="btn btn-sm btn-danger rounded font-sm mt-15"
+                                    >Delete</p
+                                >
+                            </td>
+                        </tr>
                         <% } %>
+                    </tbody>
+                </table>
+                <!-- table-responsive.// -->
+                <% } %>
             </div>
-        </div> <!-- card-body end// -->
-    </div> <!-- card end// -->
-
-</section> <!-- content-main end// -->
-
+        </div>
+        <!-- card-body end// -->
+    </div>
+</section>
+<!-- content-main end// -->
 
 <!-- Modal Add Coupon -->
-
-
-<div class="modal fade" id="addCoupon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div
+    class="modal fade"
+    id="addCoupon"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Coupon </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
             </div>
             <div class="modal-body">
                 <form action="/admin/add-coupon" method="post">
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Coupon Name</label>
-                        <input type="text" class="form-control" name="couponName" id="couponName">
+                        <label for="recipient-name" class="col-form-label"
+                            >Coupon Name</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="couponName"
+                            id="couponName"
+                        />
                     </div>
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Discount Amount</label>
-                        <input type="text" class="form-control" name="couponAmount" id="couponAmount">
+                        <label for="recipient-name" class="col-form-label"
+                            >Discount Amount</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="couponAmount"
+                            id="couponAmount"
+                        />
                     </div>
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Expired On</label>
-                        <input type="text" class="form-control" name="couponExpiry" id="couponExpiry">
+                        <label for="recipient-name" class="col-form-label"
+                            >Expired On</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="couponExpiry"
+                            id="couponExpiry"
+                        />
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Create Coupon</button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Create Coupon
+                        </button>
                     </div>
-
                 </form>
             </div>
-
         </div>
     </div>
 </div>
-
 <!--End Modal  Add Coupon-->
 
-
 <!-- Modal Edit Coupon -->
-
-
-<div class="modal fade" id="editCoupon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div
+    class="modal fade"
+    id="editCoupon"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit Coupon </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Coupon</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
             </div>
             <div class="modal-body">
                 <form action="/admin/edit-coupon" method="post">
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Coupon Name</label>
-                        <input type="text" class="form-control" name="couponName" id="couponNme">
-                    </div>
-                    <!-- <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Coupon Code</label>
-                        <input type="text" class="form-control" name="couponCode" id="couponCode">
-                    </div> -->
-                    <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Discount Amount</label>
-                        <input type="text" class="form-control" name="couponAmount" id="couponAmont">
-                    </div>
-                    <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Expired On</label>
-                        <input type="text" class="form-control" name="couponExpiry" id="couponExpiring">
+                        <label for="recipient-name" class="col-form-label"
+                            >Coupon Name</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="couponName"
+                            id="couponNme"
+                        />
                     </div>
                     <div class="mb-3">
-                        <input type="hidden" class="form-control" id="couponIdd" name="couponId" />
+                        <label for="recipient-name" class="col-form-label"
+                            >Discount Amount</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="couponAmount"
+                            id="couponAmont"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label"
+                            >Expired On</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="couponExpiry"
+                            id="couponExpiring"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <input
+                            type="hidden"
+                            class="form-control"
+                            id="couponIdd"
+                            name="couponId"
+                        />
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update Coupon</button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Update Coupon
+                        </button>
                     </div>
-
                 </form>
             </div>
-
         </div>
     </div>
 </div>
-
 <!--End Modal Edit Coupon-->
 
 
-<script>
-    function deleteCoupon(couponId) {
-        swal('are you sure you want to delete this coupon', {
-            buttons: ["no", "yes"]
-        }).then((res) => {
-            if (res) {
-                $.ajax({
-                    url: "/admin/delete-coupon/" + couponId,
-                    type: 'get',
-                })
-                    .done((res) => {
-                        if (res) {
-                            swal("Successful", `${res.message}`, "success").then(() => {
-                                location.reload()
-                            }).then(() => {
-
-                                location.href = '/admin/coupon'
-                            })
-                        }
-                    })
-                    .fail((error) => {
-                        console.error(error);
-                    })
-            }
-        })
-
-
-    }
-</script>
-
-<script>
-    function getCouponData(couponId) {
-        $.ajax({
-            url: "/admin/edit-coupon/" + couponId,
-            type: 'get',
-        })
-            .done((res) => {
-                if (res) {
-                    document.getElementById('couponNme').value = res.couponData.couponName;
-                    // document.getElementById('couponCode').value = res.couponData.code;
-                    document.getElementById('couponAmont').value = res.couponData.discount;
-                    document.getElementById('couponExpiring').value = res.couponData.expiryDate;
-                    document.getElementById('couponIdd').value = res.couponData._id;
-
-                    $("#editCoupon").modal("show");
-
-                }
-            })
-            .fail((error) => {
-                console.error(error);
-            })
-
-    }
-</script>
+<script src="/admin/assets/js/adminJs/coupon.js"></script>

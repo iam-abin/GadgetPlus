@@ -15,9 +15,9 @@ module.exports = {
 			} else {
 				wallet.walletBalance += amount;
 			}
-
+			
 			await wallet.save();
-			resolve(wallet);
+			return wallet;
 		} catch (error) {
 			throw error;
 		}

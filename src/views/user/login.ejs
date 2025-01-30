@@ -1,55 +1,32 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<style>
-  .backgroundimg {
-    background-image: url("user/assets/images/login/login-background.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    overflow-y: hidden;
-  }
 
-  label.form-label {
-        color: #333333;
-        font-size: 1rem;
-        font-weight: 600;
-      }
+<link rel="stylesheet" href="/user/assets/css/userCss/login.css">
 
-      input.form-control {
-        border-radius: 1rem;
-        padding: 1rem
-      }
-</style>
-<div class="text-center bg-white z-index" >
-  <span class="text-danger d-none" style="font-size: 17px; margin-left: 10px;" id="loginError"></span>
-</div>
-
-    <section class="vh-100 backgroundimg" style="background-color: #fffdfd;">
-      <div class="container py-4 h-100 ">
-        <div class="row d-flex justify-content-center align-items-center h-90">
-          <div class="col col-xl-10">
-            <div class="card shadow border" style="border-radius: 1rem; margin-top: 20px; height: 64rem;">
+<section class="vh-100 backgroundimg" style="background-color: #fffdfd;">
+  <div class="container py-4 h-100 ">
+    <div class="row d-flex justify-content-center align-items-center h-90">
+      <div class="col col-xl-10">
+        <div class="card shadow border" style="border-radius: 1rem; margin-top: 20px; height: 64rem;">
               <div class="row g-0">
                 <div class="col-md-6 col-lg-5 d-none d-md-block pt-3"
-                  style="background-color: #3293C9; border-radius: 1rem 0 0 1rem; height: 64rem;">
-                  <img src="user/assets/images/Secure login-amico.png" alt="login form" class="img-fluid"
-                    style="border-radius: 1rem 0 0 1rem; margin-top: 49px; margin-left: -1px;" />
-                </div>
-                <div class="col-md-6 col-lg-7 d-flex align-items-center ">
-                  <div class="card-body p-4 p-lg-5 text-black">
-                    <form class="style2" id="loginForm">
-                          <div class="d-flex align-items-center mb-2 pb-1">
-                            <h1 class="mb-0 mx-auto font-weight-bold">Login</h1>
-                          </div>
-                          
-                          <div class="form-group">
-                            <label for="emailId" class="form-label">Email ID</label>
+                style="background-color: #3293C9; border-radius: 1rem 0 0 1rem; height: 64rem;">
+                <img src="user/assets/images/login/Secure-login-amico.png" alt="login form" class="img-fluid"
+                style="border-radius: 1rem 0 0 1rem; margin-top: 49px; margin-left: -1px;" />
+              </div>
+              <div class="col-md-6 col-lg-7 d-flex align-items-center ">
+                <div class="card-body p-4 p-lg-5 text-black">
+                  <form class="style2" id="loginForm">
+                    <div class="d-flex align-items-center mb-2 pb-1">
+                      <h1 class="mb-0 mx-auto font-weight-bold">Login</h1>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="emailId" class="form-label">Email ID</label>
                             <input type="email" id="emailId" name="email" class="form-control" placeholder="Email" required>
                           </div>
                           <div class="form-group">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" id="password" name="password" class="form-control" placeholder="Password"
-                              style="font-size: medium;" required>
+                            style="font-size: medium;" required>
                           </div>
                           <div class="divider">
                             <p class=""><a href="/otp-forgotPassword" class="text-primary">Forgotten password?</a></p>
@@ -62,14 +39,11 @@
                       <p class="fw-bold mx-3 mb-0 text-muted" style="text-align: center;">OR</p>
                       <a href="/otp-user" class="btn btn-outline-primary" style="width: 100%;" id="specialButton">Login
                         with OTP</a>
-
-                      <p style="text-align: center; padding-top: 6px;">Don't have an account?<br>
+                        
+                        <p style="text-align: center; padding-top: 6px;">Don't have an account?<br>
                         <a href="/user-signup" class="text-primary">Create New Account</a>
-                    </div>
-                    <!-- <div> -->
-
+                      </div>
                     </p><br>
-                    <!-- </div> -->
                   </div>
                 </div>
               </div>
@@ -78,31 +52,8 @@
         </div>
       </div>
     </section>
-
-  
-
-
-    <script>
-        $(document).ready(function () {
-        $('#loginForm').submit((e) => {
-          e.preventDefault();
-          $.ajax({
-            url: "/user-login",
-            type: 'post',
-            data: $('#loginForm').serialize()
-          }).done((res) => {
-            location.reload() 
-
-          }).fail((err) => {
-            document.getElementById("loginError").innerHTML=`${err.responseJSON.message}`
-            document.getElementById("loginError").classList.remove('d-none')
-
-            setTimeout(()=>{
-              document.getElementById("loginError").classList.add('d-none')
-              location.reload()
-            },3000)
-
-          })
-        })
-      })
-    </script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    
+    <script src="/user/assets/js/userJs/auth.js"></script>

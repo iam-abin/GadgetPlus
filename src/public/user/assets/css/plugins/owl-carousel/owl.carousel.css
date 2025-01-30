@@ -440,7 +440,6 @@
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-image: url("../../../images/nav-prev-shadow.png");
 }
 .owl-full .owl-nav .disabled {
 	opacity: 0;
@@ -456,7 +455,6 @@
 .owl-full .owl-nav .owl-next:before {
 	left: auto;
 	right: 100%;
-	background-image: url("../../../images/nav-next-shadow.png");
 }
 .owl-full.carousel-with-shadow .owl-stage-outer {
 	padding-left: 0;
