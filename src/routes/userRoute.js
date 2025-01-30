@@ -24,15 +24,17 @@ const errorController = require("../controllers/error/error.controller");
 
 const cartWishlistCount = require("../middlewares/cartWishlistCount");
 
-// middleware that is used to fetch filter categories
-// its better to use localstorage than this middleware
+// Middleware that is used to fetch filter categories
 router.use(categorySupply);
+// Middleware that is used to fetch cart and wishlist count
 router.use(cartWishlistCount);
 
+// Homepage routes
 router.get("/", userAuthenticationCheck, userHomeController.landingPage);
 
 router.get("/user-home", userChecking, userHomeController.userHome);
 
+// Auth routes
 router.get(
     "/user-signup",
     userAuthenticationCheck,
@@ -51,6 +53,7 @@ router.post("/user-login", userAuthController.userLoginPost);
 
 router.get("/user-logout", userChecking, userAuthController.userLogout);
 
+// Otp-password routes
 router.get(
     "/otp-forgotPassword",
     userAuthenticationCheck,
@@ -75,26 +78,27 @@ router.post(
     userPasswordController.resetPassword
 );
 
-// route to render otp page
+// Otp routes
 router.get("/otp-user", userAuthenticationCheck, userOtpController.otpUser);
 
 router.post("/otp-user", userOtpController.otpSending);
 
 router.post("/otp-fill", userOtpController.otpVerifying);
 
+// Wallet routes
 router.get("/wallet", userChecking, userWalletController.getWallet);
 
+// Profile route
 router.get("/profile", userChecking, userProfileController.profile);
 
-// product routes
-
+// Product routes
 router.get("/viewProducts", userProductController.viewProducts);
 
 router.post("/search-product", userProductController.searchProduct);
 
 router.get("/quick-view/:slug", userProductController.viewAProduct); //display 4 images with image zoom
 
-// wishlist routes
+// Wishlist routes
 router.get("/wishlist", userChecking, userWishlistController.wishlist);
 
 router.post(
@@ -109,7 +113,7 @@ router.post(
     userWishlistController.removeFromWishList
 );
 
-// cart routes
+// Cart routes
 router.get("/cart", userChecking, userCartController.cart);
 
 router.post("/add-to-cart/:id", userChecking, userCartController.addToCart);
@@ -126,7 +130,7 @@ router.post(
     userCartController.removeFromCart
 );
 
-// address routes
+// Address routes
 router.post("/add-address", userChecking, userAddressController.addAddress);
 
 router.get(
@@ -147,7 +151,7 @@ router.post(
     userAddressController.deleteAddressPost
 );
 
-// payment routes
+// Payment routes
 router.get("/checkout", userChecking, userPaymentController.checkout);
 
 router.post("/apply-coupon", userChecking, userCouponController.applyCoupon);
@@ -162,7 +166,7 @@ router.post(
 
 router.get("/order-success", userChecking, userOrderController.orderSuccess);
 
-// order routes
+// Order routes
 router.get("/orders", userChecking, userOrderController.orders);
 
 router.get(

@@ -1,17 +1,5 @@
 <main class="main">
-    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-        <div class="container">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    Contact us
-                </li>
-            </ol>
-        </div>
-        <!-- End .container -->
-    </nav>
-    <!-- End .breadcrumb-nav -->
-    <div class="container">
+    <div class="container mt-4">
         <div
             class="page-header page-header-big text-center"
             style="
@@ -205,29 +193,4 @@
 </main>
 <!-- End .main -->
 
-<script>
-    // column name in the google sheet are creating based on the name attribute of the input fields.
-    $("#submit-form").submit((e) => {
-        let submitButton = document.getElementById("submit-btnn");
-        submitButton.disabled = true;
-        e.preventDefault();
-        $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbwTeIwaeA2Z5VKtTnY5npIX3EpWgDKo-cn58lJMQuSfJXGEn-Gzz6yxuGooXOlIbuAP/exec",
-            data: $("#submit-form").serialize(),
-            method: "post",
-            success: function (response) {
-                swal(
-                    "successfull",
-                    "Form submitted successfully",
-                    "success"
-                ).then(() => {
-                    location.reload();
-                    submitButton.disabled = false;
-                });
-            },
-            error: function (err) {
-                alert("Something Error");
-            },
-        });
-    });
-</script>
+<script src="/user/assets/js/userJs/contact.js"></script>

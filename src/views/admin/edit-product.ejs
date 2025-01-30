@@ -1,4 +1,9 @@
 <section class="content-main">
+    <div class="content-header">
+        <a href="javascript:history.back()"
+            ><i class="material-icons md-arrow_back"></i> Go back
+        </a>
+    </div>
     <div class="row">
         <form
             action="/admin/edit-product/<%= product.slug %>"
@@ -28,18 +33,18 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="form-label"
-                                    >Product description</label
-                                >
+                                <label class="form-label">Product description</label>
                                 <textarea
                                     placeholder="Type here"
-                                    value="<%= product.product_price %>"
                                     id="product_description"
                                     name="product_description"
                                     class="form-control"
                                     rows="4"
-                                ></textarea>
+                                >
+                                    <%= product?.product_description %> 
+                                </textarea>
                             </div>
+                            
 
                             <div class="mb-4">
                                 <label class="form-label" for="product_price"
@@ -96,12 +101,10 @@
                                     >
                                         Edit Product
                                     </button>
-                                    <!-- ms-auto d-block to move button to right-->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- card end// -->
                 </div>
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -199,18 +202,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- row.// -->
                         </div>
                     </div>
-                    <!-- card end// -->
                 </div>
             </div>
         </form>
     </div>
 </section>
-<!-- content-main end// -->
-
-<script>
-    document.getElementById("product_description").value =
-        "<%= product.product_description %>";
-</script>

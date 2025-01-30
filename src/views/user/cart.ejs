@@ -1,7 +1,7 @@
 <main class="main" style="background-color: #ffffff">
     <div
         class="page-header text-center"
-        style="background-image: url('/user/assets/images/page-header-bg.jpg')"
+        style="background-image: url('/user/assets/images/header/page-header-bg.jpg')"
     >
         <div class="container">
             <h1 class="page-title">Your Cart</h1>
@@ -197,103 +197,9 @@
 
                 <% } %>
             </div>
-            <!-- End .container -->
         </div>
-        <!-- End .cart -->
     </div>
-    <!-- End .page-content -->
 </main>
-<!-- End .main -->
 
-<script>
-    function productRemove(productId, cartId) {
-        swal("Do you want to remove this item from cart?", {
-            buttons: ["No", "yes"],
-        }).then((res) => {
-            if (res) {
-                $.ajax({
-                    url: "/remove-cart-item/" + productId,
-                    data: {
-                        cartId: cartId,
-                    },
-                    type: "post",
-                })
-                    .done((res) => {
-                        if (res) {
-                            $(`#item-${productId}`).remove();
-                            iziToast.success({
-                                title: "OK",
-                                message: `${res.message}`,
-                                position: "topRight",
-                                onOpening: function (instance, toast) {
-                                    // Modify the top property to adjust the message position
-                                    toast.style.top = "80px"; // Adjust the value as needed to move the message down
-                                },
-                            });
-                            document.getElementById("totalAmount").innerHTML =
-                                res.totalAmount;
-                            document.getElementById("cart-count").innerHTML =
-                                res.cartCount;
 
-                            if (res.cartCount == 0) {
-                                location.reload();
-                            }
-                        }
-                    })
-                    .fail((error) => {
-                        console.error(error);
-                    });
-            }
-        });
-    }
-</script>
-
-<script>
-    function incDecQuantity(productId, cartId, number, price) {
-        $.ajax({
-            url: "/quantity-change",
-            type: "post",
-            data: {
-                quantity: number,
-                cartId: cartId,
-                productId: productId,
-            },
-        }).done((res) => {
-            if (res) {
-                if (!res.OutOfStock) {
-                    document.getElementById("incDec" + productId).innerHTML =
-                        res.message.quantity;
-                    document.getElementById("totalAmount").innerHTML =
-                        res.message.totalAmount;
-                    document
-                        .getElementById("outOfStock" + productId)
-                        .classList.add("d-none");
-                    let total = res.message.quantity * price;
-                    document.getElementById(
-                        "productPrice" + productId
-                    ).innerHTML = total.toLocaleString("en-in", {
-                        style: "currency",
-                        currency: "INR",
-                        maximumFractionDigits: 0,
-                    });
-                } else {
-                    document.getElementById("incDec" + productId).innerHTML =
-                        res.message.quantity;
-                    document.getElementById("totalAmount").innerHTML =
-                        res.message.totalAmount;
-                    document
-                        .getElementById("outOfStock" + productId)
-                        .classList.remove("d-none");
-                    let total = res.message.quantity * price;
-                    document.getElementById(
-                        "productPrice" + productId
-                    ).innerHTML = total.toLocaleString("en-in", {
-                        style: "currency",
-                        currency: "INR",
-                        maximumFractionDigits: 0,
-                    });
-                }
-            }
-        });
-    }
-</script>
+<script src="/user/assets/js/userJs/cart.js"></script>

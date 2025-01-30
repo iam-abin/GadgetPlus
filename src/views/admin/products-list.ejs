@@ -90,41 +90,10 @@
                         <% } %>
                     </tbody>
                 </table>
-                <!-- table-responsive.// -->
                 <% } %>
             </div>
         </div>
-        <!-- card-body end// -->
     </div>
-    <!-- card end// -->
 </section>
-<!-- content-main end// -->
 
-<script>
-    function changeProductStatus(productId) {
-        swal("Are you sure you want to do this?", {
-            buttons: ["No!", "Yes!"],
-        }).then((res) => {
-            if (res) {
-                $.ajax({
-                    url: "/admin/delete-product/" + productId,
-                    type: "get",
-                })
-                    .done((res) => {
-                        swal("successful", `${res.message}`, "success").then(
-                            () => {
-                                location.reload();
-                            }
-                        );
-                    })
-                    .fail((err) => {
-                        swal("successful", `${res.message}`, "success").then(
-                            () => {
-                                location.reload();
-                            }
-                        );
-                    });
-            }
-        });
-    }
-</script>
+<script src="/admin/assets/js/adminJs/lists.js"></script>

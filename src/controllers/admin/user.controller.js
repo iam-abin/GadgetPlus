@@ -1,4 +1,4 @@
-const { ADMIN_LAYOUT } = require("../../config/constants");
+const { ADMIN_LAYOUT } = require("../../constants/layout");
 const adminHelper = require("../../helpers/adminHelper");
 const orderHelper = require("../../helpers/orderHepler");
 const { currencyFormatWithoutDecimal } = require("../../utils/currency-format");

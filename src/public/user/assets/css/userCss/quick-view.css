@@ -1,0 +1,11 @@
+.product-main-image img {
+    max-height: 500px; /* Set your desired fixed height for the main image here */
+    object-fit: contain; /* Ensure the image covers the container without distortion */
+    width: 100%; /* Make sure the image takes the full width of the container */
+}
+
+.product-image-gallery .product-gallery-item img {
+    max-height: 100px; /* Set your desired fixed height for the thumbnails here */
+    object-fit: contain; /* Ensure the image covers the container without distortion */
+    width: 100%; /* Make sure the image takes the full width of the container */
+}

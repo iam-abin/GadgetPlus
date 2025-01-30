@@ -3,7 +3,7 @@ const orderHelper = require("../../helpers/orderHepler");
 
 const { currencyFormatWithoutDecimal } = require("../../utils/currency-format");
 
-const { ADMIN_LAYOUT } = require("../../config/constants");
+const { ADMIN_LAYOUT } = require("../../constants/layout");
 
 const adminHome = async (req, res, next) => {
     try {
@@ -29,11 +29,7 @@ const adminHome = async (req, res, next) => {
     }
 };
 
-const banners = (req, res) => {
-    res.render("admin/banner", { layout: ADMIN_LAYOUT });
-};
 
 module.exports = {
     adminHome,
-    banners,
 };

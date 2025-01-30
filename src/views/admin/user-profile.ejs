@@ -25,52 +25,35 @@
                 </div>
                 <!--  col.// -->
                 <div class="col-xl col-lg">
-                    <h3><%= user.name %></h3>
-                    <p>3891 Ranchview Dr. Richardson, California 62639</p>
+                    <h3><%= user?.name %></h3>
                 </div>
                 <!--  col.// -->
             </div>
             <!-- card-body.// -->
             <hr class="my-4" />
             <div class="row g-4">
-                <div class="col-md-12 col-lg-4 col-xl-2">
-                    <article class="box">
-                        <p class="mb-0 text-muted">Total sales:</p>
-                        <h5 class="text-success">238</h5>
-                        <p class="mb-0 text-muted">Revenue:</p>
-                        <h5 class="text-success mb-0">$2380</h5>
-                    </article>
-                </div>
                 <!--  col.// -->
                 <div class="col-sm-6 col-lg-4 col-xl-3">
-                    <h6>Contacts</h6>
-                    <p>
-                        Manager: Jerome Bell <br />
-                        <template
-                            class="__cf_email__"
-                            data-cfemail="31585f575e715449505c415d541f525e5c"
-                            >[email&#160;protected]</template
-                        >
-                        <br />
-                        (229) 555-0109, (808) 555-0111
-                    </p>
+                    <h6>Details</h6>
+
+                    <div>
+                        <div> email: <%= user?.email %></div>
+
+                        <div> phone: <%= user?.phone %> </div>
+
+                        <div> isActive: <%= user?.isActive %> </div>
+
+                        <div>
+                            registered date: <%= new
+                            Date(user?.createdAt).toLocaleDateString('en-US', {
+                            weekday: 'long', year: 'numeric', month: 'long',
+                            day: 'numeric' }) %>
+                        </div>
+                    </div>
                 </div>
-                <!--  col.// -->
-                <div class="col-sm-6 col-lg-4 col-xl-3">
-                    <h6>Address</h6>
-                    <p>
-                        Country: California <br />
-                        Address: Ranchview Dr. Richardson <br />
-                        Postal code: 62639
-                    </p>
-                </div>
-                <!--  col.// -->
             </div>
-            <!--  row.// -->
         </div>
-        <!--  card-body.// -->
     </div>
-    <!--  card.// -->
 
     <div class="card mb-4">
         <div class="card-body">
@@ -106,9 +89,8 @@
                             <td><%= userOrderDetails[i].paymentMethod %></td>
                             <td>
                                 <span class="badge rounded-pill alert-warning"
-                                    ><%= userOrderDetails[i].orderStatus
-                                    %></span
-                                >
+                                    ><%= userOrderDetails[i].orderStatus%>
+                                </span >
                             </td>
                             <td>
                                 <a
@@ -123,10 +105,6 @@
                 </table>
                 <% } %>
             </div>
-            <!-- table-responsive //end -->
         </div>
-        <!-- card-body end// -->
     </div>
-    <!-- card end// -->
 </section>
-<!-- content-main end// -->

@@ -56,6 +56,8 @@ module.exports = {
 
 	getAllOrders: async () => {
 		try {
+			console.log("ads");
+			
 			const orders = await orderModel.aggregate([
 				{
 					$lookup: {
@@ -65,6 +67,11 @@ module.exports = {
 						as: "userDetails",
 					},
 				},
+				{
+					$sort: {
+						createdAt: -1
+					}
+				}
 			]);
 			return orders;
 		} catch (error) {
@@ -136,6 +143,11 @@ module.exports = {
 						as: "addressLookedup",
 					},
 				},
+				{
+					$sort: {
+						createdAt: -1
+					}
+				}
 			]);
 
 			return userOrderDetails;
@@ -234,6 +246,8 @@ module.exports = {
 				{ new: true }
 			);
 
+			console.log("cancelledResponse ======>", cancelledResponse);
+			
 			if (cancelledResponse.paymentMethod != "COD") {
 				await walletHelper.addMoneyToWallet(
 					userId,

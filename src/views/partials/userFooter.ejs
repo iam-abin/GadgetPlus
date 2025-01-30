@@ -1,14 +1,12 @@
 <% if (!locals.headerFooter) { %>
-
-
-
+    
     <footer class="footer">
         <div class="footer-middle">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget widget-about">
-                            <img src="/user/assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
+                            <img src="/user/assets/images/logo/logo.png" class="footer-logo" alt="Footer Logo" width="105"
                                 height="25">
                             <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna
                                 eros eu erat. </p>
@@ -34,8 +32,7 @@
 
                             <ul class="widget-list">
                                 <li><a href="#">FAQ</a></li>
-                                <li><a href="contact.html">Contact us</a></li>
-                                <li><a href="login.html">Log in</a></li>
+                                <li><a href="/contact">Contact us</a></li>
                             </ul><!-- End .widget-list -->
                         </div><!-- End .widget -->
                     </div><!-- End .col-sm-6 col-lg-3 -->
@@ -61,9 +58,9 @@
 
                             <ul class="widget-list">
                                 <li><a href="#">Sign In</a></li>
-                                <li><a href="cart.html">View Cart</a></li>
-                                <li><a href="#">My Wishlist</a></li>
-                                <li><a href="#">Track My Order</a></li>
+                                <li><a href="/cart">View Cart</a></li>
+                                <li><a href="wishlist">My Wishlist</a></li>
+                                <li><a href="#">My Order</a></li>
                                 <li><a href="#">Help</a></li>
                             </ul><!-- End .widget-list -->
                         </div><!-- End .widget -->
@@ -77,7 +74,7 @@
                 <p class="footer-copyright">Copyright © 2023 Gadgetsplus Store. All Rights Reserved.</p>
                 <!-- End .footer-copyright -->
                 <figure class="footer-payments">
-                    <img src="/user/assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                    <img src="/user/assets/images/footer/payments.png" alt="Payment methods" width="272" height="20">
                 </figure><!-- End .footer-payments -->
             </div><!-- End .container -->
         </div><!-- End .footer-bottom -->
@@ -87,54 +84,7 @@
 
 
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
-
-    <div class="mobile-menu-container">
-        <div class="mobile-menu-wrapper">
-            <span class="mobile-menu-close"><i class="icon-close"></i></span>
-
-            <form action="#" method="get" class="mobile-search">
-                <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
-                    placeholder="Search in..." required>
-                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-            </form>
-
-            <nav class="mobile-nav">
-                <ul class="mobile-menu">
-                    <li class="active">
-                        <a href="/">Home</a>
-                    <li>
-
-                    </li>
-                    <li>
-                        <a  class="sf-with-ul">Products</a>
-                        <ul>
-                            <li><a href="product.html">phones</a></li>
-                            <li><a href="product-centered.html">laptops</a></li>
-                            <li><a href="product-gallery.html">tablets</a></li>
-
-                        </ul>
-                    </li>
-                    
-                    <li class="active">
-                        <a href="/about">About</a>
-                    <li>
-                    <li class="active">
-                        <a href="/contact">Contact</a>
-                    <li>
-                </ul>
-            </nav><!-- End .mobile-nav -->
-
-            <div class="social-icons">
-                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-            </div><!-- End .social-icons -->
-        </div><!-- End .mobile-menu-wrapper -->
-    </div><!-- End .mobile-menu-container -->
+    
 
     <!-- Sign in / Register Modal -->
     <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -293,5 +243,9 @@
 
         <!-- izitoast message -->
         <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+
+        
+        <script src="/user/assets/js/userJs/wallet.js"></script>
+        <script src="/user/assets/js/userJs/product-search.js"></script>
 </body>
 </html>
