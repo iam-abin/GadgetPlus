@@ -89,10 +89,7 @@ module.exports = {
 					},
 				},
 			]);
-
-			console.log(monthlyRevenue, " monthlyRevenue");
 			
-
 			!monthlyRevenue.length
 				? (response.monthlyRevenue = 0)
 				: (response.monthlyRevenue = monthlyRevenue[0]?.revenue);

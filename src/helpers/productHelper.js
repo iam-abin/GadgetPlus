@@ -98,14 +98,18 @@ module.exports = {
 
 	filterProduct: async (filterData) => {
 		try {
+			const query = {}
+			query.product_price = {
+				$gte: Number(filterData.min),
+				$lte: Number(filterData.max),
+			}
+
+			if(filterData?.selectedCategories.length){
+				query.product_category = { $in: filterData.selectedCategories }
+			}
+
 			let filteredProducts = await productModel
-				.find({
-					product_category: { $in: filterData.selectedCategories },
-					product_price: {
-						$gte: Number(filterData.min),
-						$lte: Number(filterData.max),
-					},
-				})
+				.find(query)
 				.lean();
 
 			return filteredProducts;

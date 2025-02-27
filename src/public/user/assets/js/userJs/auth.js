@@ -9,7 +9,9 @@ $(document).ready(function () {
         location.reload() 
 
       }).fail((err) => {
-        document.getElementById("loginError").innerHTML=`${err.responseJSON.message}`
+        console.error(err);
+        
+        document.getElementById("loginError").innerHTML=`${err?.responseJSON?.message}`
         document.getElementById("loginError").classList.remove('d-none')
 
         setTimeout(()=>{

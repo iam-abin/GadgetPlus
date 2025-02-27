@@ -15,21 +15,18 @@ $('#filter-form').submit(function (e) {
     $('input:checked').each(function () {
         selectedCategories.push($(this).val())
     });
-
-    console.log("selectedCategories ", selectedCategories);
     
     filterData(selectedCategories, min, max);
 })
 
 
 function filterData(selectedCategories, min, max) {
-    
+
     let data = {
         selectedCategories: selectedCategories,
         min: min,
         max: max
     }
-    console.log(" data ", data);
     data = JSON.stringify(data)
     let html = ``;
 
@@ -42,74 +39,75 @@ function filterData(selectedCategories, min, max) {
             let product = res.product;
             let loginStatus = res.loginStatus
             let cartCount = res.cartCount
-            console.log("response ", res);
-            
 
-            for (let i = 0; i < product.length; i++) {
-                if (product[i].product_status) {
-                    html += `
-                            <div class="col-6 col-md-4 col-lg-4 mb-2">
-                                <div class="product product-7">
-                                    <figure class="product-media">
-                                        <a href="/quick-view/${product[i].slug}">
-                                            <img src="/product-images/${product[i].image[0].filename}"
-                                                alt="Product image" class="product-image">
-                                            <img src="/product-images/${product[i].image[1].filename}"
-                                                alt="Product image" class="product-image-hover">
-                                        </a>
-                                        <div class="product-action-vertical">
-                                            <a href="#" data-value="${product[i]._id}"
-                                                class="add-to-Wishlist btn-product-icon btn-wishlist btn-expandable">
-                                                <span>add to wishlist</span>
-                                            </a>
-                                        </div><!-- End .product-action-vertical -->
+            if (product && Array.isArray(product)) {
+
+                for (let i = 0; i < product.length; i++) {
+                    if (product[i].product_status) {
+                        html += `
+                    <div class="col-6 col-md-4 col-lg-4 mb-2">
+                        <div class="product product-7">
+                            <figure class="product-media">
+                                <a href="/quick-view/${product[i].slug}">
+                                    <img src="/product-images/${product[i].image[0].filename}"
+                                        alt="Product image" class="product-image">
+                                    <img src="/product-images/${product[i].image[1].filename}"
+                                        alt="Product image" class="product-image-hover">
+                                </a>
+                                <div class="product-action-vertical">
+                                    <a href="#" data-value="${product[i]._id}"
+                                        class="add-to-Wishlist btn-product-icon btn-wishlist btn-expandable">
+                                        <span>add to wishlist</span>
+                                    </a>
+                                </div><!-- End .product-action-vertical -->
+                `;
+                        if (!product[i].isInCart) {
+                            if (loginStatus) {
+                                html += `
+
+                            <div class="product-action">
+                                <a href="#" data-value="${product[i]._id}"
+                                    class="add-to-cart btn-product btn-cart">
+                                    <span>add to cart</span>
+                                </a>
+                            </div><!-- End .product-action -->
                         `;
-                    if (!product[i].isInCart) {
-                        if (loginStatus) {
-                            html += `
 
-                                    <div class="product-action">
-                                        <a href="#" data-value="${product[i]._id}"
-                                            class="add-to-cart btn-product btn-cart">
-                                            <span>add to cart</span>
-                                        </a>
-                                    </div><!-- End .product-action -->
-                                `;
-
+                            } else {
+                                html += `
+                            <div class="product-action">
+                                <a href="/user-login" class="btn-product btn-cart">
+                                    <span>add to cart</span>
+                                </a>
+                            </div><!-- End .product-action -->
+                        `;
+                            }
                         } else {
                             html += `
-                                    <div class="product-action">
-                                        <a href="/user-login" class="btn-product btn-cart">
-                                            <span>add to cart</span>
-                                        </a>
-                                    </div><!-- End .product-action -->
-                                `;
+                            <div class="product-action">
+                                <a href="/cart" class="view-cart-products btn-product btn">
+                                    <span>View in cart</span>
+                                </a>
+                            </div><!-- End .product-action -->
+                        `;
                         }
-                    } else {
+
                         html += `
-                                    <div class="product-action">
-                                        <a href="/cart" class="view-cart-products btn-product btn">
-                                            <span>View in cart</span>
-                                        </a>
-                                    </div><!-- End .product-action -->
-                                `;
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <h3 class="product-title">
+                                    <a href="product.html">${product[i].product_name}</a>
+                                </h3><!-- End .product-title -->
+                                <div class="product-price">${product[i].product_price}</div><!-- End .product-price -->
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-lg-4 -->
+                `;
+
                     }
 
-                    html += `
-                                    </figure><!-- End .product-media -->
-
-                                    <div class="product-body">
-                                        <h3 class="product-title">
-                                            <a href="product.html">${product[i].product_name}</a>
-                                        </h3><!-- End .product-title -->
-                                        <div class="product-price">${product[i].product_price}</div><!-- End .product-price -->
-                                    </div><!-- End .product-body -->
-                                </div><!-- End .product -->
-                            </div><!-- End .col-sm-6 col-lg-4 -->
-                        `;
-
                 }
-
             }
 
             productsRow.innerHTML = html
