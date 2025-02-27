@@ -1,7 +1,7 @@
 const userHelper = require("../../helpers/userHelper");
 
 const userSignup = async (req, res) => {
-    res.render("user/signup", { headerFooter: true });
+    res.render("user/signup", { noHeaderFooter: true });
 };
 
 const userSignupPost = async (req, res, next) => {
@@ -19,7 +19,7 @@ const userSignupPost = async (req, res, next) => {
 
 const userLogin = async (req, res) => {
     res.render("user/login", {
-        headerFooter: true,
+        noHeaderFooter: true,
         loggedInError: req.session.loggedInError,
     });
 };

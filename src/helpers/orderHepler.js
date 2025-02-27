@@ -56,7 +56,6 @@ module.exports = {
 
 	getAllOrders: async () => {
 		try {
-			console.log("ads");
 			
 			const orders = await orderModel.aggregate([
 				{
@@ -246,8 +245,6 @@ module.exports = {
 				{ new: true }
 			);
 
-			console.log("cancelledResponse ======>", cancelledResponse);
-			
 			if (cancelledResponse.paymentMethod != "COD") {
 				await walletHelper.addMoneyToWallet(
 					userId,

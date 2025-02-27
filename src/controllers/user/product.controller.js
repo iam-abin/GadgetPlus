@@ -8,10 +8,6 @@ const viewProducts = async (req, res, next) => {
     try {
         let products;
         let user;
-        // let minAmount= await productHelper.getMinimumPrice();
-        // let maxAmount= await productHelper.getMaximumPrice();
-        // const page = req.params.page;
-        // const perPage = 2;
         if (req.session.user) {
             user = req.session.user;
         }
@@ -48,7 +44,6 @@ const viewProducts = async (req, res, next) => {
             });
         } else {
             let filterData = JSON.parse(req.query.filterData);
-            if (filterData.selectedCategories.length) {
                 products = await productHelper.filterProduct(filterData);
                 for (let i = 0; i < products.length; i++) {
                     if (user) {
@@ -77,37 +72,6 @@ const viewProducts = async (req, res, next) => {
                     product: products,
                     loginStatus: user,
                 });
-            } else {
-                products = await productHelper.getAllProductsWithLookup();
-                for (let i = 0; i < products.length; i++) {
-                    if (user) {
-                        let userId = user._id;
-                        const isInCart = await cartHelper.isAProductInCart(
-                            userId,
-                            products[i]._id
-                        );
-                        const isInWishList =
-                            await wishListHelper.isProductInWishList(
-                                userId,
-                                products[i]._id
-                            );
-
-                        products[i].isInCart = isInCart;
-                        products[i].isInWishList = isInWishList;
-                    }
-                    products[i].product_price = Number(
-                        products[i].product_price
-                    ).toLocaleString("en-in", {
-                        style: "currency",
-                        currency: "INR",
-                    });
-                }
-
-                res.render("user/view-products", {
-                    product: products,
-                    loginStatus: user,
-                });
-            }
         }
     } catch (error) {
         next(error);

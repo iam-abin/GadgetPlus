@@ -1,4 +1,4 @@
-<% if (!locals.headerFooter) { %>
+<% if (!locals.noHeaderFooter) { %>
     
     <footer class="footer">
         <div class="footer-middle">
@@ -246,6 +246,8 @@
 
         
         <script src="/user/assets/js/userJs/wallet.js"></script>
+        <% if (!locals.noHeaderFooter) { %>
         <script src="/user/assets/js/userJs/product-search.js"></script>
+        <% } %>
 </body>
 </html>

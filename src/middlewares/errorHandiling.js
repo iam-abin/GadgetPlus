@@ -35,7 +35,7 @@ const errorHandler = (error, req, res, next) => {
 
 	// Render the error page
     if (status === 404) {
-        return res.status(404).render('error', { headerFooter: true });
+        return res.status(404).render('error', { noHeaderFooter: true });
     } else {
         // General error handling for other statuses
         return res.status(status).send({

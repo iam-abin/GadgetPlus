@@ -20,6 +20,7 @@ const adminLoginPost = async (req, res, next) => {
             adminName,
             adminPassword
         );
+        
         if (adminDetails) {
             req.session.admin = adminDetails;
         }

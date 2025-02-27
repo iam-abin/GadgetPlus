@@ -58,7 +58,7 @@
 
 
 											<% if (!wishList[i].product.isInCart) { %>
-												<button class="btn btn-primary btn-sm add-product" type="button"
+												<button class="btn btn-primary btn-sm add-to-cart" type="button"
 													data-value="<%= wishList[i].product._id %>">Add to Cart</button>
 												<% } else {%>
 
@@ -85,51 +85,5 @@
 	</div>
 </section>
 
-<script>
-	function removeFromWishList(productId) {
-		$.ajax({
-			url: '/remove-from-wishList',
-			type: 'post',
-			data: {
-				productId: productId
-			}
-		})
-			.then((res) => {
-				iziToast.success({
-					title: 'OK',
-					message: `${res.message}`,
-					position: 'topRight',
-					onOpening: function (instance, toast) {
-						// Modify the top property to adjust the message position
-						toast.style.top = '80px'; // Adjust the value as needed to move the message down
-					}
-				})
-				$('#wishlist-card-' + productId).remove()
-				document.getElementById('wishListCount').innerHTML = `${res.wishListCount}`;
-			})
-			.fail((error) => {
-				console.error(error);
-			})
-	}
-
-	$(document).ready(function () {
-		$('.add-product').click(function (e) {
-			e.preventDefault()
-			const prodId = $(this).data('value')
-			$.ajax({
-				url: '/add-to-cart/' + prodId,
-				type: 'post'
-			})
-				.done((res) => {
-					swal("successfull", `${res.message}`, "success")
-						.then(() => {
-							location.reload()
-						})
-				})
-				.fail((err) => {
-					console.error(err);
-				})
-		})
-	})
-
-</script>
+<script src="/user/assets/js/userJs/cart.js"></script>
+<script src="/user/assets/js/userJs/wishlist.js"></script>
